@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow create: if isSignedIn(userId) && isValidCreate(userId);
+      allow read: if isSignedIn(userId);
+      allow update: if isSignedIn(userId) && isValidUpdate(userId);
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+
+  function isSignedIn(userId) {
+    return request.auth != null && request.auth.uid == userId;
+  }
+
+  function isValidCreate(userId) {
+    return request.resource.data.uid == userId
+      && request.resource.data.keys().hasOnly([
+        'uid',
+        'email',
+        'phoneNumber',
+        'displayName',
+        'photoUrl',
+        'providers',
+        'createdAt',
+        'lastLoginAt'
+      ])
+      && request.resource.data.providers is list;
+  }
+
+  function isValidUpdate(userId) {
+    return request.resource.data.uid == userId
+      && resource.data.uid == userId
+      && request.resource.data.keys().hasOnly([
+        'uid',
+        'email',
+        'phoneNumber',
+        'displayName',
+        'photoUrl',
+        'providers',
+        'createdAt',
+        'lastLoginAt'
+      ])
+      && request.resource.data.createdAt == resource.data.createdAt
+      && request.resource.data.providers is list;
+  }
+}

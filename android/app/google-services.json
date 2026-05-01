@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "526853902976",
+    "firebase_url": "https://kharchaplus-default-rtdb.firebaseio.com",
+    "project_id": "kharchaplus",
+    "storage_bucket": "kharchaplus.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526853902976:android:e6292e471b522122144c65",
+        "android_client_info": {
+          "package_name": "com.nafis.nf.kharchaplus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "526853902976-pa51rjq3gjnp7gl3otgerr601m7n1pd9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nafis.nf.kharchaplus",
+            "certificate_hash": "70e0d41027d164df30dde22609cbec8dd72adc0e"
+          }
+        },
+        {
+          "client_id": "526853902976-nm029f7g8acefqef8g4n1pig1i2kc0kh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvOgiD7QPmevtt4re22wjb4I0nQsTKTQg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "526853902976-nm029f7g8acefqef8g4n1pig1i2kc0kh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
