@@ -1,7 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.nafis.nf.kharchaplus">
+
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+
     <application
-        android:label="expense_tracker"
+        android:label="Kharcha Plus"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

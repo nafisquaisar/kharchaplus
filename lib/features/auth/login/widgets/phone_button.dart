@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/KharchaThemeColors.dart';
 import '../../phone/phone_screen.dart';
 
 class PhoneButton extends StatelessWidget {
@@ -14,7 +15,7 @@ class PhoneButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
           ),
-          side: const BorderSide(color: Colors.blue),
+          side: const BorderSide(color: AppColors.colorText),
         ),
         onPressed: () {
           Navigator.push(
@@ -22,7 +23,14 @@ class PhoneButton extends StatelessWidget {
             MaterialPageRoute(builder: (_) => const PhoneScreen()),
           );
         },
-        child: const Text("Login with Phone Number"),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.phone_android, color: AppColors.colorText, size: 20),
+            SizedBox(width: 4),
+            const Text("Login with Phone Number" , style: TextStyle(color: AppColors.colorText),),
+          ],
+        ),
       ),
     );
   }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/KharchaThemeColors.dart';
+import 'footer.dart';
 import 'header_wave.dart' hide GoogleButton;
 import 'google_button.dart';
 import 'phone_button.dart';
@@ -22,7 +24,7 @@ class LoginCard extends StatelessWidget {
         children: [
           const HeaderWave(),
           Expanded(
-            child: Center(
+            child: SingleChildScrollView(
               child: _Content(),
             ),
           ),
@@ -40,19 +42,36 @@ class _Content extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
-        children: const [
+        children: [
           Text(
-            "Welcome !",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            "Welcome!",
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          SizedBox(height: 20),
-          GoogleButton(),
+          SizedBox(height: 6),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              "Track and manage your expenses easily.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+                height: 1.4,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          const GoogleButton(),
           // SizedBox(height: 15),
           // EmailButton(),
-          SizedBox(height: 15),
-          PhoneButton(),
-          SizedBox(height: 20),
-          SocialFooter(),
+          const SizedBox(height: 15),
+          const PhoneButton(),
+          const SizedBox(height: 20),
+          // SocialFooter(),
+          Footer()
         ],
       ),
     );

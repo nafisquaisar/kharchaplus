@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'core/Common/AppDrawer.dart';
 import 'core/Common/CommonAppBar.dart';
 import 'core/Common/CustomBottomNav.dart';
+import 'core/constants/KharchaThemeColors.dart';
 import 'core/constants/colors.dart';
 import 'features/Expense/expense_screen.dart';
 import 'features/Friend/FriendHome.dart';

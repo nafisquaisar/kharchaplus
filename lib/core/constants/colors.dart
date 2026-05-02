@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppColors {
+class AppColorsTheme {
   // 🌫️ Background
   static const Color background = Color(0xFFF5F7FF);
 
@@ -40,9 +40,19 @@ class AppColors {
     colors: [authGradientStart, authGradientEnd],
   );
 
+  // 💧 KHARCHA PLUS Gradient (from logo)
+  static const Color kharchaGradientStart = Color(0xFF2EC4B6);
+  static const Color kharchaGradientEnd = Color(0xFF1B7F8C);
+
+  static const LinearGradient kharchaGradient = LinearGradient(
+    colors: [kharchaGradientStart, kharchaGradientEnd],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 
 
 
 
-  const AppColors._();
+
+  const AppColorsTheme._();
 }

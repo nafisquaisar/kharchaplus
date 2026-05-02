@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/constants/KharchaThemeColors.dart';
 import '../../../../core/constants/colors.dart';
 import '../../viewmodel/auth_viewmodel.dart';
 
@@ -15,19 +16,19 @@ class GoogleButton extends StatelessWidget {
       onTap: vm.isLoading
           ? null
           : () async {
-              final success = await vm.signInWithGoogle();
+        final success = await vm.signInWithGoogle();
 
-              if (!success && context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(vm.errorMessage ?? "Login failed")),
-                );
-              }
-            },
+        if (!success && context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(vm.errorMessage ?? "Login failed")),
+          );
+        }
+      },
       child: Container(
         height: 50,
         width: double.infinity,
         decoration: BoxDecoration(
-          gradient: AppColors.buttonGradient, // 🔥 from AppColors
+          gradient: AppColors.kharchaGradient,
           borderRadius: BorderRadius.circular(25),
         ),
         child: Center(
@@ -40,12 +41,24 @@ class GoogleButton extends StatelessWidget {
               color: AppColors.textPrimary,
             ),
           )
-              : const Text(
-            "Sign in with Google",
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w600,
-            ),
+              : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // 🔥 Google Icon
+              Image.asset(
+                "assets/images/google.png",
+                height: 20,
+              ),
+              const SizedBox(width: 10),
+
+              const Text(
+                "Sign in with Google",
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ),
       ),

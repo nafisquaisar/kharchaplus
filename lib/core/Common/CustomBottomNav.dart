@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/colors.dart';
+import '../constants/KharchaThemeColors.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;

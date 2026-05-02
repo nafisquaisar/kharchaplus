@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'widgets/login_card.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -6,10 +7,18 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color(0xffF5F6FA),
-      body: SafeArea(
-        child: LoginCard(),   // 👈 FULL SCREEN
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light, // Android
+        statusBarBrightness: Brightness.dark, // iOS
+      ),
+      child: Scaffold(
+        backgroundColor: const Color(0xffF5F6FA),
+        body: SafeArea(
+          top: false,
+          child: LoginCard(),
+        ),
       ),
     );
   }

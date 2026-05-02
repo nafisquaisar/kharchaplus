@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../features/auth/viewmodel/auth_viewmodel.dart';
+import '../constants/KharchaThemeColors.dart';
 
 class AppDrawer extends StatelessWidget {
   final Function(int) onItemTap;

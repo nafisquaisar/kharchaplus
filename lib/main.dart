@@ -1,11 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/features/Profile/presentation/viewmodel/profile_view_model.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
+import 'core/constants/KharchaThemeColors.dart';
+import 'core/utils/system_ui.dart';
+import 'features/Profile/data/datasource/profile_remote_data_source.dart';
+import 'features/Profile/data/repository/profile_repository_impl.dart';
+import 'features/Profile/domain/repository/profile_repository.dart';
+import 'features/Profile/domain/usecase/get_profile_data.dart';
 import 'features/auth/data/datasources/firebase_auth_data_source.dart';
 import 'features/auth/data/datasources/firestore_user_data_source.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -40,6 +48,15 @@ void main() async {
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.debug,
   );
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // 👈 same as your theme
+      statusBarIconBrightness: Brightness.light, // white icons
+      statusBarBrightness: Brightness.dark, // iOS support
+    ),
+  );
+
 
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
@@ -106,6 +123,32 @@ class ExpenseTrackerApp extends StatelessWidget {
           create: (context) =>
               SaveUserProfileUseCase(context.read<AuthRepository>()),
         ),
+        // 1️⃣ Data Source
+        Provider<ProfileRemoteDataSource>(
+          create: (_) => ProfileRemoteDataSource(),
+        ),
+
+        // 2️⃣ Repository
+        Provider<ProfileRepository>(
+          create: (context) => ProfileRepositoryImpl(
+            context.read<ProfileRemoteDataSource>(),
+          ),
+        ),
+
+        // 3️⃣ UseCase
+        Provider<GetProfileData>(
+          create: (context) => GetProfileData(
+            context.read<ProfileRepository>(),
+          ),
+        ),
+
+        // 4️⃣ ViewModel
+        ChangeNotifierProvider(
+          create: (context) => ProfileViewModel(
+            context.read<GetProfileData>(),
+          ),
+        ),
+
         ChangeNotifierProvider(
           create: (context) => AuthViewModel(
             authRepository: context.read<AuthRepository>(),
@@ -129,13 +172,22 @@ class ExpenseTrackerApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Expense Tracker',
+        title: 'Kharcha Plus',
+
+        builder: (context, child) {
+          // 🔥 GLOBAL CONTROL
+          SystemUI.setLight();
+
+          return child!;
+        },
+
         theme: ThemeData(
-          colorSchemeSeed: const Color(0xFF4F46E5),
           useMaterial3: true,
+          colorSchemeSeed: AppColors.primary,
         ),
+
         home: const AuthWrapper(),
-      ),
+      )
     );
   }
 }

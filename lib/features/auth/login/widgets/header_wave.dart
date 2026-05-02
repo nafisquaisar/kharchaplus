@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/KharchaThemeColors.dart';
 import '../../../../core/constants/colors.dart';
 import 'wave_clipper.dart';
 
@@ -10,20 +11,23 @@ class HeaderWave extends StatelessWidget {
     return ClipPath(
       clipper: WaveClipper(),
       child: Container(
-        height: 220,
+        height: 260,
         width: double.infinity,
         decoration: const BoxDecoration(
-          gradient: AppColors.authGradient,
+          gradient: AppColors.kharchaGradient,
         ),
-        child: const Center(
+        child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Icon(Icons.account_balance_wallet,
-                  color: Colors.white, size: 50),
-              SizedBox(height: 10),
-              Text(
-                "KharchaPlus",
+              const SizedBox(height: 45),
+              Image.asset(
+                "assets/images/whiteicon1.png",
+                height: 100,
+              ),
+              const SizedBox(height: 5),
+              const Text(
+                "Kharcha Plus",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 22,
