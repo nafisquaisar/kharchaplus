@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/KharchaThemeColors.dart';
+
 class OverviewHeader extends StatelessWidget {
   const OverviewHeader({super.key});
 
@@ -9,11 +11,11 @@ class OverviewHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          Text("Overview",
+        children: [
+          const Text("Overview",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           Text("This Month",
-              style: TextStyle(color: Colors.blue)),
+              style: TextStyle(color: AppColors.colorText, fontSize: 14)),
         ],
       ),
     );

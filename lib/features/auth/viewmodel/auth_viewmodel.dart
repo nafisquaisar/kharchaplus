@@ -325,6 +325,7 @@ class AuthViewModel extends ChangeNotifier {
     required String name,
     required String email,
     required String phone,
+    required String? photoUrl,
   }) async {
     final user = _currentUser;
     if (user == null) {
@@ -340,6 +341,7 @@ class AuthViewModel extends ChangeNotifier {
         name: name,
         email: email,
         phone: phone,
+        photoUrl: photoUrl,
       );
       await _resolveProfile(user);
       return true;

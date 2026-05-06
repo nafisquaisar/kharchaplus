@@ -1,4 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/features/Expense/data/repository/ExpenseCardRepository.dart';
+import 'package:expense_tracker/features/Expense/data/repository/category_repository.dart';
+import 'package:expense_tracker/features/Expense/presentation/viewmodel/CategoryViewModel.dart';
+import 'package:expense_tracker/features/Expense/presentation/viewmodel/ExpenseCardViewModel.dart';
 import 'package:expense_tracker/features/Profile/presentation/viewmodel/profile_view_model.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +14,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'core/constants/KharchaThemeColors.dart';
 import 'core/utils/system_ui.dart';
+import 'features/Expense/data/repository/expense_repository.dart';
+import 'features/Expense/presentation/viewmodel/expense_viewmodel.dart';
 import 'features/Profile/data/datasource/profile_remote_data_source.dart';
 import 'features/Profile/data/repository/profile_repository_impl.dart';
 import 'features/Profile/domain/repository/profile_repository.dart';
@@ -30,7 +36,6 @@ import 'features/auth/domain/usecases/sign_up_with_email_password_use_case.dart'
 import 'features/auth/domain/usecases/verify_otp_use_case.dart';
 import 'features/auth/extra/AuthWrapper.dart';
 import 'features/auth/viewmodel/auth_viewmodel.dart';
-import 'features/Expense/viewmodel/expense_viewmodel.dart';
 import 'features/auth/data/services/auth_logger.dart';
 import 'features/auth/data/services/auth_cooldown_storage.dart';
 import 'features/auth/data/services/auth_debug_diagnostics.dart';
@@ -168,7 +173,15 @@ class ExpenseTrackerApp extends StatelessWidget {
             cooldownStorage: context.read<AuthCooldownStorage>(),
           ),
         ),
-        ChangeNotifierProvider(create: (_) => ExpenseViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => ExpenseViewModel(ExpenseRepository()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ExpenseCardViewModel(ExpenseCardRepository()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CategoryViewModel(CategoryRepository()),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

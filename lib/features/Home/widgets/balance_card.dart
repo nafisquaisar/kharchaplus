@@ -1,74 +1,172 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/KharchaThemeColors.dart';
 
 class BalanceCard extends StatelessWidget {
   const BalanceCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
-        ),
-        borderRadius: BorderRadius.circular(20),
+      margin: EdgeInsets.symmetric(
+        horizontal: width * 0.04,
+        vertical: 8, // ↓ reduced
       ),
+      padding: EdgeInsets.all(width * 0.035), // ↓ reduced
+
+      decoration: BoxDecoration(
+        color: AppColors.map,
+        borderRadius: BorderRadius.circular(16), // slightly tighter
+        image: const DecorationImage(
+          image: AssetImage("assets/images/map.jpg"),
+          fit: BoxFit.cover,
+          opacity: 0.3,
+        ),
+      ),
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// 🔹 Top Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text("Total Balance",
-                  style: TextStyle(color: Colors.white70)),
-              Text("This Month",
-                  style: TextStyle(color: Colors.white70)),
+            children: [
+              Image.asset(
+                "assets/images/chip.png",
+                height: width * 0.1, // ↓ reduced
+              ),
+              Icon(Icons.visibility_off,
+                  size: width * 0.05,
+                  color: AppColors.textSecondary),
             ],
           ),
-          const SizedBox(height: 10),
 
-          const Text(
-            "₹ 24,750.00",
+          SizedBox(height: width * 0.02),
+
+          /// 🔹 Title
+          Text(
+            "Current Month Balance",
             style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: AppColors.textSecondary,
+              fontSize: width * 0.03, // ↓ reduced
             ),
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: width * 0.01),
 
+          /// 🔹 Balance
+          Text(
+            "₹ 0",
+            style: TextStyle(
+              fontSize: width * 0.07, // ↓ reduced
+              fontWeight: FontWeight.bold,
+              color: AppColors.colorText,
+            ),
+          ),
+
+          SizedBox(height: width * 0.025),
+
+          /// 🔹 Month + Year + Transactions
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              _InfoItem(title: "Total Expense", value: "₹ 12,450"),
-              _InfoItem(title: "You Owe", value: "₹ 2,000"),
-              _InfoItem(title: "You'll Get", value: "₹ 1,500"),
+            children: [
+              Row(
+                children: [
+                  _infoBlock("Month", "May", width),
+                  SizedBox(width: width * 0.06),
+                  _infoBlock("Year", "2026", width),
+                ],
+              ),
+              Text(
+                "0 Txn",
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: width * 0.028,
+                ),
+              )
+            ],
+          ),
+
+          SizedBox(height: width * 0.03),
+
+          /// 🔹 Bottom Row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _incomeExpense(
+                icon: Icons.arrow_upward,
+                title: "Income",
+                amount: "₹0",
+                color: Colors.green,
+                width: width,
+              ),
+              _incomeExpense(
+                icon: Icons.arrow_downward,
+                title: "Expense",
+                amount: "₹0",
+                color: AppColors.deleteBackground,
+                width: width,
+              ),
             ],
           ),
         ],
       ),
     );
   }
-}
 
-class _InfoItem extends StatelessWidget {
-  final String title;
-  final String value;
-
-  const _InfoItem({required this.title, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _infoBlock(String title, String value, double width) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: const TextStyle(color: Colors.white70, fontSize: 12)),
-        const SizedBox(height: 4),
-        Text(value,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold)),
+        Text(
+          title,
+          style: TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: width * 0.028,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: width * 0.038,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _incomeExpense({
+    required IconData icon,
+    required String title,
+    required String amount,
+    required Color color,
+    required double width,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, color: color, size: width * 0.045),
+        SizedBox(width: width * 0.01),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                color: color,
+                fontSize: width * 0.028,
+              ),
+            ),
+            Text(
+              amount,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: width * 0.035,
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }

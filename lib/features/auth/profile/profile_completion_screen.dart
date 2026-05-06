@@ -194,6 +194,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
                             name: name,
                             email: email,
                             phone: phone,
+                            photoUrl: vm.currentUser?.photoUrl ?? "",
                           );
 
                           if (!context.mounted) {

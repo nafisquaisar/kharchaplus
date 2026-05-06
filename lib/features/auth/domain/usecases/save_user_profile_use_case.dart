@@ -10,13 +10,16 @@ class SaveUserProfileUseCase {
     required String name,
     required String email,
     required String phone,
+    required String? photoUrl,
   }) {
     return _repository.saveUserProfile(
       uid: uid,
       name: name,
       email: email,
       phone: phone,
+      photoUrl: photoUrl,
     );
   }
+
 }
 

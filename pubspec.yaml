@@ -29,6 +29,9 @@ dependencies:
   google_sign_in: ^6.2.1
   firebase_app_check: ^0.4.3
   sms_autofill: ^2.4.1
+  image_picker: ^1.2.2
+  flutter_slidable: ^4.0.3
+  another_flushbar: ^1.12.32
 
 dev_dependencies:
   flutter_test:

@@ -30,6 +30,7 @@ class FirestoreUserDataSource {
     required String name,
     required String email,
     required String phone,
+    required String? photoUrl
   }) async {
     final docRef = _firestore.collection('users').doc(uid);
     final snapshot = await docRef.get();
@@ -39,6 +40,7 @@ class FirestoreUserDataSource {
       'name': name,
       'email': email,
       'phone': phone,
+      "photoUrl": photoUrl,
       'lastLoginAt': FieldValue.serverTimestamp(),
     };
 

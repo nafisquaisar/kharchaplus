@@ -41,6 +41,7 @@ abstract class AuthRepository {
     required String name,
     required String email,
     required String phone,
+    required String? photoUrl,
   });
 
   Future<void> logout();

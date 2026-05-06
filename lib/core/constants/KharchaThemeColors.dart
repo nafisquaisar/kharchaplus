@@ -11,6 +11,7 @@ class AppColors {
   static const Color primary = Color(0xFF2EC4B6);
   static const Color accent = Color(0xFF1B7F8C);
   static const Color primarybg = Color(0xFFF4FEFE);
+  static const Color map = Color(0xFFDBF8F8);
 
   // 🔮 Gradient (used in containers / dashboard)
   static const Color totalContainerStart = Color(0xFF2EC4B6);
