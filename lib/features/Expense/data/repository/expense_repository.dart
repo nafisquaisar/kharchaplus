@@ -5,49 +5,342 @@ import '../model/ExpenseCardModel.dart';
 class ExpenseRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  DocumentReference<Map<String, dynamic>> mainSummaryRef(String userId) {
+    return _firestore
+        .collection("users")
+        .doc(userId)
+        .collection("summary")
+        .doc("main");
+  }
+
+  DocumentReference<Map<String, dynamic>> monthlySummaryRef(
+    String userId,
+    String month,
+  ) {
+    return _firestore
+        .collection("users")
+        .doc(userId)
+        .collection("monthly_summary")
+        .doc(month);
+  }
+
   // ➕ Add Expense + Update Card
   Future<void> addExpense(ExpenseModel expense) async {
-    final expenseRef = _firestore
-        .collection("users")
-        .doc(expense.userId)
-        .collection("expenses")
-        .doc(expense.id);
+    try {
+      print("");
+      print("=================================");
+      print("ADD EXPENSE START");
+      print("=================================");
 
-    final cardRef = _firestore
-        .collection("users")
-        .doc(expense.userId)
-        .collection("expense_cards")
-        .doc(expense.cardId);
+      // =========================
+      // PATHS
+      // =========================
 
-    await _firestore.runTransaction((tx) async {
-      tx.set(expenseRef, expense.toJson());
+      final expenseRef = _firestore
+          .collection("users")
+          .doc(expense.userId)
+          .collection("expenses")
+          .doc(expense.id);
 
-      final cardSnap = await tx.get(cardRef);
-      if (!cardSnap.exists) return;
+      print("EXPENSE REF => ${expenseRef.path}");
 
-      final card = ExpenseCardModel.fromJson(cardSnap.data()!);
+      final cardRef = _firestore
+          .collection("users")
+          .doc(expense.userId)
+          .collection("expense_cards")
+          .doc(expense.cardId);
 
-      final updatedCard = card.copyWith(
-        totalAmount: card.totalAmount + expense.amount,
-        totalItems: card.totalItems + 1,
-        updatedAt: DateTime.now(),
-      );
+      print("CARD REF => ${cardRef.path}");
 
-      tx.update(cardRef, updatedCard.toJson());
-    });
+      final mainSummary = mainSummaryRef(expense.userId);
+
+      print("MAIN SUMMARY REF => ${mainSummary.path}");
+
+      final monthId = getMonthId(expense.date);
+
+      print("MONTH ID => $monthId");
+
+      final monthlySummary = monthlySummaryRef(expense.userId, monthId);
+
+      print("MONTH SUMMARY REF => ${monthlySummary.path}");
+
+      print("");
+      print("EXPENSE JSON =>");
+      print(expense.toJson());
+
+      // =========================
+      // TRANSACTION
+      // =========================
+
+      await _firestore.runTransaction((tx) async {
+        print("");
+        print("TRANSACTION START");
+
+        // =========================
+        // ALL READS FIRST
+        // =========================
+
+        print("");
+        print("GETTING CARD SNAP");
+
+        final cardSnap = await tx.get(cardRef);
+
+        print("CARD EXISTS => ${cardSnap.exists}");
+
+        print("");
+        print("GETTING MAIN SUMMARY");
+
+        final mainSnap = await tx.get(mainSummary);
+
+        print("MAIN SUMMARY EXISTS => ${mainSnap.exists}");
+
+        print("");
+        print("GETTING MONTH SUMMARY");
+
+        final monthSnap = await tx.get(monthlySummary);
+
+        print("MONTH SUMMARY EXISTS => ${monthSnap.exists}");
+
+        // =========================
+        // NOW START WRITES
+        // =========================
+
+        print("");
+        print("SETTING EXPENSE");
+
+        tx.set(expenseRef, expense.toJson());
+
+        print("EXPENSE SET DONE");
+
+        // =========================
+        // CARD UPDATE
+        // =========================
+
+        if (cardSnap.exists) {
+          print("CARD DATA =>");
+          print(cardSnap.data());
+
+          final card = ExpenseCardModel.fromJson(cardSnap.data()!);
+
+          print("OLD CARD TOTAL => ${card.remainingAmount}");
+
+          final updatedExpense = card.totalExpense + expense.amount;
+
+          final updatedCard = card.copyWith(
+            totalExpense: updatedExpense,
+
+            remainingAmount: card.totalBudget - updatedExpense,
+            totalBudget: card.totalBudget,
+
+            totalItems: card.totalItems + 1,
+
+            updatedAt: DateTime.now(),
+          );
+
+          tx.update(cardRef, updatedCard.toJson());
+
+          print("CARD UPDATED");
+        } else {
+          print("");
+          print("CARD NOT FOUND");
+          print("CARD ID => ${expense.cardId}");
+        }
+
+        // =========================
+        // MAIN SUMMARY
+        // =========================
+
+        double totalExpense = 0;
+        double totalIncome = 0;
+
+        int totalTransactions = 0;
+
+        int expenseTransactions = 0;
+        int incomeTransactions = 0;
+
+        if (mainSnap.exists) {
+          final data = mainSnap.data()!;
+
+          print("OLD MAIN SUMMARY =>");
+          print(data);
+
+          totalExpense = (data["totalExpense"] ?? 0).toDouble();
+
+          totalIncome = (data["totalIncome"] ?? 0).toDouble();
+
+          totalTransactions = data["totalTransactions"] ?? 0;
+
+          expenseTransactions = data["totalExpenseTransactions"] ?? 0;
+
+          incomeTransactions = data["totalIncomeTransactions"] ?? 0;
+        }
+
+        totalTransactions++;
+
+        if (expense.type == ExpenseType.expense) {
+          totalExpense += expense.amount;
+
+          expenseTransactions++;
+        } else {
+          totalIncome += expense.amount;
+
+          incomeTransactions++;
+        }
+
+        print("");
+        print("NEW MAIN SUMMARY =>");
+
+        print({
+          "totalExpense": totalExpense,
+          "totalIncome": totalIncome,
+          "remainingBalance": totalIncome - totalExpense,
+        });
+
+        tx.set(mainSummary, {
+          "totalExpense": totalExpense,
+
+          "totalIncome": totalIncome,
+
+          "remainingBalance": totalIncome - totalExpense,
+
+          "totalTransactions": totalTransactions,
+
+          "totalExpenseTransactions": expenseTransactions,
+
+          "totalIncomeTransactions": incomeTransactions,
+
+          "updatedAt": DateTime.now(),
+        });
+
+        print("MAIN SUMMARY UPDATED");
+
+        // =========================
+        // MONTHLY SUMMARY
+        // =========================
+
+        double monthExpense = 0;
+        double monthIncome = 0;
+
+        int monthTransactions = 0;
+
+        int monthExpenseTransactions = 0;
+        int monthIncomeTransactions = 0;
+
+        if (monthSnap.exists) {
+          final data = monthSnap.data()!;
+
+          print("OLD MONTH SUMMARY =>");
+          print(data);
+
+          monthExpense = (data["totalExpense"] ?? 0).toDouble();
+
+          monthIncome = (data["totalIncome"] ?? 0).toDouble();
+
+          monthTransactions = data["totalTransactions"] ?? 0;
+
+          monthExpenseTransactions = data["totalExpenseTransactions"] ?? 0;
+
+          monthIncomeTransactions = data["totalIncomeTransactions"] ?? 0;
+        }
+
+        monthTransactions++;
+
+        if (expense.type == ExpenseType.expense) {
+          monthExpense += expense.amount;
+
+          monthExpenseTransactions++;
+        } else {
+          monthIncome += expense.amount;
+
+          monthIncomeTransactions++;
+        }
+
+        print("");
+        print("NEW MONTH SUMMARY =>");
+
+        print({"monthExpense": monthExpense, "monthIncome": monthIncome});
+
+        tx.set(monthlySummary, {
+          "month": monthId,
+
+          "totalExpense": monthExpense,
+
+          "totalIncome": monthIncome,
+
+          "remainingBalance": monthIncome - monthExpense,
+
+          "totalTransactions": monthTransactions,
+
+          "totalExpenseTransactions": monthExpenseTransactions,
+
+          "totalIncomeTransactions": monthIncomeTransactions,
+
+          "updatedAt": DateTime.now(),
+
+          "createdAt": DateTime.now(),
+        });
+
+        print("MONTH SUMMARY UPDATED");
+
+        print("");
+        print("TRANSACTION END");
+      });
+
+      // =========================
+      // VERIFY
+      // =========================
+
+      print("");
+      print("VERIFYING DOCUMENT");
+
+      final check = await expenseRef.get();
+
+      print("DOCUMENT EXISTS => ${check.exists}");
+
+      if (check.exists) {
+        print("FINAL DOCUMENT =>");
+        print(check.data());
+      }
+
+      print("");
+      print("=================================");
+      print("ADD EXPENSE SUCCESS");
+      print("=================================");
+    } catch (e, stack) {
+      print("");
+      print("=================================");
+      print("ADD EXPENSE ERROR");
+      print("=================================");
+
+      print(e);
+      print(stack);
+
+      rethrow;
+    }
+  }
+
+  String getMonthId(DateTime date) {
+    return "${date.year}-${date.month.toString().padLeft(2, '0')}";
   }
 
   // 📥 Get ALL Expenses (one-time fetch)
-  Future<List<ExpenseModel>> getExpenses(String userId) async {
-    final snapshot = await _firestore
+  Stream<List<ExpenseModel>> streamExpenses(String userId) {
+    return _firestore
         .collection("users")
         .doc(userId)
         .collection("expenses")
-        .get();
-
-    return snapshot.docs.map((doc) {
-      return ExpenseModel.fromJson(doc.data());
-    }).toList();
+        .orderBy("date", descending: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map((doc) {
+                return ExpenseModel.fromJson(doc.data());
+              })
+              .where((expense) {
+                return !expense.isDeleted;
+              })
+              .toList();
+        });
   }
 
   // 📥 Stream by cardId
@@ -57,12 +350,23 @@ class ExpenseRepository {
         .doc(userId)
         .collection("expenses")
         .where("cardId", isEqualTo: cardId)
-        .orderBy("date", descending: true)
-        .snapshots()
+        .snapshots(includeMetadataChanges: true)
         .map((snapshot) {
-          return snapshot.docs.map((doc) {
-            return ExpenseModel.fromJson(doc.data());
-          }).toList();
+          final expenses =
+              snapshot.docs
+                  .map((doc) {
+                    return ExpenseModel.fromJson(doc.data());
+                  })
+                  .where((expense) {
+                    return !expense.isDeleted;
+                  })
+                  .toList()
+                ..sort((a, b) => b.date.compareTo(a.date));
+
+          print("");
+          print("REALTIME COUNT => ${expenses.length}");
+
+          return expenses;
         });
   }
 
@@ -80,21 +384,146 @@ class ExpenseRepository {
         .collection("expense_cards")
         .doc(expense.cardId);
 
+    final mainSummary = mainSummaryRef(expense.userId);
+
+    final monthId = getMonthId(expense.date);
+
+    final monthlySummary = monthlySummaryRef(expense.userId, monthId);
+
     await _firestore.runTransaction((tx) async {
-      tx.delete(expenseRef);
+      // =========================
+      // ALL READS FIRST
+      // =========================
 
       final cardSnap = await tx.get(cardRef);
-      if (!cardSnap.exists) return;
 
-      final card = ExpenseCardModel.fromJson(cardSnap.data()!);
+      final mainSnap = await tx.get(mainSummary);
 
-      final updatedCard = card.copyWith(
-        totalAmount: card.totalAmount - expense.amount,
-        totalItems: (card.totalItems - 1).clamp(0, 9999),
-        updatedAt: DateTime.now(),
-      );
+      final monthSnap = await tx.get(monthlySummary);
 
-      tx.update(cardRef, updatedCard.toJson());
+      final now = DateTime.now();
+
+      // =========================
+      // SOFT DELETE EXPENSE
+      // =========================
+
+      tx.update(expenseRef, {"isDeleted": true, "deletedAt": now});
+
+      // =========================
+      // CARD UPDATE
+      // =========================
+
+      if (cardSnap.exists) {
+        final card = ExpenseCardModel.fromJson(cardSnap.data()!);
+
+        final updatedExpense = card.totalExpense - expense.amount;
+
+        final updatedCard = card.copyWith(
+          totalExpense: updatedExpense,
+
+          remainingAmount: card.totalBudget - updatedExpense,
+
+          totalBudget: card.totalBudget,
+
+          totalItems: (card.totalItems - 1).clamp(0, 999999),
+
+          updatedAt: now,
+        );
+
+        tx.update(cardRef, updatedCard.toJson());
+      }
+
+      // =========================
+      // MAIN SUMMARY REVERSE
+      // =========================
+
+      if (mainSnap.exists) {
+        final data = mainSnap.data()!;
+
+        double totalExpense = (data["totalExpense"] ?? 0).toDouble();
+
+        double totalIncome = (data["totalIncome"] ?? 0).toDouble();
+
+        int totalTransactions = data["totalTransactions"] ?? 0;
+
+        int expenseTransactions = data["totalExpenseTransactions"] ?? 0;
+
+        int incomeTransactions = data["totalIncomeTransactions"] ?? 0;
+
+        totalTransactions--;
+
+        if (expense.type == ExpenseType.expense) {
+          totalExpense -= expense.amount;
+
+          expenseTransactions--;
+        } else {
+          totalIncome -= expense.amount;
+
+          incomeTransactions--;
+        }
+
+        tx.update(mainSummary, {
+          "totalExpense": totalExpense,
+
+          "totalIncome": totalIncome,
+
+          "remainingBalance": totalIncome - totalExpense,
+
+          "totalTransactions": totalTransactions.clamp(0, 999999),
+
+          "totalExpenseTransactions": expenseTransactions.clamp(0, 999999),
+
+          "totalIncomeTransactions": incomeTransactions.clamp(0, 999999),
+
+          "updatedAt": now,
+        });
+      }
+
+      // =========================
+      // MONTHLY SUMMARY REVERSE
+      // =========================
+
+      if (monthSnap.exists) {
+        final data = monthSnap.data()!;
+
+        double monthExpense = (data["totalExpense"] ?? 0).toDouble();
+
+        double monthIncome = (data["totalIncome"] ?? 0).toDouble();
+
+        int monthTransactions = data["totalTransactions"] ?? 0;
+
+        int monthExpenseTransactions = data["totalExpenseTransactions"] ?? 0;
+
+        int monthIncomeTransactions = data["totalIncomeTransactions"] ?? 0;
+
+        monthTransactions--;
+
+        if (expense.type == ExpenseType.expense) {
+          monthExpense -= expense.amount;
+
+          monthExpenseTransactions--;
+        } else {
+          monthIncome -= expense.amount;
+
+          monthIncomeTransactions--;
+        }
+
+        tx.update(monthlySummary, {
+          "totalExpense": monthExpense,
+
+          "totalIncome": monthIncome,
+
+          "remainingBalance": monthIncome - monthExpense,
+
+          "totalTransactions": monthTransactions.clamp(0, 999999),
+
+          "totalExpenseTransactions": monthExpenseTransactions.clamp(0, 999999),
+
+          "totalIncomeTransactions": monthIncomeTransactions.clamp(0, 999999),
+
+          "updatedAt": now,
+        });
+      }
     });
   }
 
@@ -113,17 +542,25 @@ class ExpenseRepository {
         .doc(expense.cardId);
 
     await _firestore.runTransaction((tx) async {
+      final cardSnap = await tx.get(cardRef);
+
       tx.update(expenseRef, expense.toJson());
 
-      final cardSnap = await tx.get(cardRef);
       if (!cardSnap.exists) return;
 
       final card = ExpenseCardModel.fromJson(cardSnap.data()!);
 
       final diff = expense.amount - oldAmount;
 
+      final updatedExpense = card.totalExpense + diff;
+
       final updatedCard = card.copyWith(
-        totalAmount: card.totalAmount + diff,
+        totalExpense: updatedExpense,
+
+        remainingAmount: card.totalBudget - updatedExpense,
+
+        totalBudget: card.totalBudget,
+
         updatedAt: DateTime.now(),
       );
 
@@ -179,7 +616,6 @@ class ExpenseRepository {
         .fold<double>(0.0, (sum, e) => sum + e.amount);
   }
 
-
   // 💰 Total Income
   Future<double> getTotalIncome(String userId) async {
     final data = await getExpenses(userId);
@@ -194,6 +630,19 @@ class ExpenseRepository {
     final income = await getTotalIncome(userId);
     final expense = await getTotalExpense(userId);
     return income - expense;
+  }
+
+  Future<List<ExpenseModel>> getExpenses(String userId) async {
+    final snapshot = await _firestore
+        .collection("users")
+        .doc(userId)
+        .collection("expenses")
+        .orderBy("date", descending: true)
+        .get();
+
+    return snapshot.docs.map((doc) {
+      return ExpenseModel.fromJson(doc.data());
+    }).toList();
   }
 
   // 📈 Category-wise

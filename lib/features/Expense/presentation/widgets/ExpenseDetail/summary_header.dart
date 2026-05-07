@@ -36,11 +36,16 @@ class SummaryHeader extends StatelessWidget {
           ),
         ),
 
-        SizedBox(width: width * 0.01),
+        SizedBox(width: width * 0.03),
 
         /// 🔥 DATE TEXT
         Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment:
+          MainAxisAlignment.start,
+
+          crossAxisAlignment:
+          CrossAxisAlignment.start,
+
           children: [
 
             Text(

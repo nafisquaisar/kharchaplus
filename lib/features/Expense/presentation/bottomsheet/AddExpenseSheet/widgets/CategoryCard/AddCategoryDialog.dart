@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../../core/constants/KharchaThemeColors.dart';
-import '../../../../data/model/category_model.dart';
-import '../../../viewmodel/CategoryViewModel.dart';
+import '../../../../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../../data/model/category_model.dart';
+import '../../../../viewmodel/CategoryViewModel.dart';
 import 'category_icon.dart';
 
 void showAddCategoryDialog(BuildContext context) {

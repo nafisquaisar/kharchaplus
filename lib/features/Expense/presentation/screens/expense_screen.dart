@@ -1,15 +1,27 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constants/KharchaThemeColors.dart';
-import '../../../../core/constants/colors.dart';
 import '../../../../core/utils/AppFlushbar.dart';
+
+import '../../data/model/ExpenseCardModel.dart';
+import '../../data/repository/expense_repository.dart';
+
+import '../../utils/ExpenseCardShimmer.dart';
+
+import '../bottomsheet/CreateExpenseCardSheet/create_expense_card_sheet.dart';
+
 import '../viewmodel/ExpenseCardViewModel.dart';
+import '../viewmodel/ExpenseFilterViewModel.dart';
+import '../viewmodel/expense_viewmodel.dart';
+
 import '../widgets/ExpensePage/expense_card.dart';
 import '../widgets/ExpensePage/expense_search_bar.dart';
-import '../bottomsheet/create_expense_card_sheet.dart';
+
 import 'expense_detail_screen.dart';
 
 class ExpenseScreen extends StatefulWidget {
@@ -22,12 +34,18 @@ class ExpenseScreen extends StatefulWidget {
 class _ExpenseScreenState extends State<ExpenseScreen> {
   Map<String, dynamic>? _lastDeleted;
 
+  Timer? _deleteTimer;
+
   String searchQuery = "";
+
   final searchController = TextEditingController();
+
+  final Set<String> _pendingDeleteIds = {};
 
   @override
   void initState() {
     super.initState();
+
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
     Future.microtask(() {
@@ -36,148 +54,391 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
   }
 
   @override
+  void dispose() {
+    _deleteTimer?.cancel();
+
+    searchController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final vm = context.watch<ExpenseCardViewModel>();
+
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
+    /// =====================================================
+    /// FILTERED LIST
+    /// =====================================================
+
     final filteredCards = vm.cards.where((card) {
-      return card.title.toLowerCase().contains(searchQuery) ||
-          card.notes!.toLowerCase().contains(searchQuery);
+      /// HIDE PENDING DELETE
+
+      if (_pendingDeleteIds.contains(card.id)) {
+        return false;
+      }
+
+      final title = card.title.toLowerCase();
+
+      final notes = card.notes?.toLowerCase() ?? "";
+
+      return title.contains(searchQuery) || notes.contains(searchQuery);
     }).toList();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FF),
 
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
+      body: RefreshIndicator(
+        displacement: 40,
 
+        edgeOffset: 20,
 
-          /// 🔥 SEARCH BAR
-          ExpenseSearchBar(
-            controller: searchController,
-            onChanged: (value) {
-              setState(() {
-                searchQuery = value.toLowerCase();
-              });
-            },
+        color: Colors.deepPurple,
+
+        backgroundColor: Colors.white,
+
+        onRefresh: () {
+          return context.read<ExpenseCardViewModel>().refreshCards();
+        },
+
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
           ),
 
-          const SizedBox(height: 16),
+          padding: const EdgeInsets.all(16),
 
-          /// 🔥 EMPTY STATE
-          if (filteredCards.isEmpty)
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Text("No expenses found"),
-              ),
+          children: [
+            /// =====================================================
+            /// SEARCH
+            /// =====================================================
+            ExpenseSearchBar(
+              controller: searchController,
+
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value.toLowerCase();
+                });
+              },
             ),
 
-          ...filteredCards.map((card) {
-            final subtitle =
-                "${DateFormat('d MMM').format(card.startDate)} - ${DateFormat('d MMM').format(card.endDate)}";
+            const SizedBox(height: 16),
 
-            return Dismissible(
-              key: ValueKey(card.id),
+            /// =====================================================
+            /// SHIMMER
+            /// =====================================================
+            if (vm.isInitialLoading) const ExpenseCardShimmer(),
 
-              background: swipeBackground(
-                color: Colors.blue,
-                icon: Icons.edit,
-                alignment: Alignment.centerLeft,
-              ),
+            /// =====================================================
+            /// ERROR
+            /// =====================================================
+            if (!vm.isInitialLoading && vm.error != null)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 80),
 
-              secondaryBackground: swipeBackground(
-                color: Colors.red,
-                icon: Icons.delete,
-                alignment: Alignment.centerRight,
-              ),
+                  child: Column(
+                    children: [
+                      const Icon(
+                        Icons.error_outline_rounded,
 
-              confirmDismiss: (direction) async {
-                if (direction == DismissDirection.startToEnd) {
-                  final result = await showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (_) => CreateExpenseCardSheet(card: card),
-                  );
+                        size: 64,
 
-                  if (result != null && mounted) {
-                    showSnack(result);
-                  }
+                        color: Colors.redAccent,
+                      ),
 
-                  return false;
-                } else {
-                  return await showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      title: const Text("Delete"),
-                      content: const Text("Are you sure?"),
-                      actions: [
-                        TextButton(
-                          onPressed: () =>
-                              Navigator.pop(context, false),
-                          child: const Text("Cancel"),
+                      const SizedBox(height: 14),
+
+                      Text(
+                        vm.error!,
+
+                        style: const TextStyle(
+                          fontSize: 16,
+
+                          fontWeight: FontWeight.w600,
                         ),
-                        TextButton(
-                          onPressed: () =>
-                              Navigator.pop(context, true),
-                          child: const Text("Delete"),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              },
 
-              onDismissed: (_) {
-                _lastDeleted = {
-                  "card": card,
-                  "index": vm.cards.indexOf(card),
-                };
+                        textAlign: TextAlign.center,
+                      ),
 
-                vm.deleteCard(userId, card.id);
-                showUndoFlushbar();
-              },
+                      const SizedBox(height: 18),
 
-              child: ExpenseCard(
-                title: card.title,
-                subtitle: subtitle,
-                amount: card.totalAmount.toStringAsFixed(0),
-                items: "${card.totalItems} Items",
-                status: card.status,
-                progress: card.progress,
-                isHighlighted: card.status == "Active",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const ExpenseDetailScreen(),
-                    ),
-                  );
-                },
+                      ElevatedButton(
+                        onPressed: () {
+                          vm.listenCards(userId);
+                        },
+
+                        child: const Text("Retry"),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            );
-          }).toList(),
-        ],
+
+            /// =====================================================
+            /// EMPTY
+            /// =====================================================
+            if (!vm.isInitialLoading &&
+                vm.error == null &&
+                filteredCards.isEmpty)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 100),
+
+                  child: Column(
+                    children: [
+                      Icon(Icons.wallet_rounded, size: 70, color: Colors.grey),
+
+                      SizedBox(height: 14),
+
+                      Text(
+                        "No Expense Cards",
+
+                        style: TextStyle(
+                          fontSize: 18,
+
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+
+                      SizedBox(height: 8),
+
+                      Text(
+                        "Create your first expense card",
+
+                        style: TextStyle(color: Colors.grey),
+
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+            /// =====================================================
+            /// CARD LIST
+            /// =====================================================
+            if (!vm.isInitialLoading &&
+                vm.error == null &&
+                filteredCards.isNotEmpty)
+              ...filteredCards.map((card) {
+                final subtitle =
+                    "${DateFormat('d MMM').format(card.startDate)} - "
+                    "${DateFormat('d MMM').format(card.endDate)}";
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 14),
+
+                  child: Dismissible(
+                    key: ValueKey(card.id),
+
+                    background: swipeBackground(
+                      color: Colors.blue,
+
+                      icon: Icons.edit,
+
+                      alignment: Alignment.centerLeft,
+                    ),
+
+                    secondaryBackground: swipeBackground(
+                      color: Colors.red,
+
+                      icon: Icons.delete,
+
+                      alignment: Alignment.centerRight,
+                    ),
+
+                    confirmDismiss: (direction) async {
+                      /// =================================================
+                      /// EDIT
+                      /// =================================================
+
+                      if (direction == DismissDirection.startToEnd) {
+                        final result = await showModalBottomSheet(
+                          context: context,
+
+                          isScrollControlled: true,
+
+                          backgroundColor: Colors.transparent,
+
+                          builder: (_) {
+                            return CreateExpenseCardSheet(card: card);
+                          },
+                        );
+
+                        if (result != null && mounted) {
+                          showSnack(result);
+                        }
+
+                        return false;
+                      }
+
+                      /// =================================================
+                      /// DELETE CONFIRM
+                      /// =================================================
+
+                      return await showDialog(
+                        context: context,
+
+                        builder: (_) {
+                          return AlertDialog(
+                            title: const Text("Delete Expense Card"),
+
+                            content: const Text(
+                              "Are you sure you want to delete this expense card?",
+                            ),
+
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, false);
+                                },
+
+                                child: const Text("Cancel"),
+                              ),
+
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, true);
+                                },
+
+                                child: const Text("Delete"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+
+                    onDismissed: (_) {
+                      deleteCardWithUndo(card, userId);
+                    },
+
+                    child: ExpenseCard(
+                      title: card.title,
+
+                      subtitle: subtitle,
+
+                      amount: card.totalExpense.toStringAsFixed(0),
+
+
+                      items: "${card.totalItems} Items",
+
+                      status: card.status,
+
+                      progress: card.progress,
+
+                      isHighlighted: card.status == "Active",
+
+                      onTap: () {
+                        Navigator.push(
+                          context,
+
+                          MaterialPageRoute(
+                            builder: (_) {
+                              return MultiProvider(
+                                providers: [
+                                  ChangeNotifierProvider(
+                                    create: (_) =>
+                                        ExpenseViewModel(ExpenseRepository())
+                                          ..listenExpensesByCard(card.id),
+                                  ),
+
+                                  ChangeNotifierProvider(
+                                    create: (_) => ExpenseFilterViewModel(),
+                                  ),
+                                ],
+
+                                child: ExpenseDetailScreen(cardId: card.id),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              }),
+          ],
+        ),
       ),
 
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.accent,
+
         onPressed: () async {
           final result = await showModalBottomSheet(
             context: context,
+
             isScrollControlled: true,
-            builder: (_) => const CreateExpenseCardSheet(),
+
+            backgroundColor: Colors.transparent,
+
+            builder: (_) {
+              return const CreateExpenseCardSheet();
+            },
           );
 
           if (result != null && mounted) {
             showSnack(result);
           }
         },
+
         child: const Icon(Icons.add, color: AppColors.textPrimary),
       ),
     );
   }
+
+  /// =====================================================
+  /// DELETE WITH UNDO
+  /// =====================================================
+
+  Future<void> deleteCardWithUndo(ExpenseCardModel card, String userId) async {
+    /// HIDE UI INSTANTLY
+
+    setState(() {
+      _pendingDeleteIds.add(card.id);
+    });
+
+    /// TEMP SAVE
+
+    _lastDeleted = {"card": card};
+
+    /// SHOW UNDO
+
+    AppFlushbar.showUndo(
+      context,
+
+      message: "Expense card deleted",
+
+      onUndo: () async {
+        _deleteTimer?.cancel();
+
+        setState(() {
+          _pendingDeleteIds.remove(card.id);
+        });
+
+        _lastDeleted = null;
+      },
+    );
+
+    /// AUTO DELETE AFTER 5 SEC
+
+    _deleteTimer?.cancel();
+
+    _deleteTimer = Timer(const Duration(seconds: 5), () async {
+      if (_lastDeleted != null) {
+        await context.read<ExpenseCardViewModel>().deleteCard(userId, card.id);
+
+        _lastDeleted = null;
+      }
+    });
+  }
+
+  /// =====================================================
+  /// FLUSHBAR
+  /// =====================================================
 
   void showSnack(String type) {
     if (type == "updated") {
@@ -189,34 +450,28 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     }
   }
 
-  void showUndoFlushbar() {
-    AppFlushbar.showUndo(
-      context,
-      message: "Expense deleted",
-      onUndo: () async {
-        if (_lastDeleted == null) return;
-
-        final card = _lastDeleted!["card"];
-        await context.read<ExpenseCardViewModel>().addCard(card);
-
-        _lastDeleted = null;
-      },
-    );
-  }
+  /// =====================================================
+  /// SWIPE BG
+  /// =====================================================
 
   Widget swipeBackground({
     required Color color,
+
     required IconData icon,
+
     required Alignment alignment,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 20),
+
       alignment: alignment,
+
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(14),
+        color: color.withOpacity(0.12),
+
+        borderRadius: BorderRadius.circular(18),
       ),
+
       child: Icon(icon, color: color),
     );
   }

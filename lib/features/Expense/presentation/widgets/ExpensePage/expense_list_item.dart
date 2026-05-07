@@ -4,172 +4,472 @@ import 'package:intl/intl.dart';
 import '../../../data/model/ExpenseModel.dart';
 
 class ExpenseListItem extends StatelessWidget {
+
   final ExpenseModel expense;
+
+  final Future<void> Function() onEdit;
+
+  final Future<void> Function() onDelete;
 
   const ExpenseListItem({
     super.key,
     required this.expense,
+    required this.onEdit,
+    required this.onDelete,
   });
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
 
-    final isExpense = expense.type == ExpenseType.expense;
+    final width =
+        MediaQuery.of(context).size.width;
 
-    final amountColor = isExpense ? Colors.red : Colors.green;
+    final isExpense =
+        expense.type ==
+            ExpenseType.expense;
+
+    final amountColor =
+    isExpense
+        ? Colors.red
+        : Colors.green;
 
     final formattedDate =
-    DateFormat("d MMM yyyy").format(expense.date);
+    DateFormat("d MMM yyyy")
+        .format(expense.date);
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+    return Dismissible(
+
+      key: ValueKey(expense.id),
+
+      direction:
+      DismissDirection.horizontal,
+
+      /// 🔥 RIGHT SWIPE → UPDATE
+      background: _swipeBackground(
+
+        color: Colors.blue,
+
+        icon: Icons.edit,
+
+        alignment:
+        Alignment.centerLeft,
       ),
 
-      child: Row(
-        children: [
+      /// 🔥 LEFT SWIPE → DELETE
+      secondaryBackground:
+      _swipeBackground(
 
-          /// 🔥 CATEGORY ICON
-          Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-              color: _getCategoryColor(expense.categoryName)
-                  .withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              _getCategoryIcon(expense.categoryName),
-              color: _getCategoryColor(expense.categoryName),
-              size: 20,
-            ),
-          ),
+        color: Colors.red,
 
-          const SizedBox(width: 12),
+        icon: Icons.delete,
 
-          /// 🔥 TITLE + SUB INFO
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+        alignment:
+        Alignment.centerRight,
+      ),
 
-                /// CATEGORY NAME
-                Text(
-                  expense.categoryName,
-                  style: TextStyle(
-                    fontSize: width * 0.038,
-                    fontWeight: FontWeight.w600,
+      confirmDismiss:
+          (direction) async {
+
+        /// 🔥 UPDATE
+
+        if (direction ==
+            DismissDirection
+                .startToEnd) {
+
+          await onEdit();
+
+          return false;
+        }
+
+        /// 🔥 DELETE
+
+        final confirm =
+        await showDialog<bool>(
+
+          context: context,
+
+          builder: (_) {
+
+            return AlertDialog(
+
+              title: const Text(
+                "Delete Expense",
+              ),
+
+              content: const Text(
+                "Are you sure you want to delete this transaction?",
+              ),
+
+              actions: [
+
+                TextButton(
+
+                  onPressed: () {
+
+                    Navigator.pop(
+                      context,
+                      false,
+                    );
+                  },
+
+                  child: const Text(
+                    "Cancel",
                   ),
                 ),
 
-                const SizedBox(height: 4),
+                ElevatedButton(
 
-                /// DATE + PAYMENT MODE
-                Row(
-                  children: [
-                    Text(
-                      formattedDate,
-                      style: TextStyle(
-                        fontSize: width * 0.030,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
+                  onPressed: () {
 
-                    const SizedBox(width: 8),
+                    Navigator.pop(
+                      context,
+                      true,
+                    );
+                  },
 
-                    _paymentChip(expense.paymentMode),
-                  ],
-                ),
-
-                /// NOTE (optional)
-                if (expense.note != null &&
-                    expense.note!.isNotEmpty) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    expense.note!,
-                    style: TextStyle(
-                      fontSize: width * 0.028,
-                      color: Colors.grey.shade500,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  child: const Text(
+                    "Delete",
                   ),
-                ],
+                ),
               ],
-            ),
+            );
+          },
+        );
+
+        return confirm ?? false;
+      },
+
+      onDismissed: (_) async {
+
+        await onDelete();
+      },
+
+      /// 🔥 ORIGINAL UI (UNCHANGED)
+      child: Container(
+
+        margin:
+        const EdgeInsets.only(
+          bottom: 10,
+        ),
+
+        padding:
+        const EdgeInsets.all(12),
+
+        decoration: BoxDecoration(
+
+          color: Colors.white,
+
+          borderRadius:
+          BorderRadius.circular(
+            14,
           ),
 
-          /// 🔥 AMOUNT
-          Text(
-            "${isExpense ? "-" : "+"}₹${expense.amount.toStringAsFixed(0)}",
-            style: TextStyle(
-              fontSize: width * 0.038,
-              fontWeight: FontWeight.bold,
-              color: amountColor,
+          boxShadow: [
+
+            BoxShadow(
+
+              color: Colors.black
+                  .withOpacity(
+                0.03,
+              ),
+
+              blurRadius: 6,
+
+              offset:
+              const Offset(
+                0,
+                2,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+
+        child: Row(
+
+          children: [
+
+            /// 🔥 CATEGORY ICON
+            Container(
+
+              height: 40,
+              width: 40,
+
+              decoration:
+              BoxDecoration(
+
+                color:
+                _getCategoryColor(
+                  expense.categoryName,
+                ).withOpacity(
+                  0.1,
+                ),
+
+                borderRadius:
+                BorderRadius.circular(
+                  12,
+                ),
+              ),
+
+              child: Icon(
+
+                _getCategoryIcon(
+                  expense.categoryName,
+                ),
+
+                color:
+                _getCategoryColor(
+                  expense.categoryName,
+                ),
+
+                size: 20,
+              ),
+            ),
+
+            const SizedBox(width: 12),
+
+            /// 🔥 CONTENT
+            Expanded(
+
+              child: Column(
+
+                crossAxisAlignment:
+                CrossAxisAlignment
+                    .start,
+
+                children: [
+
+                  Text(
+
+                    expense.categoryName,
+
+                    style: TextStyle(
+
+                      fontSize:
+                      width * 0.038,
+
+                      fontWeight:
+                      FontWeight.w600,
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: 4,
+                  ),
+
+                  Row(
+
+                    children: [
+
+                      Text(
+
+                        formattedDate,
+
+                        style: TextStyle(
+
+                          fontSize:
+                          width *
+                              0.030,
+
+                          color: Colors
+                              .grey
+                              .shade600,
+                        ),
+                      ),
+
+                      const SizedBox(
+                        width: 8,
+                      ),
+
+                      _paymentChip(
+                        expense
+                            .paymentMode,
+                      ),
+                    ],
+                  ),
+
+                  if (expense.note !=
+                      null &&
+                      expense.note!
+                          .isNotEmpty) ...[
+
+                    const SizedBox(
+                      height: 2,
+                    ),
+
+                    Text(
+
+                      expense.note!,
+
+                      style: TextStyle(
+
+                        fontSize:
+                        width *
+                            0.028,
+
+                        color: Colors
+                            .grey
+                            .shade500,
+                      ),
+
+                      maxLines: 1,
+
+                      overflow:
+                      TextOverflow
+                          .ellipsis,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+
+            Text(
+
+              "${isExpense ? "-" : "+"}₹${expense.amount.toStringAsFixed(0)}",
+
+              style: TextStyle(
+
+                fontSize:
+                width * 0.038,
+
+                fontWeight:
+                FontWeight.bold,
+
+                color: amountColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  /// 🔥 PAYMENT MODE CHIP
-  Widget _paymentChip(PaymentMode mode) {
+  /// 🔥 SWIPE BG
+
+  Widget _swipeBackground({
+
+    required Color color,
+
+    required IconData icon,
+
+    required Alignment alignment,
+  }) {
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(6),
+
+      margin:
+      const EdgeInsets.only(
+        bottom: 10,
       ),
-      child: Text(
-        mode.name.toUpperCase(),
-        style: const TextStyle(fontSize: 10),
+
+      padding:
+      const EdgeInsets.symmetric(
+        horizontal: 20,
+      ),
+
+      alignment: alignment,
+
+      decoration: BoxDecoration(
+
+        color:
+        color.withOpacity(0.15),
+
+        borderRadius:
+        BorderRadius.circular(
+          14,
+        ),
+      ),
+
+      child: Icon(
+        icon,
+        color: color,
       ),
     );
   }
 
-  /// 🔥 CATEGORY ICON (BASIC MAPPING)
-  IconData _getCategoryIcon(String category) {
-    switch (category.toLowerCase()) {
+  /// 🔥 PAYMENT CHIP
+
+  Widget _paymentChip(
+      PaymentMode mode) {
+
+    return Container(
+
+      padding:
+      const EdgeInsets.symmetric(
+        horizontal: 6,
+        vertical: 2,
+      ),
+
+      decoration: BoxDecoration(
+
+        color:
+        Colors.grey.shade200,
+
+        borderRadius:
+        BorderRadius.circular(
+          6,
+        ),
+      ),
+
+      child: Text(
+
+        mode.name.toUpperCase(),
+
+        style:
+        const TextStyle(
+          fontSize: 10,
+        ),
+      ),
+    );
+  }
+
+  IconData _getCategoryIcon(
+      String category) {
+
+    switch (
+    category.toLowerCase()) {
+
       case "food":
         return Icons.restaurant;
+
       case "rent":
         return Icons.home;
+
       case "salary":
-        return Icons.account_balance_wallet;
+        return Icons
+            .account_balance_wallet;
+
       case "transport":
         return Icons.directions_car;
+
       case "shopping":
         return Icons.shopping_bag;
+
       default:
         return Icons.category;
     }
   }
 
-  /// 🔥 CATEGORY COLOR
-  Color _getCategoryColor(String category) {
-    switch (category.toLowerCase()) {
+  Color _getCategoryColor(
+      String category) {
+
+    switch (
+    category.toLowerCase()) {
+
       case "food":
         return Colors.orange;
+
       case "rent":
         return Colors.blue;
+
       case "salary":
         return Colors.green;
+
       case "transport":
         return Colors.purple;
+
       case "shopping":
         return Colors.teal;
+
       default:
         return Colors.grey;
     }

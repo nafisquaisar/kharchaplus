@@ -15,6 +15,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'core/constants/KharchaThemeColors.dart';
 import 'core/utils/system_ui.dart';
 import 'features/Expense/data/repository/expense_repository.dart';
+import 'features/Expense/presentation/viewmodel/ExpenseFilterViewModel.dart';
 import 'features/Expense/presentation/viewmodel/expense_viewmodel.dart';
 import 'features/Profile/data/datasource/profile_remote_data_source.dart';
 import 'features/Profile/data/repository/profile_repository_impl.dart';
@@ -181,7 +182,11 @@ class ExpenseTrackerApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => CategoryViewModel(CategoryRepository()),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>
+              ExpenseFilterViewModel(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

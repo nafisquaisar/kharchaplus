@@ -43,17 +43,19 @@ class SummaryCard extends StatelessWidget {
         children: [
 
           /// 🔥 HEADER + TREND (IMPORTANT CHANGE)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SummaryHeader(
-                startDate: startDate,
-                endDate: endDate,
-                trendText: trendText,
-              ),
+          Align(
+            alignment: Alignment.centerLeft,
 
-            ],
+            child: SummaryHeader(
+
+              startDate: startDate,
+
+              endDate: endDate,
+
+              trendText: trendText,
+            ),
           ),
+
 
           Container(
             height: 1,

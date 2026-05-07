@@ -3,14 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/constants/KharchaThemeColors.dart';
-import '../../../../core/utils/AppFlushbar.dart';
-import '../../data/model/ExpenseCardModel.dart';
-import '../viewmodel/ExpenseCardViewModel.dart';
-import 'CreateExpenseCardSheet/widgets/DateSection.dart';
-import 'CreateExpenseCardSheet/widgets/DetailsSection.dart';
-import 'CreateExpenseCardSheet/widgets/SaveButton.dart';
-import 'CreateExpenseCardSheet/widgets/SheetHeader.dart';
+import '../../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../../core/utils/AppFlushbar.dart';
+import '../../../../../core/utils/IdGenerator.dart';
+import '../../../data/model/ExpenseCardModel.dart';
+import '../../viewmodel/ExpenseCardViewModel.dart';
+import 'widgets/DateSection.dart';
+import 'widgets/DetailsSection.dart';
+import 'widgets/SaveButton.dart';
+import 'widgets/SheetHeader.dart';
 
 class CreateExpenseCardSheet extends StatefulWidget {
   final ExpenseCardModel? card;
@@ -185,18 +186,21 @@ class _CreateExpenseCardSheetState
       final now = DateTime.now();
 
       final card = ExpenseCardModel(
-        id: widget.card?.id ?? now.millisecondsSinceEpoch.toString(),
+        id: widget.card?.id ?? IdGenerator.generate(),
         userId: userId,
         title: title,
         notes: notes,
         startDate: startDate!,
         endDate: finalEndDate,
-        totalAmount: widget.card?.totalAmount ?? 0,
+        totalExpense: widget.card?.totalExpense ?? 0,
+        totalBudget: widget.card?.totalBudget ?? 0,
+        remainingAmount: widget.card?.remainingAmount ?? 0,
         totalItems: widget.card?.totalItems ?? 0,
         status: calculateStatus(startDate!, finalEndDate),
         progress: calculateProgress(startDate!, finalEndDate),
         createdAt: widget.card?.createdAt ?? now,
         updatedAt: now,
+        isDeleted: false,
       );
 
       final vm = context.read<ExpenseCardViewModel>();

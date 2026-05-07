@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/KharchaThemeColors.dart';
+import '../../../data/model/ExpenseModel.dart';
 
 class FilterRow extends StatelessWidget {
-  final String selected;
-  final Function(String) onChanged;
+  final ExpenseType? selectedType;
+
+  final Function(ExpenseType?)
+  onChanged;
   final VoidCallback onFilterTap;
   final VoidCallback onAddTap; // ✅ NEW
 
   const FilterRow({
     super.key,
-    required this.selected,
     required this.onChanged,
     required this.onFilterTap,
     required this.onAddTap,
+    required this.selectedType,
   });
 
   @override
@@ -28,11 +31,23 @@ class FilterRow extends StatelessWidget {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                _chip("All"),
+                _chip(
+                  label: "All",
+                  type: null,
+                ),
                 const SizedBox(width: 8),
-                _chip("Expense"),
+
+                _chip(
+                  label: "Expense",
+                  type: ExpenseType.expense,
+                ),
                 const SizedBox(width: 8),
-                _chip("Income"),
+
+                _chip(
+                  label: "Income",
+                  type: ExpenseType.income,
+                ),
+
               ],
             ),
           ),
@@ -75,27 +90,60 @@ class FilterRow extends StatelessWidget {
     );
   }
 
-  Widget _chip(String text) {
-    final isSelected = selected == text;
+  Widget _chip({
+
+    required String label,
+
+    required ExpenseType? type,
+  }) {
+
+    final isSelected =
+        selectedType == type;
 
     return GestureDetector(
-      onTap: () => onChanged(text),
+
+      onTap: () => onChanged(type),
+
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+
+        padding:
+        const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 6,
+        ),
+
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.accent : Colors.white,
-          borderRadius: BorderRadius.circular(18),
+
+          color: isSelected
+              ? AppColors.accent
+              : Colors.white,
+
+          borderRadius:
+          BorderRadius.circular(18),
+
           border: Border.all(
-            color: isSelected ? AppColors.accent : Colors.grey.shade300,
+
+            color: isSelected
+                ? AppColors.accent
+                : Colors.grey.shade300,
           ),
         ),
+
         child: Center(
           child: Text(
-            text,
+
+            label,
+
             style: TextStyle(
+
               fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: isSelected ? Colors.white : Colors.black87,
+
+              fontWeight:
+              FontWeight.w500,
+
+              color: isSelected
+                  ? Colors.white
+                  : Colors.black87,
             ),
           ),
         ),

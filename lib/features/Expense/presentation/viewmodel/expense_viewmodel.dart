@@ -1,152 +1,572 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 import '../../data/model/ExpenseModel.dart';
 import '../../data/repository/expense_repository.dart';
 
 class ExpenseViewModel extends ChangeNotifier {
+
   final ExpenseRepository _repository;
 
   ExpenseViewModel(this._repository);
 
-  // 📦 State
+  StreamSubscription<List<ExpenseModel>>?
+  _expenseSubscription;
+
+  // =========================================================
+  // STATE
+  // =========================================================
+
   List<ExpenseModel> _expenses = [];
-  List<ExpenseModel> get expenses => _expenses;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  List<ExpenseModel> get expenses =>
+      _expenses;
 
+  /// INITIAL SCREEN LOADING
+  bool _isInitialLoading = false;
+
+  bool get isInitialLoading =>
+      _isInitialLoading;
+
+  /// PULL TO REFRESH
+  bool _isRefreshing = false;
+
+  bool get isRefreshing =>
+      _isRefreshing;
+
+  /// ADD / UPDATE / DELETE
+  bool _isMutating = false;
+
+  bool get isMutating =>
+      _isMutating;
+
+  /// ERROR
   String? _error;
-  String? get error => _error;
 
-  // 📊 Summary
+  String? get error =>
+      _error;
+
+  /// CURRENT USER
+  String get userId =>
+      FirebaseAuth
+          .instance
+          .currentUser!
+          .uid;
+
+  // =========================================================
+  // SUMMARY
+  // =========================================================
+
   double _totalExpense = 0;
-  double get totalExpense => _totalExpense;
+
+  double get totalExpense =>
+      _totalExpense;
 
   double _totalIncome = 0;
-  double get totalIncome => _totalIncome;
+
+  double get totalIncome =>
+      _totalIncome;
 
   double _balance = 0;
-  double get balance => _balance;
 
-  String get userId => FirebaseAuth.instance.currentUser!.uid;
+  double get balance =>
+      _balance;
 
-  // 🔄 Load All Expenses
-  Future<void> loadExpenses() async {
+  // =========================================================
+  // REALTIME ALL EXPENSES
+  // =========================================================
+
+  void listenExpenses() {
+
+    if (_expenses.isEmpty) {
+
+      _isInitialLoading = true;
+
+      notifyListeners();
+    }
+
+    _expenseSubscription?.cancel();
+
+    _expenseSubscription =
+        _repository
+            .streamExpenses(userId)
+            .listen(
+
+              (data) {
+
+            _expenses = data;
+
+            _calculateSummaryWithoutNotify();
+
+            _error = null;
+
+            _isInitialLoading = false;
+
+            notifyListeners();
+          },
+
+          onError: (e) {
+
+            _error =
+            "Realtime sync failed";
+
+            _isInitialLoading = false;
+
+            notifyListeners();
+          },
+        );
+  }
+
+  // =========================================================
+  // REALTIME CARD EXPENSES
+  // =========================================================
+
+  void listenExpensesByCard(
+      String cardId,
+      ) {
+
+    if (_expenses.isEmpty) {
+
+      _isInitialLoading = true;
+
+      notifyListeners();
+    }
+
+    _expenseSubscription?.cancel();
+
+    _expenseSubscription =
+        _repository
+            .getExpensesByCard(
+          userId,
+          cardId,
+        )
+            .listen(
+
+              (data) {
+
+            _expenses = data;
+
+            _calculateSummaryWithoutNotify();
+
+            _error = null;
+
+            _isInitialLoading = false;
+
+            _isRefreshing = false;
+
+            notifyListeners();
+          },
+
+          onError: (e) {
+
+            _error =
+            "Realtime sync failed";
+
+            _isInitialLoading = false;
+
+            _isRefreshing = false;
+
+            notifyListeners();
+          },
+        );
+  }
+
+  // =========================================================
+  // PULL REFRESH
+  // =========================================================
+
+  Future<void> refreshExpenses(
+      String cardId,
+      ) async {
+
     try {
-      _setLoading(true);
 
-      final data = await _repository.getExpenses(userId); // ✅ FIXED
-      _expenses = data;
+      /// already refreshing
+      if (_isRefreshing) {
+        return;
+      }
 
-      await _calculateSummary();
+      _isRefreshing = true;
+
+      notifyListeners();
+
+      /// simulate refresh delay
+      /// realtime stream already active hai
+      await Future.delayed(
+        const Duration(
+          milliseconds: 700,
+        ),
+      );
 
       _error = null;
+
     } catch (e) {
-      _error = "Failed to load expenses";
+
+      _error =
+      "Refresh failed";
+
     } finally {
-      _setLoading(false);
-    }
-  }
 
-  // ➕ Add Expense
-  Future<void> addExpense(ExpenseModel expense) async {
-    try {
-      await _repository.addExpense(expense);
-      await loadExpenses();
-    } catch (e) {
-      _error = "Failed to add expense";
+      _isRefreshing = false;
+
       notifyListeners();
     }
   }
 
-  // ❌ Delete Expense (FIXED)
-  Future<void> deleteExpense(ExpenseModel expense) async {
+
+  // =========================================================
+  // ADD EXPENSE
+  // =========================================================
+
+  Future<void> addExpense(
+      ExpenseModel expense,
+      ) async {
+
     try {
-      await _repository.deleteExpense(expense); // ✅ FIXED
-      await loadExpenses();
+
+      _isMutating = true;
+
+      notifyListeners();
+
+      await _repository
+          .addExpense(expense);
+
+      _error = null;
+
     } catch (e) {
-      _error = "Failed to delete expense";
+
+      _error = e.toString();
+
+      notifyListeners();
+
+      rethrow;
+
+    } finally {
+
+      _isMutating = false;
+
       notifyListeners();
     }
   }
 
-  // ✏️ Update Expense (FIXED)
+  // =========================================================
+  // UPDATE EXPENSE
+  // =========================================================
+
   Future<void> updateExpense(
-      ExpenseModel expense, double oldAmount) async {
+      ExpenseModel expense,
+      double oldAmount,
+      ) async {
+
     try {
-      await _repository.updateExpense(expense, oldAmount); // ✅ FIXED
-      await loadExpenses();
+
+      _isMutating = true;
+
+      notifyListeners();
+
+      await _repository
+          .updateExpense(
+        expense,
+        oldAmount,
+      );
+
+      _error = null;
+
     } catch (e) {
-      _error = "Failed to update expense";
+
+      _error =
+      "Failed to update expense";
+
+      notifyListeners();
+
+    } finally {
+
+      _isMutating = false;
+
       notifyListeners();
     }
   }
 
-  // 🔍 Filter by Date
-  Future<void> filterByDate(DateTime start, DateTime end) async {
+  // =========================================================
+  // HARD DELETE
+  // =========================================================
+
+  Future<void> deleteExpense(
+      ExpenseModel expense,
+      ) async {
+
     try {
-      _setLoading(true);
+
+      _isMutating = true;
+
+      notifyListeners();
+
+      await _repository
+          .deleteExpense(expense);
+
+      _error = null;
+
+    } catch (e) {
+
+      _error =
+      "Failed to delete expense";
+
+      notifyListeners();
+
+    } finally {
+
+      _isMutating = false;
+
+      notifyListeners();
+    }
+  }
+
+  // =========================================================
+  // SOFT DELETE
+  // =========================================================
+
+  Future<void> softDeleteExpense(
+      ExpenseModel expense,
+      ) async {
+
+    try {
+
+      _isMutating = true;
+
+      notifyListeners();
+
+      final deletedExpense =
+      expense.copyWith(
+
+        isDeleted: true,
+
+        updatedAt:
+        DateTime.now(),
+      );
+
+      await _repository
+          .updateExpense(
+        deletedExpense,
+        expense.amount,
+      );
+
+      _error = null;
+
+    } catch (e) {
+
+      _error =
+      "Failed to delete expense";
+
+      notifyListeners();
+
+    } finally {
+
+      _isMutating = false;
+
+      notifyListeners();
+    }
+  }
+
+  // =========================================================
+  // FILTER DATE
+  // =========================================================
+
+  Future<void> filterByDate(
+      DateTime start,
+      DateTime end,
+      ) async {
+
+    try {
+
+      _isInitialLoading = true;
+
+      notifyListeners();
 
       _expenses =
-      await _repository.getExpensesByDate(userId, start, end); // ✅ FIXED
+      await _repository
+          .getExpensesByDate(
+        userId,
+        start,
+        end,
+      );
 
-      await _calculateSummary();
+      _calculateSummaryWithoutNotify();
 
       _error = null;
+
     } catch (e) {
+
       _error = "Filter failed";
+
     } finally {
-      _setLoading(false);
+
+      _isInitialLoading = false;
+
+      notifyListeners();
     }
   }
 
-  // 📂 Filter by Category
-  Future<void> filterByCategory(String categoryId) async {
+  // =========================================================
+  // FILTER CATEGORY
+  // =========================================================
+
+  Future<void> filterByCategory(
+      String categoryId,
+      ) async {
+
     try {
-      _setLoading(true);
 
-      _expenses = await _repository.getExpensesByCategory(
-          userId, categoryId); // ✅ FIXED
+      _isInitialLoading = true;
 
-      await _calculateSummary();
-
-      _error = null;
-    } catch (e) {
-      _error = "Filter failed";
-    } finally {
-      _setLoading(false);
-    }
-  }
-
-  // 💳 Filter by Payment Mode
-  Future<void> filterByPaymentMode(PaymentMode mode) async {
-    try {
-      _setLoading(true);
+      notifyListeners();
 
       _expenses =
-      await _repository.getByPaymentMode(userId, mode); // ✅ FIXED
+      await _repository
+          .getExpensesByCategory(
+        userId,
+        categoryId,
+      );
 
-      await _calculateSummary();
+      _calculateSummaryWithoutNotify();
 
       _error = null;
+
     } catch (e) {
+
       _error = "Filter failed";
+
     } finally {
-      _setLoading(false);
+
+      _isInitialLoading = false;
+
+      notifyListeners();
     }
   }
 
-  // 📊 Calculate Summary
-  Future<void> _calculateSummary() async {
-    _totalExpense = await _repository.getTotalExpense(userId); // ✅ FIXED
-    _totalIncome = await _repository.getTotalIncome(userId);   // ✅ FIXED
-    _balance = await _repository.getBalance(userId);           // ✅ FIXED
+  // =========================================================
+  // FILTER PAYMENT MODE
+  // =========================================================
+
+  Future<void> filterByPaymentMode(
+      PaymentMode mode,
+      ) async {
+
+    try {
+
+      _isInitialLoading = true;
+
+      notifyListeners();
+
+      _expenses =
+      await _repository
+          .getByPaymentMode(
+        userId,
+        mode,
+      );
+
+      _calculateSummaryWithoutNotify();
+
+      _error = null;
+
+    } catch (e) {
+
+      _error = "Filter failed";
+
+    } finally {
+
+      _isInitialLoading = false;
+
+      notifyListeners();
+    }
   }
 
-  // 🔄 Loading Handler
-  void _setLoading(bool value) {
-    _isLoading = value;
+  // =========================================================
+  // SUMMARY
+  // =========================================================
+
+  void _calculateSummaryWithoutNotify() {
+
+    _totalExpense = _expenses
+        .where(
+          (e) =>
+      !e.isDeleted &&
+          e.type ==
+              ExpenseType.expense,
+    )
+        .fold(
+      0.0,
+          (sum, e) =>
+      sum + e.amount,
+    );
+
+    _totalIncome = _expenses
+        .where(
+          (e) =>
+      !e.isDeleted &&
+          e.type ==
+              ExpenseType.income,
+    )
+        .fold(
+      0.0,
+          (sum, e) =>
+      sum + e.amount,
+    );
+
+    _balance =
+        _totalIncome -
+            _totalExpense;
+  }
+
+  // =========================================================
+  // CLEAR ERROR
+  // =========================================================
+
+  void clearError() {
+
+    _error = null;
+
     notifyListeners();
+  }
+
+  // =========================================================
+  // RESET STATE
+  // =========================================================
+
+  void reset() {
+
+    _expenses = [];
+
+    _totalExpense = 0;
+
+    _totalIncome = 0;
+
+    _balance = 0;
+
+    _error = null;
+
+    _isInitialLoading = false;
+
+    _isRefreshing = false;
+
+    _isMutating = false;
+
+    notifyListeners();
+  }
+
+
+
+
+  // =========================================================
+  // DISPOSE
+  // =========================================================
+
+  @override
+  void dispose() {
+
+    _expenseSubscription?.cancel();
+
+    super.dispose();
   }
 }
