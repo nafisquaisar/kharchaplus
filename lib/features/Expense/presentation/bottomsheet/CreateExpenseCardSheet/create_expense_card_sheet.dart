@@ -194,6 +194,7 @@ class _CreateExpenseCardSheetState
         endDate: finalEndDate,
         totalExpense: widget.card?.totalExpense ?? 0,
         totalBudget: widget.card?.totalBudget ?? 0,
+        totalIncome: widget.card?.totalIncome ?? 0,
         remainingAmount: widget.card?.remainingAmount ?? 0,
         totalItems: widget.card?.totalItems ?? 0,
         status: calculateStatus(startDate!, finalEndDate),

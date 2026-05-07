@@ -28,22 +28,30 @@ class CategoryViewModel extends ChangeNotifier {
   }
 
   Future<void> addDefaultCategories() async {
-    if (categories.isNotEmpty) return;
+    final alreadyExists = await _repo.hasCategories(userId);
+
+    if (alreadyExists) {
+      return;
+    }
 
     final now = DateTime.now();
 
     for (final item in predefinedCategories) {
       final category = CategoryModel(
         id: item["name"].toString().toLowerCase(),
+
         name: item["name"],
+
         icon: (item["icon"] as IconData).codePoint.toString(),
+
         color: (item["color"] as Color).value,
+
         createdAt: now,
+
         updatedAt: now,
       );
 
       await _repo.addCategory(userId, category);
     }
   }
-
 }

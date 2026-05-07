@@ -15,6 +15,7 @@ import '../../utils/ExpenseCardShimmer.dart';
 
 import '../bottomsheet/CreateExpenseCardSheet/create_expense_card_sheet.dart';
 
+import '../viewmodel/CategoryViewModel.dart';
 import '../viewmodel/ExpenseCardViewModel.dart';
 import '../viewmodel/ExpenseFilterViewModel.dart';
 import '../viewmodel/expense_viewmodel.dart';
@@ -51,6 +52,14 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     Future.microtask(() {
       context.read<ExpenseCardViewModel>().listenCards(userId);
     });
+
+    Future.microtask(() async {
+
+      await context
+          .read<CategoryViewModel>()
+          .addDefaultCategories();
+    });
+
   }
 
   @override

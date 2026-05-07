@@ -6,6 +6,7 @@ class CommonAppBar extends StatelessWidget {
   final String title;
   final String? userName;
   final bool isHome;
+  final bool isDashboard;
   final VoidCallback onMenuTap;
   final VoidCallback onNotificationTap;
   final bool hasNotification;
@@ -22,6 +23,7 @@ class CommonAppBar extends StatelessWidget {
     this.hasNotification = true,
     this.showMore = false,
     this.onMoreTap,
+    this.isDashboard=false,
   });
 
   String getGreeting() {
@@ -55,7 +57,7 @@ class CommonAppBar extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(width * 0.015),
                   child: Icon(
-                    isHome ? Icons.menu : Icons.arrow_back,
+                    isDashboard ? Icons.menu : Icons.arrow_back,
                     size: width * 0.07,
                     color: Colors.white,
                   ),
@@ -107,7 +109,7 @@ class CommonAppBar extends StatelessWidget {
 
               // 🔔 NOTIFICATION
               /// 🔥 RIGHT ACTION
-              if (isHome)
+              if (isDashboard)
                 _buildNotification(width)
               else if (showMore)
                 _buildMoreButton(width)

@@ -27,11 +27,6 @@ class ExpenseRepository {
   // ➕ Add Expense + Update Card
   Future<void> addExpense(ExpenseModel expense) async {
     try {
-      print("");
-      print("=================================");
-      print("ADD EXPENSE START");
-      print("=================================");
-
       // =========================
       // PATHS
       // =========================
@@ -42,110 +37,67 @@ class ExpenseRepository {
           .collection("expenses")
           .doc(expense.id);
 
-      print("EXPENSE REF => ${expenseRef.path}");
-
       final cardRef = _firestore
           .collection("users")
           .doc(expense.userId)
           .collection("expense_cards")
           .doc(expense.cardId);
 
-      print("CARD REF => ${cardRef.path}");
-
       final mainSummary = mainSummaryRef(expense.userId);
-
-      print("MAIN SUMMARY REF => ${mainSummary.path}");
-
       final monthId = getMonthId(expense.date);
 
-      print("MONTH ID => $monthId");
-
       final monthlySummary = monthlySummaryRef(expense.userId, monthId);
-
-      print("MONTH SUMMARY REF => ${monthlySummary.path}");
-
-      print("");
-      print("EXPENSE JSON =>");
-      print(expense.toJson());
 
       // =========================
       // TRANSACTION
       // =========================
 
       await _firestore.runTransaction((tx) async {
-        print("");
-        print("TRANSACTION START");
-
         // =========================
         // ALL READS FIRST
         // =========================
-
-        print("");
-        print("GETTING CARD SNAP");
-
         final cardSnap = await tx.get(cardRef);
-
-        print("CARD EXISTS => ${cardSnap.exists}");
-
-        print("");
-        print("GETTING MAIN SUMMARY");
-
         final mainSnap = await tx.get(mainSummary);
-
-        print("MAIN SUMMARY EXISTS => ${mainSnap.exists}");
-
-        print("");
-        print("GETTING MONTH SUMMARY");
-
         final monthSnap = await tx.get(monthlySummary);
-
-        print("MONTH SUMMARY EXISTS => ${monthSnap.exists}");
 
         // =========================
         // NOW START WRITES
         // =========================
 
-        print("");
-        print("SETTING EXPENSE");
-
         tx.set(expenseRef, expense.toJson());
-
-        print("EXPENSE SET DONE");
 
         // =========================
         // CARD UPDATE
         // =========================
 
         if (cardSnap.exists) {
-          print("CARD DATA =>");
-          print(cardSnap.data());
-
           final card = ExpenseCardModel.fromJson(cardSnap.data()!);
 
-          print("OLD CARD TOTAL => ${card.remainingAmount}");
+          double updatedExpense = card.totalExpense;
+          double updatedIncome = card.totalIncome;
+          int updatedItems = card.totalItems;
+          if (expense.type == ExpenseType.expense) {
+            updatedExpense += expense.amount;
+          } else {
+            updatedIncome += expense.amount;
+          }
 
-          final updatedExpense = card.totalExpense + expense.amount;
+          updatedItems++;
 
           final updatedCard = card.copyWith(
             totalExpense: updatedExpense,
 
-            remainingAmount: card.totalBudget - updatedExpense,
-            totalBudget: card.totalBudget,
+            totalIncome: updatedIncome,
 
-            totalItems: card.totalItems + 1,
+            remainingAmount: card.totalBudget - updatedExpense,
+
+            totalItems: updatedItems,
 
             updatedAt: DateTime.now(),
           );
 
           tx.update(cardRef, updatedCard.toJson());
-
-          print("CARD UPDATED");
-        } else {
-          print("");
-          print("CARD NOT FOUND");
-          print("CARD ID => ${expense.cardId}");
         }
-
         // =========================
         // MAIN SUMMARY
         // =========================
@@ -161,17 +113,10 @@ class ExpenseRepository {
         if (mainSnap.exists) {
           final data = mainSnap.data()!;
 
-          print("OLD MAIN SUMMARY =>");
-          print(data);
-
           totalExpense = (data["totalExpense"] ?? 0).toDouble();
-
           totalIncome = (data["totalIncome"] ?? 0).toDouble();
-
           totalTransactions = data["totalTransactions"] ?? 0;
-
           expenseTransactions = data["totalExpenseTransactions"] ?? 0;
-
           incomeTransactions = data["totalIncomeTransactions"] ?? 0;
         }
 
@@ -186,15 +131,6 @@ class ExpenseRepository {
 
           incomeTransactions++;
         }
-
-        print("");
-        print("NEW MAIN SUMMARY =>");
-
-        print({
-          "totalExpense": totalExpense,
-          "totalIncome": totalIncome,
-          "remainingBalance": totalIncome - totalExpense,
-        });
 
         tx.set(mainSummary, {
           "totalExpense": totalExpense,
@@ -212,8 +148,6 @@ class ExpenseRepository {
           "updatedAt": DateTime.now(),
         });
 
-        print("MAIN SUMMARY UPDATED");
-
         // =========================
         // MONTHLY SUMMARY
         // =========================
@@ -229,17 +163,10 @@ class ExpenseRepository {
         if (monthSnap.exists) {
           final data = monthSnap.data()!;
 
-          print("OLD MONTH SUMMARY =>");
-          print(data);
-
           monthExpense = (data["totalExpense"] ?? 0).toDouble();
-
           monthIncome = (data["totalIncome"] ?? 0).toDouble();
-
           monthTransactions = data["totalTransactions"] ?? 0;
-
           monthExpenseTransactions = data["totalExpenseTransactions"] ?? 0;
-
           monthIncomeTransactions = data["totalIncomeTransactions"] ?? 0;
         }
 
@@ -247,18 +174,11 @@ class ExpenseRepository {
 
         if (expense.type == ExpenseType.expense) {
           monthExpense += expense.amount;
-
           monthExpenseTransactions++;
         } else {
           monthIncome += expense.amount;
-
           monthIncomeTransactions++;
         }
-
-        print("");
-        print("NEW MONTH SUMMARY =>");
-
-        print({"monthExpense": monthExpense, "monthIncome": monthIncome});
 
         tx.set(monthlySummary, {
           "month": monthId,
@@ -279,42 +199,14 @@ class ExpenseRepository {
 
           "createdAt": DateTime.now(),
         });
-
-        print("MONTH SUMMARY UPDATED");
-
-        print("");
-        print("TRANSACTION END");
       });
 
       // =========================
       // VERIFY
       // =========================
-
-      print("");
-      print("VERIFYING DOCUMENT");
-
-      final check = await expenseRef.get();
-
-      print("DOCUMENT EXISTS => ${check.exists}");
-
-      if (check.exists) {
-        print("FINAL DOCUMENT =>");
-        print(check.data());
-      }
-
-      print("");
-      print("=================================");
-      print("ADD EXPENSE SUCCESS");
-      print("=================================");
     } catch (e, stack) {
-      print("");
-      print("=================================");
-      print("ADD EXPENSE ERROR");
-      print("=================================");
-
       print(e);
       print(stack);
-
       rethrow;
     }
   }
@@ -416,14 +308,22 @@ class ExpenseRepository {
       if (cardSnap.exists) {
         final card = ExpenseCardModel.fromJson(cardSnap.data()!);
 
-        final updatedExpense = card.totalExpense - expense.amount;
+        double updatedExpense = card.totalExpense;
+
+        double updatedIncome = card.totalIncome;
+
+        if (expense.type == ExpenseType.expense) {
+          updatedExpense -= expense.amount;
+        } else {
+          updatedIncome -= expense.amount;
+        }
 
         final updatedCard = card.copyWith(
           totalExpense: updatedExpense,
 
-          remainingAmount: card.totalBudget - updatedExpense,
+          totalIncome: updatedIncome,
 
-          totalBudget: card.totalBudget,
+          remainingAmount: card.totalBudget - updatedExpense,
 
           totalItems: (card.totalItems - 1).clamp(0, 999999),
 
@@ -546,20 +446,26 @@ class ExpenseRepository {
 
       tx.update(expenseRef, expense.toJson());
 
-      if (!cardSnap.exists) return;
+      if (!cardSnap.exists) {
+        return;
+      }
 
       final card = ExpenseCardModel.fromJson(cardSnap.data()!);
-
       final diff = expense.amount - oldAmount;
-
-      final updatedExpense = card.totalExpense + diff;
+      double updatedExpense = card.totalExpense;
+      double updatedIncome = card.totalIncome;
+      if (expense.type == ExpenseType.expense) {
+        updatedExpense += diff;
+      } else {
+        updatedIncome += diff;
+      }
 
       final updatedCard = card.copyWith(
         totalExpense: updatedExpense,
 
-        remainingAmount: card.totalBudget - updatedExpense,
+        totalIncome: updatedIncome,
 
-        totalBudget: card.totalBudget,
+        remainingAmount: card.totalBudget - updatedExpense,
 
         updatedAt: DateTime.now(),
       );

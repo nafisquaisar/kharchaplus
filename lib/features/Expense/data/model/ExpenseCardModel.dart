@@ -16,6 +16,7 @@ class ExpenseCardModel {
   /// =====================================================
 
   final double totalBudget;
+  final double totalIncome;
 
   final double totalExpense;
 
@@ -63,6 +64,7 @@ class ExpenseCardModel {
     required this.endDate,
 
     required this.totalBudget,
+    required this.totalIncome,
     required this.totalExpense,
     required this.remainingAmount,
 
@@ -98,6 +100,7 @@ class ExpenseCardModel {
       endDate: DateTime.parse(json['endDate']),
 
       totalBudget: (json['totalBudget'] as num?)?.toDouble() ?? 0.0,
+      totalIncome: (json['totalIncome'] as num?)?.toDouble() ?? 0.0,
       totalExpense: (json['totalExpense'] as num?)?.toDouble() ?? 0.0,
       remainingAmount: (json['remainingAmount'] as num?)?.toDouble() ?? 0.0,
 
@@ -135,6 +138,7 @@ class ExpenseCardModel {
       'endDate': endDate.toIso8601String(),
 
       'totalBudget': totalBudget,
+      'totalIncome': totalIncome,
       'totalExpense': totalExpense,
 
       'remainingAmount': remainingAmount,
@@ -172,6 +176,7 @@ class ExpenseCardModel {
     DateTime? endDate,
 
     double? totalExpense,
+    double? totalIncome,
     double? totalBudget,
     double? remainingAmount,
 
@@ -201,6 +206,7 @@ class ExpenseCardModel {
       endDate: endDate ?? this.endDate,
 
       totalExpense: totalExpense ?? this.totalExpense,
+      totalIncome: totalIncome ?? this.totalIncome,
       totalBudget: totalBudget ?? this.totalBudget,
       remainingAmount: remainingAmount ?? this.remainingAmount,
 

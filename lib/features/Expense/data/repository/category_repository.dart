@@ -26,4 +26,20 @@ class CategoryRepository {
         .doc(category.id)
         .set(category.toJson());
   }
+
+  Future<bool> hasCategories(
+      String userId,
+      ) async {
+
+    final snapshot =
+    await _firestore
+        .collection("users")
+        .doc(userId)
+        .collection("categories")
+        .limit(1)
+        .get();
+
+    return snapshot.docs.isNotEmpty;
+  }
+
 }

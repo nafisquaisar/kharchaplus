@@ -68,6 +68,7 @@ class _MainScreenState extends State<MainScreen> {
         preferredSize: const Size.fromHeight(70),
         child: CommonAppBar(
           isHome: _currentIndex == 0,
+          isDashboard: true,
           title: _titles[_currentIndex],
           userName: "${name} Sir",
           onMenuTap: () => _scaffoldKey.currentState?.openDrawer(),
