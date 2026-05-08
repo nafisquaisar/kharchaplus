@@ -3,7 +3,7 @@ import 'package:expense_tracker/features/Expense/data/repository/ExpenseCardRepo
 import 'package:expense_tracker/features/Expense/data/repository/category_repository.dart';
 import 'package:expense_tracker/features/Expense/presentation/viewmodel/CategoryViewModel.dart';
 import 'package:expense_tracker/features/Expense/presentation/viewmodel/ExpenseCardViewModel.dart';
-import 'package:expense_tracker/features/Profile/presentation/viewmodel/profile_view_model.dart';
+import 'package:expense_tracker/features/Profile/presentation/viewmodel/profile_viewmodel.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,9 +18,8 @@ import 'features/Expense/data/repository/expense_repository.dart';
 import 'features/Expense/presentation/viewmodel/ExpenseFilterViewModel.dart';
 import 'features/Expense/presentation/viewmodel/expense_viewmodel.dart';
 import 'features/Profile/data/datasource/profile_remote_data_source.dart';
+import 'features/Profile/data/repository/profile_repository.dart';
 import 'features/Profile/data/repository/profile_repository_impl.dart';
-import 'features/Profile/domain/repository/profile_repository.dart';
-import 'features/Profile/domain/usecase/get_profile_data.dart';
 import 'features/auth/data/datasources/firebase_auth_data_source.dart';
 import 'features/auth/data/datasources/firestore_user_data_source.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -29,7 +28,6 @@ import 'features/auth/domain/usecases/get_user_profile_use_case.dart';
 import 'features/auth/domain/usecases/link_email_password_use_case.dart';
 import 'features/auth/domain/usecases/link_phone_use_case.dart';
 import 'features/auth/domain/usecases/logout_use_case.dart';
-import 'features/auth/domain/usecases/save_user_profile_use_case.dart';
 import 'features/auth/domain/usecases/send_otp_use_case.dart';
 import 'features/auth/domain/usecases/sign_in_with_email_password_use_case.dart';
 import 'features/auth/domain/usecases/sign_in_with_google_use_case.dart';
@@ -125,36 +123,6 @@ class ExpenseTrackerApp extends StatelessWidget {
           create: (context) =>
               GetUserProfileUseCase(context.read<AuthRepository>()),
         ),
-        Provider(
-          create: (context) =>
-              SaveUserProfileUseCase(context.read<AuthRepository>()),
-        ),
-        // 1️⃣ Data Source
-        Provider<ProfileRemoteDataSource>(
-          create: (_) => ProfileRemoteDataSource(),
-        ),
-
-        // 2️⃣ Repository
-        Provider<ProfileRepository>(
-          create: (context) => ProfileRepositoryImpl(
-            context.read<ProfileRemoteDataSource>(),
-          ),
-        ),
-
-        // 3️⃣ UseCase
-        Provider<GetProfileData>(
-          create: (context) => GetProfileData(
-            context.read<ProfileRepository>(),
-          ),
-        ),
-
-        // 4️⃣ ViewModel
-        ChangeNotifierProvider(
-          create: (context) => ProfileViewModel(
-            context.read<GetProfileData>(),
-          ),
-        ),
-
         ChangeNotifierProvider(
           create: (context) => AuthViewModel(
             authRepository: context.read<AuthRepository>(),
@@ -169,10 +137,24 @@ class ExpenseTrackerApp extends StatelessWidget {
             linkEmailPassword: context.read<LinkEmailPasswordUseCase>(),
             logout: context.read<LogoutUseCase>(),
             getUserProfile: context.read<GetUserProfileUseCase>(),
-            saveUserProfile: context.read<SaveUserProfileUseCase>(),
             logger: context.read<AuthLogger>(),
             cooldownStorage: context.read<AuthCooldownStorage>(),
           ),
+        ),
+        Provider<ProfileRemoteDataSource>(
+          create: (_) => ProfileRemoteDataSource(),
+        ),
+        Provider<ProfileRepository>(
+          create: (context) => ProfileRepositoryImpl(
+            context.read<ProfileRemoteDataSource>(),
+          ),
+        ),
+        ChangeNotifierProxyProvider<AuthViewModel, ProfileViewModel>(
+          create: (context) => ProfileViewModel(
+            context.read<ProfileRepository>(),
+          ),
+          update: (_, authVm, profileVm) =>
+              profileVm!..bindUser(authVm.currentUser?.uid),
         ),
         ChangeNotifierProvider(
           create: (_) => ExpenseViewModel(ExpenseRepository()),
@@ -184,8 +166,7 @@ class ExpenseTrackerApp extends StatelessWidget {
           create: (_) => CategoryViewModel(CategoryRepository()),
         ),
         ChangeNotifierProvider(
-          create: (_) =>
-              ExpenseFilterViewModel(),
+          create: (_) => ExpenseFilterViewModel(),
         ),
       ],
       child: MaterialApp(

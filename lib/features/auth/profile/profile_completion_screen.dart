@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:expense_tracker/features/Profile/presentation/viewmodel/profile_viewmodel.dart';
 import '../domain/entities/auth_state.dart';
 import '../domain/entities/auth_user.dart';
 import '../phone/phone_screen.dart';
@@ -47,6 +48,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AuthViewModel>();
+    final profileVm = context.read<ProfileViewModel>();
     final missing = widget.missingFields;
     final isPhoneUser = widget.user.providers.contains('phone');
     final isEmailUser = widget.user.providers.contains('email');
@@ -164,55 +166,64 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
               SizedBox(
                 width: double.infinity,
                 height: 52,
-                child: ElevatedButton(
-                  onPressed: vm.isLoading
-                      ? null
-                      : () async {
-                          final name = _nameController.text.trim();
-                          final email = _emailController.text.trim();
-                          final phone = _phoneController.text.trim();
+                child: Selector<ProfileViewModel, bool>(
+                  selector: (_, pvm) => pvm.isSavingProfile,
+                  builder: (context, isSavingProfile, _) {
+                    return ElevatedButton(
+                      onPressed: isSavingProfile
+                          ? null
+                          : () async {
+                              final name = _nameController.text.trim();
+                              final email = _emailController.text.trim();
+                              final phone = _phoneController.text.trim();
 
-                          if (missing.contains(ProfileField.name) && name.isEmpty) {
-                            _showSnack(context, 'Name is required');
-                            return;
-                          }
-                          if (missing.contains(ProfileField.email) && email.isEmpty) {
-                            _showSnack(context, 'Email is required');
-                            return;
-                          }
-                          if (missing.contains(ProfileField.phone) && phone.isEmpty) {
-                            _showSnack(context, 'Phone is required');
-                            return;
-                          }
+                              if (missing.contains(ProfileField.name) && name.isEmpty) {
+                                _showSnack(context, 'Name is required');
+                                return;
+                              }
+                              if (missing.contains(ProfileField.email) && email.isEmpty) {
+                                _showSnack(context, 'Email is required');
+                                return;
+                              }
+                              if (missing.contains(ProfileField.phone) && phone.isEmpty) {
+                                _showSnack(context, 'Phone is required');
+                                return;
+                              }
 
-                          if (needsEmailLink && _passwordController.text.trim().isEmpty) {
-                            _showSnack(context, 'Link email before saving');
-                            return;
-                          }
+                              if (needsEmailLink &&
+                                  _passwordController.text.trim().isEmpty) {
+                                _showSnack(context, 'Link email before saving');
+                                return;
+                              }
 
-                          final success = await vm.saveProfile(
-                            name: name,
-                            email: email,
-                            phone: phone,
-                            photoUrl: vm.currentUser?.photoUrl ?? "",
-                          );
+                              final success = await profileVm.saveProfile(
+                                name: name,
+                                email: email,
+                                phone: phone,
+                                photoUrl: vm.currentUser?.photoUrl,
+                              );
 
-                          if (!context.mounted) {
-                            return;
-                          }
+                              if (!context.mounted) {
+                                return;
+                              }
 
-                          if (!success) {
-                            _showSnack(context,
-                                vm.errorMessage ?? 'Profile update failed');
-                          }
-                        },
-                  child: vm.isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Continue'),
+                              if (success) {
+                                await vm.refreshProfile();
+                                return;
+                              }
+
+                              _showSnack(context,
+                                  profileVm.errorMessage ?? 'Profile update failed');
+                            },
+                      child: isSavingProfile
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Text('Continue'),
+                    );
+                  },
                 ),
               ),
             ],
@@ -250,4 +261,3 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 }
-

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../auth/viewmodel/auth_viewmodel.dart';
+import '../viewmodel/profile_viewmodel.dart';
 import '../../../../core/constants/KharchaThemeColors.dart';
 
 class ProfileHeader extends StatelessWidget {
@@ -11,7 +11,7 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<AuthViewModel, _ProfileHeaderData>(
+    return Selector<ProfileViewModel, _ProfileHeaderData>(
       selector: (_, vm) => _ProfileHeaderData(
         vm.resolvedName,
         vm.resolvedEmail,

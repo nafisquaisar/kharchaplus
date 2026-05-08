@@ -22,7 +22,6 @@ import 'package:expense_tracker/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:expense_tracker/features/auth/data/services/auth_logger.dart';
 import 'package:expense_tracker/features/auth/data/services/auth_cooldown_storage.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/get_user_profile_use_case.dart';
-import 'package:expense_tracker/features/auth/domain/usecases/save_user_profile_use_case.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
@@ -52,8 +51,6 @@ class MockLinkEmailPasswordUseCase extends Mock
 
 class MockGetUserProfileUseCase extends Mock implements GetUserProfileUseCase {}
 
-class MockSaveUserProfileUseCase extends Mock implements SaveUserProfileUseCase {}
-
 void main() {
   late MockAuthRepository repository;
   late MockSignInWithGoogleUseCase signInWithGoogle;
@@ -67,7 +64,6 @@ void main() {
   late MockSignUpWithEmailPasswordUseCase signUpWithEmailPassword;
   late MockLinkEmailPasswordUseCase linkEmailPassword;
   late MockGetUserProfileUseCase getUserProfile;
-  late MockSaveUserProfileUseCase saveUserProfile;
   late StreamController<AuthUser?> authStream;
 
   AuthViewModel buildViewModel() {
@@ -82,7 +78,6 @@ void main() {
       linkEmailPassword: linkEmailPassword,
       logout: logout,
       getUserProfile: getUserProfile,
-      saveUserProfile: saveUserProfile,
       logger: logger,
       cooldownStorage: cooldownStorage,
     );
@@ -101,7 +96,6 @@ void main() {
     signUpWithEmailPassword = MockSignUpWithEmailPasswordUseCase();
     linkEmailPassword = MockLinkEmailPasswordUseCase();
     getUserProfile = MockGetUserProfileUseCase();
-    saveUserProfile = MockSaveUserProfileUseCase();
     authStream = StreamController<AuthUser?>.broadcast();
 
     when(() => repository.userChanges())

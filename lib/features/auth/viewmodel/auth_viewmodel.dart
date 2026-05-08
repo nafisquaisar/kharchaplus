@@ -16,7 +16,6 @@ import '../domain/usecases/get_user_profile_use_case.dart';
 import '../domain/usecases/link_email_password_use_case.dart';
 import '../domain/usecases/link_phone_use_case.dart';
 import '../domain/usecases/logout_use_case.dart';
-import '../domain/usecases/save_user_profile_use_case.dart';
 import '../domain/usecases/send_otp_use_case.dart';
 import '../domain/usecases/sign_in_with_email_password_use_case.dart';
 import '../domain/usecases/sign_in_with_google_use_case.dart';
@@ -34,7 +33,6 @@ class AuthViewModel extends ChangeNotifier {
   final LinkEmailPasswordUseCase _linkEmailPassword;
   final LogoutUseCase _logout;
   final GetUserProfileUseCase _getUserProfile;
-  final SaveUserProfileUseCase _saveUserProfile;
   final AuthLogger _logger;
   final AuthCooldownStorage _cooldownStorage;
 
@@ -47,7 +45,6 @@ class AuthViewModel extends ChangeNotifier {
   String? _verificationId;
   AuthUser? _currentUser;
   UserProfile? _profile;
-  bool _isSavingProfile = false;
 
   AuthViewModel({
     required AuthRepository authRepository,
@@ -60,7 +57,6 @@ class AuthViewModel extends ChangeNotifier {
     required LinkEmailPasswordUseCase linkEmailPassword,
     required LogoutUseCase logout,
     required GetUserProfileUseCase getUserProfile,
-    required SaveUserProfileUseCase saveUserProfile,
     required AuthLogger logger,
     required AuthCooldownStorage cooldownStorage,
   })  : _authRepository = authRepository,
@@ -73,7 +69,6 @@ class AuthViewModel extends ChangeNotifier {
         _linkEmailPassword = linkEmailPassword,
         _logout = logout,
         _getUserProfile = getUserProfile,
-        _saveUserProfile = saveUserProfile,
         _logger = logger,
         _cooldownStorage = cooldownStorage {
     _authSubscription = _authRepository.userChanges().listen(
@@ -100,7 +95,6 @@ class AuthViewModel extends ChangeNotifier {
 
   AuthUser? get currentUser => _currentUser;
   UserProfile? get profile => _profile;
-  bool get isSavingProfile => _isSavingProfile;
 
   String get resolvedName {
     final value = _profile?.name ?? _currentUser?.displayName ?? '';
@@ -342,52 +336,17 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> saveProfile({
-    required String name,
-    required String email,
-    required String phone,
-    required String? photoUrl,
-  }) async {
-    final user = _currentUser;
-    if (user == null) {
-      _setState(const AuthError('Missing authenticated user.'));
-      return false;
-    }
-
-    if (_isSavingProfile) {
-      return false;
-    }
-
-    _setProfileSaving(true);
-
-    try {
-      await _saveUserProfile(
-        uid: user.uid,
-        name: name,
-        email: email,
-        phone: phone,
-        photoUrl: photoUrl,
-      );
-      final updatedProfile = UserProfile(
-        uid: user.uid,
-        name: name,
-        email: email,
-        phone: phone,
-        photoUrl: photoUrl,
-      );
-      await _resolveProfile(user, profileOverride: updatedProfile);
-      return true;
-    } catch (e) {
-      _setState(AuthError(_mapError(e)));
-      return false;
-    } finally {
-      _setProfileSaving(false);
-    }
-  }
-
   Future<void> logout() async {
     _setState(const AuthLoading());
     await _logout();
+  }
+
+  Future<void> refreshProfile() async {
+    final user = _currentUser;
+    if (user == null) {
+      return;
+    }
+    await _resolveProfile(user);
   }
 
   void _handleAuthUser(AuthUser? user) {
@@ -449,13 +408,6 @@ class AuthViewModel extends ChangeNotifier {
     return missing;
   }
 
-  void _setProfileSaving(bool value) {
-    if (_isSavingProfile == value) {
-      return;
-    }
-    _isSavingProfile = value;
-    notifyListeners();
-  }
 
   void _setState(AuthState state) {
     _state = state;
