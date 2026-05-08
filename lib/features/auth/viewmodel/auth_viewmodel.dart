@@ -46,6 +46,8 @@ class AuthViewModel extends ChangeNotifier {
   AuthState _state = const AuthInitial();
   String? _verificationId;
   AuthUser? _currentUser;
+  UserProfile? _profile;
+  bool _isSavingProfile = false;
 
   AuthViewModel({
     required AuthRepository authRepository,
@@ -97,6 +99,25 @@ class AuthViewModel extends ChangeNotifier {
   int get resendSecondsRemaining => _resendSecondsRemaining;
 
   AuthUser? get currentUser => _currentUser;
+  UserProfile? get profile => _profile;
+  bool get isSavingProfile => _isSavingProfile;
+
+  String get resolvedName {
+    final value = _profile?.name ?? _currentUser?.displayName ?? '';
+    return value.trim();
+  }
+
+  String get resolvedEmail {
+    final value = _profile?.email ?? _currentUser?.email ?? '';
+    return value.trim();
+  }
+
+  String get resolvedPhone {
+    final value = _profile?.phone ?? _currentUser?.phoneNumber ?? '';
+    return value.trim();
+  }
+
+  String? get resolvedPhotoUrl => _profile?.photoUrl ?? _currentUser?.photoUrl;
 
   Future<bool> signInWithGoogle() async {
     try {
@@ -333,7 +354,11 @@ class AuthViewModel extends ChangeNotifier {
       return false;
     }
 
-    _setState(const AuthLoading());
+    if (_isSavingProfile) {
+      return false;
+    }
+
+    _setProfileSaving(true);
 
     try {
       await _saveUserProfile(
@@ -343,11 +368,20 @@ class AuthViewModel extends ChangeNotifier {
         phone: phone,
         photoUrl: photoUrl,
       );
-      await _resolveProfile(user);
+      final updatedProfile = UserProfile(
+        uid: user.uid,
+        name: name,
+        email: email,
+        phone: phone,
+        photoUrl: photoUrl,
+      );
+      await _resolveProfile(user, profileOverride: updatedProfile);
       return true;
     } catch (e) {
       _setState(AuthError(_mapError(e)));
       return false;
+    } finally {
+      _setProfileSaving(false);
     }
   }
 
@@ -359,18 +393,27 @@ class AuthViewModel extends ChangeNotifier {
   void _handleAuthUser(AuthUser? user) {
     if (user == null) {
       _currentUser = null;
+      _profile = null;
       _setState(const AuthUnauthenticated());
       return;
     }
 
     _currentUser = user;
-    _setState(const AuthLoading());
+    final shouldShowLoading =
+        _state is! AuthAuthenticated && _state is! AuthProfileIncomplete;
+    if (shouldShowLoading) {
+      _setState(const AuthLoading());
+    }
     _resolveProfile(user);
   }
 
-  Future<void> _resolveProfile(AuthUser user) async {
+  Future<void> _resolveProfile(
+    AuthUser user, {
+    UserProfile? profileOverride,
+  }) async {
     try {
-      final profile = await _getUserProfile(user.uid);
+      final profile = profileOverride ?? await _getUserProfile(user.uid);
+      _profile = profile;
       final missing = _missingProfileFields(user, profile);
       if (missing.isNotEmpty) {
         _setState(AuthProfileIncomplete(user, missing));
@@ -404,6 +447,14 @@ class AuthViewModel extends ChangeNotifier {
     }
 
     return missing;
+  }
+
+  void _setProfileSaving(bool value) {
+    if (_isSavingProfile == value) {
+      return;
+    }
+    _isSavingProfile = value;
+    notifyListeners();
   }
 
   void _setState(AuthState state) {

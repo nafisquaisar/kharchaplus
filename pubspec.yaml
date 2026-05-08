@@ -34,6 +34,8 @@ dependencies:
   another_flushbar: ^1.12.32
   uuid: ^4.5.3
   shimmer: ^3.0.0
+  cached_network_image: ^3.4.1
+  flutter_image_compress: ^2.4.0
 
 dev_dependencies:
   flutter_test:
@@ -43,7 +45,7 @@ dev_dependencies:
   build_runner: ^2.4.6
   mocktail: ^1.0.3
 
-  flutter_launcher_icons: ^0.14.4   # ✔ HERE (correct)
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
@@ -57,4 +59,3 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/images/logo.png"
-

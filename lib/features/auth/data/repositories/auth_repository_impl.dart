@@ -228,12 +228,17 @@ class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String phone,
     required String? photoUrl
-  }) {
-    return _userDataSource.saveUserProfile(
+  }) async {
+    await _userDataSource.saveUserProfile(
       uid: uid,
       name: name,
       email: email,
       phone: phone,
+      photoUrl: photoUrl,
+    );
+
+    await _authDataSource.updateProfile(
+      displayName: name,
       photoUrl: photoUrl,
     );
   }

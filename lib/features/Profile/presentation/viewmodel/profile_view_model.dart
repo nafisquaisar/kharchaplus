@@ -5,20 +5,16 @@ class ProfileViewModel extends ChangeNotifier {
   final GetProfileData getProfileData;
 
   ProfileViewModel(this.getProfileData);
-
   String name = "";
   String email = "";
-
   int totalExpense = 0;
   int foodExpense = 0;
   int waterAvg = 0;
   int waterToday = 0;
   int streak = 0;
-
   int mealsCount = 0;
   int messExpense = 0;
   int outsideExpense = 0;
-
   String insight = "You are doing great 🎉";
   String plan = "Free";
 

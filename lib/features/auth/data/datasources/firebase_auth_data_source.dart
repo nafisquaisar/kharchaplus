@@ -18,6 +18,26 @@ class FirebaseAuthDataSource {
 
   User? get currentUser => _auth.currentUser;
 
+  Future<void> updateProfile({
+    String? displayName,
+    String? photoUrl,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      return;
+    }
+
+    if (displayName != null) {
+      await user.updateDisplayName(displayName);
+    }
+
+    if (photoUrl != null) {
+      await user.updatePhotoURL(photoUrl);
+    }
+
+    await user.reload();
+  }
+
   Future<AuthCredential?> getGoogleCredential() async {
     debugPrint('[Auth] Google sign-in started');
 

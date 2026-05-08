@@ -17,12 +17,11 @@ class FirestoreUserDataSource {
     }
 
     final data = snapshot.data();
-    return UserProfile(
-      uid: uid,
-      name: data?['name'] as String?,
-      email: data?['email'] as String?,
-      phone: data?['phone'] as String?,
-    );
+    if (data == null) {
+      return null;
+    }
+
+    return UserProfile.fromJson(data);
   }
 
   Future<void> saveUserProfile({
