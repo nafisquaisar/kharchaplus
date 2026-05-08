@@ -91,9 +91,7 @@ class _MainScreenState
           setState(() {
             _currentIndex = index;
           });
-
-          Navigator.pop(context);
-        },
+          },
       ),
 
       /// APP BAR
