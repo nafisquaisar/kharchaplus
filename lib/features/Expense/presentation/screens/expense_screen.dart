@@ -22,12 +22,10 @@ import '../viewmodel/expense_viewmodel.dart';
 
 import '../widgets/ExpensePage/expense_card.dart';
 import '../widgets/ExpensePage/expense_search_bar.dart';
-
 import 'expense_detail_screen.dart';
 
 class ExpenseScreen extends StatefulWidget {
   const ExpenseScreen({super.key});
-
   @override
   State<ExpenseScreen> createState() => _ExpenseScreenState();
 }
@@ -36,12 +34,10 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
   Map<String, dynamic>? _lastDeleted;
 
   Timer? _deleteTimer;
-
   String searchQuery = "";
-
   final searchController = TextEditingController();
-
   final Set<String> _pendingDeleteIds = {};
+
 
   @override
   void initState() {
@@ -100,31 +96,23 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
       body: RefreshIndicator(
         displacement: 40,
-
         edgeOffset: 20,
-
-        color: Colors.deepPurple,
-
+        color: AppColors.accent,
         backgroundColor: Colors.white,
-
         onRefresh: () {
           return context.read<ExpenseCardViewModel>().refreshCards();
         },
-
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(
             parent: BouncingScrollPhysics(),
           ),
-
           padding: const EdgeInsets.all(16),
-
           children: [
             /// =====================================================
             /// SEARCH
             /// =====================================================
             ExpenseSearchBar(
               controller: searchController,
-
               onChanged: (value) {
                 setState(() {
                   searchQuery = value.toLowerCase();
@@ -188,7 +176,8 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
             /// =====================================================
             /// EMPTY
             /// =====================================================
-            if (!vm.isInitialLoading &&
+            if (vm.hasLoadedOnce &&
+                !vm.isInitialLoading &&
                 vm.error == null &&
                 filteredCards.isEmpty)
               const Center(

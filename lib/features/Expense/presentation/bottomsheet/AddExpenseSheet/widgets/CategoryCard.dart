@@ -61,7 +61,7 @@ class CategoryCard extends StatelessWidget {
               ),
 
               onPressed: () =>
-                  showAddCategoryDialog(context),
+                  showAddCategoryBottomSheet(context),
 
               icon: const Icon(
                 Icons.add_circle_outline_rounded,

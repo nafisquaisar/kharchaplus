@@ -39,41 +39,46 @@ class ExpenseCardViewModel extends ChangeNotifier {
 
   String get userId => FirebaseAuth.instance.currentUser!.uid;
 
+  bool _hasLoadedOnce = false;
+
+  bool get hasLoadedOnce => _hasLoadedOnce;
+
   // =====================================================
   // REALTIME LISTENER
   // =====================================================
 
   void listenCards(String userId) {
-    if (_cards.isEmpty) {
-      _isInitialLoading = true;
+    _isInitialLoading = true;
 
-      notifyListeners();
-    }
+    notifyListeners();
 
     _cardSubscription?.cancel();
 
-    _cardSubscription = _repo
-        .getCards(userId)
-        .listen(
+    _cardSubscription = _repo.getCards(userId).listen(
           (data) {
-            _cards = data;
+        _cards = data;
 
-            _error = null;
+        _error = null;
 
-            _isInitialLoading = false;
+        _isInitialLoading = false;
 
-            notifyListeners();
-          },
+        _hasLoadedOnce = true;
 
-          onError: (e) {
-            _error = "Failed to load cards";
+        notifyListeners();
+      },
 
-            _isInitialLoading = false;
+      onError: (e) {
+        _error = "Failed to load cards";
 
-            notifyListeners();
-          },
-        );
+        _isInitialLoading = false;
+
+        _hasLoadedOnce = true;
+
+        notifyListeners();
+      },
+    );
   }
+
 
   // =====================================================
   // REFRESH
@@ -196,11 +201,12 @@ class ExpenseCardViewModel extends ChangeNotifier {
 
     _isMutating = false;
 
+    _hasLoadedOnce = false;
+
     _error = null;
 
     notifyListeners();
   }
-
   // =====================================================
   // DISPOSE
   // =====================================================

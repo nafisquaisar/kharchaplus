@@ -28,10 +28,7 @@ class AddExpenseSheet extends StatefulWidget {
 
   final String buttonText;
 
-  final Future<void> Function(
-      ExpenseModel expense,
-      ) onAdd;
-
+  final Future<void> Function(ExpenseModel expense) onAdd;
 
   const AddExpenseSheet({
     super.key,
@@ -40,8 +37,7 @@ class AddExpenseSheet extends StatefulWidget {
 
     this.expense,
 
-    this.buttonText =
-    "Save Expense",
+    this.buttonText = "Save Expense",
   });
 
   @override
@@ -51,6 +47,7 @@ class AddExpenseSheet extends StatefulWidget {
 class _AddExpenseSheetState extends State<AddExpenseSheet> {
   final amountController = TextEditingController();
   final noteController = TextEditingController();
+  bool isSaving = false;
 
   DateTime selectedDate = DateTime.now();
   CategoryModel? selectedCategory;
@@ -67,30 +64,23 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     if (widget.expense != null) {
       final expense = widget.expense!;
 
-      amountController.text =
-          expense.amount.toString();
+      amountController.text = expense.amount.toString();
 
-      noteController.text =
-          expense.note ?? "";
+      noteController.text = expense.note ?? "";
 
-      selectedDate =
-          expense.date;
+      selectedDate = expense.date;
 
-      selectedType =
-          expense.type;
+      selectedType = expense.type;
 
-      selectedPayment =
-          expense.paymentMode;
+      selectedPayment = expense.paymentMode;
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        final categoryVM =
-        context.read<CategoryViewModel>();
+        final categoryVM = context.read<CategoryViewModel>();
 
         try {
-          selectedCategory =
-              categoryVM.categories.firstWhere(
-                    (e) => e.id == expense.categoryId,
-              );
+          selectedCategory = categoryVM.categories.firstWhere(
+            (e) => e.id == expense.categoryId,
+          );
 
           validate();
 
@@ -120,9 +110,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       ),
       decoration: const BoxDecoration(
         color: AppColors.primarybg,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(30),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
       ),
 
       child: SingleChildScrollView(
@@ -130,13 +118,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             /// 🔥 Header
             Header(
-              title:
-              widget.expense == null
-                  ? "Add Expense"
-                  : "Update Expense",
+              title: widget.expense == null ? "Add Expense" : "Update Expense",
             ),
             const SizedBox(height: 10),
 
@@ -184,20 +168,15 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               noteController: noteController,
             ),
 
-
-
             const SizedBox(height: 20),
 
             /// 🚀 Save Button
             SaveButton(
-
-              text:
-              widget.buttonText,
-
-              onPressed:
-              isValid
-                  ? submit
-                  : () {},
+              text: widget.buttonText,
+              isLoading: isSaving,
+              onPressed: isSaving
+                  ? () {}
+                  : submit,
             ),
 
             const SizedBox(height: 10),
@@ -207,79 +186,71 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     );
   }
 
-
   Future<void> submit() async {
+    /// 🔥 Prevent double click
+    if (isSaving) return;
+
+    /// 🔥 Validation
+    if (amountController.text.trim().isEmpty) {
+      AppFlushbar.showError(context, "Enter amount");
+
+      return;
+    }
+
+    final amount = double.tryParse(amountController.text.trim());
+
+    if (amount == null || amount <= 0) {
+      AppFlushbar.showError(context, "Enter valid amount");
+
+      return;
+    }
+
+    if (selectedCategory == null) {
+      AppFlushbar.showError(context, "Select category");
+
+      return;
+    }
+
+    setState(() {
+      isSaving = true;
+    });
 
     try {
-
-      final user =
-          FirebaseAuth
-              .instance
-              .currentUser;
+      final user = FirebaseAuth.instance.currentUser;
 
       if (user == null) {
-
-        AppFlushbar.showError(
-          context,
-          "User not logged in",
-        );
+        AppFlushbar.showError(context, "User not logged in");
 
         return;
       }
 
-      final now =
-      DateTime.now();
+      final now = DateTime.now();
 
-      final isUpdate =
-          widget.expense != null;
+      final isUpdate = widget.expense != null;
 
-      final expense =
-      ExpenseModel(
-
-        /// 🔥 KEEP OLD ID IN UPDATE
-        id:
-        widget.expense?.id ??
-            IdGenerator.generate(),
+      final expense = ExpenseModel(
+        id: widget.expense?.id ?? IdGenerator.generate(),
 
         userId: user.uid,
 
-        cardId:
-        widget.cardId,
+        cardId: widget.cardId,
 
-        amount:
+        amount: amount,
 
-        double.tryParse(
-          amountController.text,
-        ) ??
-            0,
+        categoryId: selectedCategory!.id,
 
-        categoryId:
-        selectedCategory!.id,
+        categoryName: selectedCategory!.name,
 
-        categoryName:
-        selectedCategory!.name,
+        note: noteController.text.trim(),
 
-        note:
-        noteController.text
-            .trim(),
+        type: selectedType,
 
-        type:
-        selectedType,
+        paymentMode: selectedPayment,
 
-        paymentMode:
-        selectedPayment,
+        date: selectedDate,
 
-        date:
-        selectedDate,
+        createdAt: widget.expense?.createdAt ?? now,
 
-        /// 🔥 KEEP ORIGINAL CREATED DATE
-        createdAt:
-
-        widget.expense
-            ?.createdAt ??
-            now,
-
-        /// 🔥 ALWAYS UPDATE
         updatedAt: now,
 
         currency: 'INR',
@@ -287,34 +258,32 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         isDeleted: false,
       );
 
-      await widget.onAdd(
-        expense,
-      );
+      await widget.onAdd(expense);
 
       if (!context.mounted) {
         return;
       }
 
-      AppFlushbar.showSuccess(
 
+      AppFlushbar.showSuccess(
         context,
 
         isUpdate
             ? "Expense updated successfully"
             : "Expense added successfully",
       );
-
     } catch (e) {
-
       if (!context.mounted) {
         return;
       }
 
-      AppFlushbar.showError(
-        context,
-        e.toString(),
-      );
+      AppFlushbar.showError(context, e.toString());
+    } finally {
+      if (mounted) {
+        setState(() {
+          isSaving = false;
+        });
+      }
     }
   }
-
 }
