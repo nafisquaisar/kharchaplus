@@ -37,6 +37,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const UtilitiesSection(),
             const SettingsSection(),
             const AccountSection(),
+
+            SizedBox(height: 100),
           ],
         ),
       ),

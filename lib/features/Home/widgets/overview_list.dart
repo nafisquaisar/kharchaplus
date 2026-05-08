@@ -7,7 +7,13 @@ class OverviewList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.fromLTRB(
+        16,
+        16,
+        16,
+        MediaQuery.of(context).padding.bottom + 80,
+      ),
+
       children: const [
         OverviewItem(
           title: "Expense",

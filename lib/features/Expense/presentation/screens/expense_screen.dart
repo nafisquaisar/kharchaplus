@@ -38,7 +38,6 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
   final searchController = TextEditingController();
   final Set<String> _pendingDeleteIds = {};
 
-
   @override
   void initState() {
     super.initState();
@@ -50,12 +49,8 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     });
 
     Future.microtask(() async {
-
-      await context
-          .read<CategoryViewModel>()
-          .addDefaultCategories();
+      await context.read<CategoryViewModel>().addDefaultCategories();
     });
-
   }
 
   @override
@@ -106,7 +101,12 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
           physics: const AlwaysScrollableScrollPhysics(
             parent: BouncingScrollPhysics(),
           ),
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.fromLTRB(
+            16,
+            16,
+            16,
+            MediaQuery.of(context).padding.bottom + 110,
+          ),
           children: [
             /// =====================================================
             /// SEARCH
@@ -320,7 +320,6 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
                       amount: card.totalExpense.toStringAsFixed(0),
 
-
                       items: "${card.totalItems} Items",
 
                       status: card.status,
@@ -362,28 +361,34 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
         ),
       ),
 
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.accent,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
-        onPressed: () async {
-          final result = await showModalBottomSheet(
-            context: context,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 90),
 
-            isScrollControlled: true,
+        child: FloatingActionButton(
+          backgroundColor: AppColors.accent,
 
-            backgroundColor: Colors.transparent,
+          onPressed: () async {
+            final result = await showModalBottomSheet(
+              context: context,
 
-            builder: (_) {
-              return const CreateExpenseCardSheet();
-            },
-          );
+              isScrollControlled: true,
 
-          if (result != null && mounted) {
-            showSnack(result);
-          }
-        },
+              backgroundColor: Colors.transparent,
 
-        child: const Icon(Icons.add, color: AppColors.textPrimary),
+              builder: (_) {
+                return const CreateExpenseCardSheet();
+              },
+            );
+
+            if (result != null && mounted) {
+              showSnack(result);
+            }
+          },
+
+          child: const Icon(Icons.add, color: AppColors.textPrimary),
+        ),
       ),
     );
   }

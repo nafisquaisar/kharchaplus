@@ -35,6 +35,7 @@ class AppColors {
 
   // 📝 Text
   static const Color textPrimary = Colors.white;
+  static const Color black = Colors.black;
   static const Color textSecondary = Color(0xFF5F7F85); // muted teal-grey
   static const Color colorText = Color(0xFF1B7F8C); // muted teal-grey
 
