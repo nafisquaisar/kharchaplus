@@ -24,9 +24,16 @@ class FirebaseFoodService {
           .doc(uid)
           .collection("food_cycles");
 
-  CollectionReference get mealEntriesRef =>
-      firestore
-          .collection("users")
-          .doc(uid)
-          .collection("meal_entries");
+  // =========================
+  // MEAL ENTRIES
+  // =========================
+
+  CollectionReference mealEntriesRef(
+      String cycleId,
+      ) {
+
+    return foodCyclesRef
+        .doc(cycleId)
+        .collection("meal_entries");
+  }
 }

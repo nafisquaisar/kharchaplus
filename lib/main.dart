@@ -4,6 +4,7 @@ import 'package:expense_tracker/features/Expense/data/repository/category_reposi
 import 'package:expense_tracker/features/Expense/presentation/viewmodel/CategoryViewModel.dart';
 import 'package:expense_tracker/features/Expense/presentation/viewmodel/ExpenseCardViewModel.dart';
 import 'package:expense_tracker/features/Profile/presentation/viewmodel/profile_viewmodel.dart';
+import 'package:expense_tracker/features/Track/FoodTracking/presentation/viewmodel/meal_entry_viewmodel.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,9 @@ import 'features/Expense/presentation/viewmodel/expense_viewmodel.dart';
 import 'features/Profile/data/datasource/profile_remote_data_source.dart';
 import 'features/Profile/data/repository/profile_repository.dart';
 import 'features/Profile/data/repository/profile_repository_impl.dart';
+import 'features/Track/FoodTracking/data/datasource/remote/meal_remote_datasource_impl.dart';
+import 'features/Track/FoodTracking/domain/repository/MealRepository.dart';
+import 'features/Track/FoodTracking/domain/repository/MealRepositoryImpl.dart';
 import 'features/Track/FoodTracking/domain/repository/food_repository_impl.dart';
 import 'features/Track/FoodTracking/presentation/viewmodel/food_cycle_viewmodel.dart';
 import 'features/Track/FoodTracking/services/FirebaseFoodService.dart';
@@ -172,6 +176,26 @@ class ExpenseTrackerApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => ExpenseFilterViewModel(),
         ),
+        ChangeNotifierProvider(
+
+          create: (_) => MealEntryViewModel(
+
+            MealRepositoryImpl(
+
+              remote: MealRemoteDataSourceImpl(
+
+                service: FirebaseFoodService(
+
+                  firestore:
+                  FirebaseFirestore.instance,
+
+                  auth:
+                  FirebaseAuth.instance,
+                ),
+              ),
+            ),
+          ),
+        ),
 
         ChangeNotifierProvider(
           create: (_) => FoodCycleViewModel(
@@ -181,17 +205,22 @@ class ExpenseTrackerApp extends StatelessWidget {
                 auth: FirebaseAuth.instance,
               ),
             ),
+              MealRepositoryImpl(
+                remote: MealRemoteDataSourceImpl(
+                  service: FirebaseFoodService(
+                    firestore: FirebaseFirestore.instance,
+                    auth: FirebaseAuth.instance,
+                  ),
+                ),
+              ),
           )..loadCycles(),
         ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Kharcha Plus',
-
         builder: (context, child) {
-          // 🔥 GLOBAL CONTROL
           SystemUI.setLight();
-
           return child!;
         },
 

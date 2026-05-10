@@ -18,24 +18,7 @@ abstract class FoodRepository {
 
   Future<FoodCycle?> getCycleById(String cycleId);
 
-  // =========================
-  // MEAL ENTRY
-  // =========================
 
-  Future<void> saveMealEntry(MealEntry entry);
-
-  Future<void> updateMealEntry(MealEntry entry);
-
-  Future<void> deleteMealEntry(String entryId);
-
-  Future<List<MealEntry>> getMealEntries(
-      String cycleId,
-      );
-
-  Future<MealEntry?> getMealByDate(
-      String cycleId,
-      DateTime date,
-      );
 
   // =========================
   // SYNC

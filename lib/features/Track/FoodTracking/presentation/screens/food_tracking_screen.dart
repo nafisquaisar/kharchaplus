@@ -329,41 +329,73 @@ class _FoodTrackingScreenState extends State<FoodTrackingScreen> {
                     )
                   else
                     ...filteredCycles.map((cycle) {
+
+                      final stats =
+                      vm.getStats(
+                        cycle.id,
+                      );
+
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
+
+                        padding:
+                        const EdgeInsets.only(
+                          bottom: 12,
+                        ),
 
                         child: Dismissible(
+
                           key: Key(cycle.id),
 
-                          direction: DismissDirection.horizontal,
+                          direction:
+                          DismissDirection
+                              .horizontal,
 
-                          movementDuration: const Duration(milliseconds: 250),
+                          movementDuration:
+                          const Duration(
+                            milliseconds: 250,
+                          ),
 
-                          resizeDuration: const Duration(milliseconds: 200),
+                          resizeDuration:
+                          const Duration(
+                            milliseconds: 200,
+                          ),
 
-                          confirmDismiss: (direction) async {
-                            // DISMISS KEYBOARD
-                            FocusManager.instance.primaryFocus?.unfocus();
+                          confirmDismiss:
+                              (direction) async {
 
-                            // =========================
+                            FocusManager.instance
+                                .primaryFocus
+                                ?.unfocus();
+
+                            // =====================
                             // EDIT
-                            // =========================
+                            // =====================
 
-                            if (direction == DismissDirection.startToEnd) {
+                            if (direction ==
+                                DismissDirection
+                                    .startToEnd) {
+
                               openEditSheet(cycle);
 
                               return false;
                             }
 
-                            // =========================
+                            // =====================
                             // DELETE
-                            // =========================
+                            // =====================
 
-                            if (direction == DismissDirection.endToStart) {
-                              final confirm = await showDeleteDialog();
+                            if (direction ==
+                                DismissDirection
+                                    .endToStart) {
+
+                              final confirm =
+                              await showDeleteDialog();
 
                               if (confirm) {
-                                await deleteCycleWithUndo(cycle);
+
+                                await deleteCycleWithUndo(
+                                  cycle,
+                                );
                               }
 
                               return false;
@@ -372,50 +404,72 @@ class _FoodTrackingScreenState extends State<FoodTrackingScreen> {
                             return false;
                           },
 
-                          background: swipeBackground(
-                            color: AppColors.accent,
+                          background:
+                          swipeBackground(
 
-                            icon: Icons.edit,
+                            color:
+                            AppColors.accent,
 
-                            alignment: Alignment.centerLeft,
+                            icon:
+                            Icons.edit,
+
+                            alignment:
+                            Alignment.centerLeft,
                           ),
 
-                          secondaryBackground: swipeBackground(
+                          secondaryBackground:
+                          swipeBackground(
+
                             color: Colors.red,
 
                             icon: Icons.delete,
 
-                            alignment: Alignment.centerRight,
+                            alignment:
+                            Alignment.centerRight,
                           ),
 
                           child: FoodCycleCard(
-                            title: cycle.title ?? "Food Cycle",
 
-                            cost: "₹ ${cycle.monthlyAmount.toStringAsFixed(0)}",
+                            title: cycle.title ?? "Untitled",
 
-                            status: cycle.status.name,
+                            
+                            cost:
+                            "₹ ${cycle.monthlyAmount.toStringAsFixed(0)}",
 
-                            highlight: cycle.status == CycleStatus.active,
+                            status:
+                            cycle.status.name,
 
-                            dateRange: formatDateRange(cycle),
+                            highlight:
+                            cycle.status ==
+                                CycleStatus.active,
 
-                            totalTiffin: cycle.totalTiffin,
+                            dateRange:
+                            formatDateRange(
+                              cycle,
+                            ),
 
-                            totalEaten: cycle.totalEaten,
+                            totalTiffin:
+                            stats.totalTiffin,
 
-                            remainingTiffin: cycle.remainingTiffin,
+                            totalEaten:
+                            stats.totalMeals,
+
+                            remainingTiffin:
+                            stats.remaining,
+
+                            progress:
+                            stats.progress,
 
                             onTap: () {
-                              // DISMISS KEYBOARD
-                              FocusManager.instance.primaryFocus?.unfocus();
 
-                              openDetail(cycle);
+                              openDetail(
+                                cycle,
+                              );
                             },
                           ),
                         ),
                       );
-                    }),
-                ],
+                    }),                ],
               ),
             );
           },

@@ -1,21 +1,37 @@
 import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
 
 import '../../../domain/entities/FoodCycle.dart';
+
+import '../../../domain/entities/food_cycle_stats_model.dart';
+
 import '../../../domain/enum/cycle_status.dart';
 
 import 'food_cycle_card.dart';
 
-class FoodCycleList extends StatelessWidget {
+class FoodCycleList
+    extends StatelessWidget {
 
   final List<FoodCycle> cycles;
 
   final Function(FoodCycle) onTap;
 
+  // REALTIME STATS
+
+  final FoodCycleStatsModel
+  Function(String cycleId)
+  getStats;
+
   const FoodCycleList({
+
     super.key,
+
     required this.cycles,
+
     required this.onTap,
+
+    required this.getStats,
   });
 
   // =========================
@@ -26,7 +42,8 @@ class FoodCycleList extends StatelessWidget {
       FoodCycle cycle,
       ) {
 
-    return "₹ ${cycle.monthlyAmount.toStringAsFixed(0)}";
+    return
+      "₹ ${cycle.monthlyAmount.toStringAsFixed(0)}";
   }
 
   // =========================
@@ -38,18 +55,24 @@ class FoodCycleList extends StatelessWidget {
       ) {
 
     final start =
+
     DateFormat("d MMM")
-        .format(cycle.startDate);
+        .format(
+      cycle.startDate,
+    );
 
     final end =
+
     DateFormat("d MMM")
-        .format(cycle.endDate);
+        .format(
+      cycle.endDate,
+    );
 
     return "$start - $end";
   }
 
   // =========================
-  // CARD STATUS
+  // ACTIVE STATUS
   // =========================
 
   bool isActive(
@@ -61,9 +84,12 @@ class FoodCycleList extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+      BuildContext context,
+      ) {
 
     if (cycles.isEmpty) {
+
       return const SizedBox();
     }
 
@@ -73,52 +99,85 @@ class FoodCycleList extends StatelessWidget {
 
       cycles.map((cycle) {
 
-        return FoodCycleCard(
+        final stats =
+        getStats(cycle.id);
 
-          // TITLE
+        return Padding(
 
-          title:
+          padding:
+          const EdgeInsets.only(
+            bottom: 12,
+          ),
 
-          cycle.title?.trim().isNotEmpty == true
+          child: FoodCycleCard(
 
-              ? cycle.title!
+            // =====================
+            // TITLE
+            // =====================
 
-              : "Food Cycle",
+            title:
 
-          // COST
+            cycle.title
+                ?.trim()
+                .isNotEmpty ==
+                true
 
-          cost:
-          calculateCost(cycle),
+                ? cycle.title!
 
-          // STATUS
+                : "Food Cycle",
 
-          status:
-          cycle.status.name
-              .toUpperCase(),
+            // =====================
+            // COST
+            // =====================
 
-          highlight:
-          isActive(cycle),
+            cost:
+            calculateCost(
+              cycle,
+            ),
 
-          // DATE
+            // =====================
+            // STATUS
+            // =====================
 
-          dateRange:
-          formatDateRange(cycle),
+            status:
+            cycle.status.name
+                .toUpperCase(),
 
-          // TIFFIN INFO
+            highlight:
+            isActive(cycle),
 
-          totalTiffin:
-          cycle.totalTiffin,
+            // =====================
+            // DATE
+            // =====================
 
-          totalEaten:
-          cycle.totalEaten,
+            dateRange:
+            formatDateRange(
+              cycle,
+            ),
 
-          remainingTiffin:
-          cycle.remainingTiffin,
+            // =====================
+            // REALTIME STATS
+            // =====================
 
-          // CLICK
+            totalTiffin:
+            stats.totalTiffin,
 
-          onTap:
-              () => onTap(cycle),
+            totalEaten:
+            stats.totalMeals,
+
+            remainingTiffin:
+            stats.remaining,
+
+            progress:
+            stats.progress,
+
+            // =====================
+            // CLICK
+            // =====================
+
+            onTap:
+                () => onTap(cycle),
+          ),
         );
       }).toList(),
     );

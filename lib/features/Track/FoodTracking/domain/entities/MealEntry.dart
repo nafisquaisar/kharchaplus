@@ -58,21 +58,39 @@ class MealEntry {
   // =========================
 
   MealEntry copyWith({
+
     String? id,
+
     String? cycleId,
+
     DateTime? date,
+
     bool? breakfast,
+
     bool? lunch,
+
     bool? dinner,
+
     bool? skipped,
+
     double? extraCharge,
+
     String? note,
+
     MealType? extraMealType,
+
+    bool clearExtraMealType = false,
+
     DateTime? createdAt,
+
     DateTime? updatedAt,
+
     bool? isDeleted,
+
     bool? isSynced,
+
     SyncStatus? syncStatus,
+
     int? version,
   }) {
 
@@ -84,32 +102,49 @@ class MealEntry {
 
       date: date ?? this.date,
 
-      breakfast: breakfast ?? this.breakfast,
+      breakfast:
+      breakfast ?? this.breakfast,
 
-      lunch: lunch ?? this.lunch,
+      lunch:
+      lunch ?? this.lunch,
 
-      dinner: dinner ?? this.dinner,
+      dinner:
+      dinner ?? this.dinner,
 
-      skipped: skipped ?? this.skipped,
+      skipped:
+      skipped ?? this.skipped,
 
-      extraCharge: extraCharge ?? this.extraCharge,
+      extraCharge:
+      extraCharge ?? this.extraCharge,
 
       note: note ?? this.note,
 
       extraMealType:
-      extraMealType ?? this.extraMealType,
 
-      createdAt: createdAt ?? this.createdAt,
+      clearExtraMealType
 
-      updatedAt: updatedAt ?? this.updatedAt,
+          ? null
 
-      isDeleted: isDeleted ?? this.isDeleted,
+          : extraMealType ??
+          this.extraMealType,
 
-      isSynced: isSynced ?? this.isSynced,
+      createdAt:
+      createdAt ?? this.createdAt,
 
-      syncStatus: syncStatus ?? this.syncStatus,
+      updatedAt:
+      updatedAt ?? this.updatedAt,
 
-      version: version ?? this.version,
+      isDeleted:
+      isDeleted ?? this.isDeleted,
+
+      isSynced:
+      isSynced ?? this.isSynced,
+
+      syncStatus:
+      syncStatus ?? this.syncStatus,
+
+      version:
+      version ?? this.version,
     );
   }
 

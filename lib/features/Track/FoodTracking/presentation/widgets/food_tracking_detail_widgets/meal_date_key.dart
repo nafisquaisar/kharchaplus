@@ -17,12 +17,23 @@ DateTime? dateFromKey(String key) {
   return DateTime(year, month, day);
 }
 
-Map<String, bool> mealState(Map<String, Map<String, bool>> data, String key) {
-  final day = data[key];
-  return {
-    'lunch': day?['lunch'] ?? false,
-    'dinner': day?['dinner'] ?? false,
-  };
+Map<String, bool> mealState(
+
+    Map<String, Map<String, bool>> map,
+
+    String key,
+    ) {
+
+  return map[key] ??
+
+      {
+
+        'lunch': false,
+
+        'dinner': false,
+
+        'special': false,
+      };
 }
 
 DateTime normalizeDate(DateTime date) => DateTime(date.year, date.month, date.day);

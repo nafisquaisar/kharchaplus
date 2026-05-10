@@ -20,6 +20,8 @@ class FoodCycleCard extends StatelessWidget {
 
   final VoidCallback onTap;
 
+  final double progress;
+
   const FoodCycleCard({
     super.key,
     required this.title,
@@ -31,6 +33,7 @@ class FoodCycleCard extends StatelessWidget {
     required this.totalEaten,
     required this.remainingTiffin,
     required this.onTap,
+    required this.progress,
   });
 
   @override

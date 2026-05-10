@@ -1,5 +1,6 @@
 enum CycleStatus {
   active,
   completed,
-  paused,
+  upcoming,
+  archived,
 }
