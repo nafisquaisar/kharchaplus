@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../core/constants/AppColors.dart';
 
 class PhoneHeader extends StatelessWidget {
   const PhoneHeader({super.key});

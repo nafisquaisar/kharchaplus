@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../../core/constants/AppColors.dart';
 
 class TransactionHeader extends StatelessWidget {
   final VoidCallback onAdd;

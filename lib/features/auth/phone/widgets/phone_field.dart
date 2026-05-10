@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../core/constants/AppColors.dart';
 
 class PhoneInputField extends StatelessWidget {
   final TextEditingController controller;

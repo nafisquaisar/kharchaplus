@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../constants/KharchaThemeColors.dart';
+import '../constants/AppColors.dart';
 
 class CustomBottomNav extends StatelessWidget {
 

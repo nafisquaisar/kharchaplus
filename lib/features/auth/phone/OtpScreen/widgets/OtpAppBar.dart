@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../../core/constants/AppColors.dart';
 
 class OtpAppBar extends StatelessWidget implements PreferredSizeWidget {
   const OtpAppBar({super.key});

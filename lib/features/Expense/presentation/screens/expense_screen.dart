@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../core/constants/AppColors.dart';
 import '../../../../core/utils/AppFlushbar.dart';
 
 import '../../data/model/ExpenseCardModel.dart';
@@ -232,7 +232,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     key: ValueKey(card.id),
 
                     background: swipeBackground(
-                      color: Colors.blue,
+                      color: AppColors.accent,
 
                       icon: Icons.edit,
 
@@ -470,7 +470,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
       alignment: alignment,
 
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withOpacity(0.2),
 
         borderRadius: BorderRadius.circular(18),
       ),

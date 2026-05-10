@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../viewmodel/profile_viewmodel.dart';
-import '../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../core/constants/AppColors.dart';
 import 'package:expense_tracker/features/auth/domain/entities/user_profile.dart';
 
 class EditProfileScreen extends StatefulWidget {

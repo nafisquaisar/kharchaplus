@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../core/constants/AppColors.dart';
 import '../../phone/phone_screen.dart';
 
 class PhoneButton extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:expense_tracker/core/constants/KharchaThemeColors.dart';
+import 'package:expense_tracker/core/constants/AppColors.dart';
 import 'package:flutter/material.dart';
 
 class LoadingView extends StatelessWidget {

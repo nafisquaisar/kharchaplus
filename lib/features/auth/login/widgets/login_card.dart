@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../core/constants/AppColors.dart';
 import 'footer.dart';
 import 'header_wave.dart' hide GoogleButton;
 import 'google_button.dart';

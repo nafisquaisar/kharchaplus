@@ -5,7 +5,7 @@ import 'core/Common/AppDrawer.dart';
 import 'core/Common/CommonAppBar.dart';
 import 'core/Common/CustomBottomNav.dart';
 
-import 'core/constants/KharchaThemeColors.dart';
+import 'core/constants/AppColors.dart';
 
 import 'features/Expense/presentation/screens/expense_screen.dart';
 import 'features/Home/home_screen.dart';

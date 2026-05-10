@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../../../../core/constants/AppColors.dart';
 import '../../../../../data/model/category_model.dart';
 
 class CategoryDropdown extends StatefulWidget {

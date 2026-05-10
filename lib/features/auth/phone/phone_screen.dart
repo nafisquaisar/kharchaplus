@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/constants/KharchaThemeColors.dart';
+import '../../../core/constants/AppColors.dart';
 import '../viewmodel/auth_viewmodel.dart';
 import 'OtpScreen/otp_screen.dart';
 

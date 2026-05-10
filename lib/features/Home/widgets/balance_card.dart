@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/constants/KharchaThemeColors.dart';
+import '../../../core/constants/AppColors.dart';
 import '../../Expense/data/model/ExpenseCardModel.dart';
 import '../../Expense/presentation/viewmodel/expense_viewmodel.dart';
 

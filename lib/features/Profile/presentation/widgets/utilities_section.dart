@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/KharchaThemeColors.dart';
+import 'package:expense_tracker/core/constants/AppColors.dart';
 
 class UtilitiesSection extends StatelessWidget {
   const UtilitiesSection({super.key});

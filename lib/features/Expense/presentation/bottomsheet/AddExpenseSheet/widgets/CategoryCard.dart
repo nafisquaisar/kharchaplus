@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../../../core/constants/AppColors.dart';
 import '../../../../data/model/category_model.dart';
 import 'CategoryCard/AddCategoryDialog.dart';
 import 'CategoryCard/CategoryDropdown.dart';

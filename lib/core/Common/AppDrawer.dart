@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../features/auth/viewmodel/auth_viewmodel.dart';
-import '../constants/KharchaThemeColors.dart';
+import '../constants/AppColors.dart';
 
 class AppDrawer extends StatelessWidget {
   final Function(int) onItemTap;

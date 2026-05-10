@@ -1,6 +1,6 @@
 import 'package:expense_tracker/features/Expense/presentation/widgets/ExpenseDetail/summary_trend.dart';
 import 'package:flutter/material.dart';
-import '../../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../../core/constants/AppColors.dart';
 
 class SummaryHeader extends StatelessWidget {
   final String startDate;

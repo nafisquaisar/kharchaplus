@@ -1,226 +1,330 @@
+import 'package:expense_tracker/features/Track/FoodTracking/bottomsheet/services/food_cycle_sheet_service.dart';
+import 'package:expense_tracker/features/Track/FoodTracking/bottomsheet/widgets/FoodBottomSheetHeader.dart';
+import 'package:expense_tracker/features/Track/FoodTracking/bottomsheet/widgets/basic_details_section.dart';
+import 'package:expense_tracker/features/Track/FoodTracking/bottomsheet/widgets/cycle_duration_section.dart';
+import 'package:expense_tracker/features/Track/FoodTracking/bottomsheet/widgets/gradient_button.dart';
+import 'package:expense_tracker/features/Track/FoodTracking/bottomsheet/widgets/meal_rules_section.dart';
+import 'package:expense_tracker/features/Track/FoodTracking/bottomsheet/widgets/pricing_section.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/constants/AppColors.dart';
 
-import '../../model/FoodCycle.dart';
+import '../../../../core/utils/AppFlushbar.dart';
+import '../domain/entities/FoodCycle.dart';
+import '../domain/enum/SundayRule.dart';
+import '../domain/enum/cycle_status.dart';
+
+import '../presentation/viewmodel/food_cycle_viewmodel.dart';
 
 class CreateFoodCycleSheet extends StatefulWidget {
-  final Function(FoodCycle) onCreate; // ✅ FIXED
+  final FoodCycle? cycle;
 
-  const CreateFoodCycleSheet({super.key, required this.onCreate});
+  const CreateFoodCycleSheet({super.key, this.cycle});
 
   @override
-  State<CreateFoodCycleSheet> createState() =>
-      _CreateFoodCycleSheetState();
+  State<CreateFoodCycleSheet> createState() => _CreateFoodCycleSheetState();
 }
 
-class _CreateFoodCycleSheetState
-    extends State<CreateFoodCycleSheet> {
+class _CreateFoodCycleSheetState extends State<CreateFoodCycleSheet> {
+  // =========================
+  // CONTROLLERS
+  // =========================
+
+  final titleController = TextEditingController();
+
+  final notesController = TextEditingController();
+
   final priceController = TextEditingController();
 
+  final monthlyFeeController = TextEditingController();
+  final monthlyAmountController = TextEditingController();
+
+  // =========================
+  // STATE
+  // =========================
+
   DateTime? startDate;
+
   DateTime? endDate;
 
   String sundayOption = "2 Meals";
+
+  bool includeSunday = true;
+
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final cycle = widget.cycle;
+    if (cycle != null) {
+      titleController.text = cycle.title ?? "";
+      notesController.text = cycle.note ?? "";
+      monthlyAmountController.text = (cycle.monthlyAmount).toStringAsFixed(0);
+      startDate = cycle.startDate;
+      endDate = cycle.endDate;
+      sundayOption = cycle.sundayRule.name == "twoMeals"
+          ? "2 Meals"
+          : cycle.sundayRule.name == "oneMeal"
+          ? "1 Meal"
+          : "Off";
+    }
+  }
+
+  // =========================
+  // FORMAT DATE
+  // =========================
 
   String formatDate(DateTime date) {
     return DateFormat("d MMM yyyy").format(date);
   }
 
+  // =========================
+  // PICK DATE
+  // =========================
+
   Future<void> pickDate(bool isStart) async {
     final picked = await showDatePicker(
       context: context,
+
       initialDate: DateTime.now(),
+
       firstDate: DateTime(2020),
+
       lastDate: DateTime(2100),
     );
 
-    if (picked != null) {
-      setState(() {
-        if (isStart) {
-          startDate = picked;
-        } else {
-          endDate = picked;
-        }
-      });
+    if (picked == null) {
+      return;
     }
+
+    setState(() {
+      if (isStart) {
+        startDate = picked;
+      } else {
+        endDate = picked;
+      }
+    });
   }
+
+  // =========================
+  // ERROR
+  // =========================
 
   void showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg), backgroundColor: Colors.red),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Colors.red));
   }
 
-  void submit() {
-    if (priceController.text.isEmpty) {
-      showError("Price is required");
-      return;
-    }
+  // =========================
+  // SUBMIT
+  // =========================
 
-    if (startDate == null) {
-      showError("Start date required");
-      return;
-    }
+  Future<void> submit() async {
+    FocusScope.of(context).unfocus();
 
-    if (endDate != null && endDate!.isBefore(startDate!)) {
-      showError("End date must be after start date");
-      return;
-    }
+    final title = titleController.text.trim();
 
-    final cycle = FoodCycle(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      price: double.parse(priceController.text),
-      startDate: startDate!,
+    final monthlyAmount = double.tryParse(monthlyAmountController.text);
+
+    final isValid = FoodCycleSheetService.validate(
+      context: context,
+
+      title: title,
+
+      monthlyAmount: monthlyAmount,
+
+      startDate: startDate,
+
       endDate: endDate,
-      sundayRule: sundayOption,
     );
 
-    widget.onCreate(cycle);
+    if (!isValid) return;
 
-    Navigator.pop(context);
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      final cycle = FoodCycleSheetService.buildCycle(
+        oldCycle: widget.cycle,
+
+        title: title,
+
+        monthlyAmount: monthlyAmount!,
+
+        startDate: startDate!,
+
+        note: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
+
+        endDate: endDate!,
+
+        sundayOption: sundayOption,
+      );
+
+      await FoodCycleSheetService.saveCycle(
+        context: context,
+
+        cycle: cycle,
+
+        isEdit: widget.cycle != null,
+      );
+
+      if (!mounted) return;
+
+      Navigator.pop(context);
+
+      AppFlushbar.showSuccess(
+        context,
+
+        widget.cycle != null
+            ? "Cycle updated successfully"
+            : "Cycle created successfully",
+      );
+    } catch (e) {
+      AppFlushbar.showError(context, e.toString());
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
-
-
-  InputDecoration input(String hint) => InputDecoration(
-    hintText: hint,
-    filled: true,
-    fillColor: const Color(0xFFF3F4F6),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14),
-      borderSide: BorderSide.none,
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Create Food Cycle",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return DraggableScrollableSheet(
+      expand: false,
+
+      initialChildSize: 0.88,
+
+      minChildSize: 0.65,
+
+      maxChildSize: 0.95,
+
+      builder: (context, scrollController) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: AppColors.background,
+
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 20,
+
+              right: 20,
+
+              top: 14,
+
+              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
             ),
 
-            const SizedBox(height: 20),
+            child: ListView(
+              controller: scrollController,
 
-            // 💰 Price
-            const Text("Price per meal"),
-            const SizedBox(height: 6),
-            TextField(
-              controller: priceController,
-              keyboardType: TextInputType.number,
-              decoration: input("Enter price"),
+              physics: const BouncingScrollPhysics(),
+
+              children: [
+                // HEADER
+                FoodBottomSheetHeader(
+
+                  title: widget.cycle != null
+                      ? "Update Food Cycle"
+                      : "Create Food Cycle",
+                ),
+
+                const SizedBox(height: 16),
+
+                // BASIC DETAILS
+                BasicDetailsSection(
+                  titleController: titleController,
+
+                  notesController: notesController,
+                ),
+
+                const SizedBox(height: 14),
+
+                // DURATION
+                CycleDurationSection(
+                  startDate: startDate,
+
+                  endDate: endDate,
+
+                  formatDate: formatDate,
+
+                  onStartTap: () => pickDate(true),
+
+                  onEndTap: () => pickDate(false),
+                ),
+
+                const SizedBox(height: 14),
+
+                // PRICING
+                PricingSection(
+                  monthlyAmountController: monthlyAmountController,
+
+                  monthlyFeeController: monthlyFeeController,
+                ),
+
+                const SizedBox(height: 14),
+
+                // RULES
+                MealRulesSection(
+                  sundayOption: sundayOption,
+
+                  onSundayChanged: (v) {
+                    setState(() {
+                      sundayOption = v!;
+                    });
+                  },
+                ),
+
+                const SizedBox(height: 28),
+
+                // BUTTON
+                GradientButton(
+
+                  text: isLoading
+
+                      ? widget.cycle != null
+                      ? "Updating..."
+                      : "Creating..."
+
+                      : widget.cycle != null
+                      ? "Update Cycle"
+                      : "Create Cycle",
+
+                  onTap: isLoading
+                      ? null
+                      : () async {
+                    await submit();
+                  },
+                ),
+
+                const SizedBox(height: 30),
+              ],
             ),
-
-            const SizedBox(height: 16),
-
-            // 📅 Start Date
-            const Text("Start Date"),
-            const SizedBox(height: 6),
-            GestureDetector(
-              onTap: () => pickDate(true),
-              child: Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF3F4F6),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(startDate == null
-                        ? "Select Date"
-                        : formatDate(startDate!)),
-                    const Icon(Icons.calendar_today, size: 18),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // 📅 End Date
-            const Text("End Date (Optional)"),
-            const SizedBox(height: 6),
-            GestureDetector(
-              onTap: () => pickDate(false),
-              child: Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF3F4F6),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(endDate == null
-                        ? "Select Date"
-                        : formatDate(endDate!)),
-                    const Icon(Icons.calendar_today, size: 18),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // 🍱 Sunday Rule
-            const Text("Sunday Rule"),
-            const SizedBox(height: 6),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3F4F6),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: sundayOption,
-                  isExpanded: true,
-                  items: const [
-                    DropdownMenuItem(value: "2 Meals", child: Text("2 Meals")),
-                    DropdownMenuItem(value: "1 Meal", child: Text("1 Meal")),
-                    DropdownMenuItem(value: "Off", child: Text("Off")),
-                  ],
-                  onChanged: (v) => setState(() => sundayOption = v!),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // 🔥 Button
-            SizedBox(
-              width: double.infinity,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
-                  ),
-                ),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  onPressed: submit,
-                  child: const Text("Create Cycle"),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+
+    notesController.dispose();
+
+    priceController.dispose();
+
+    monthlyFeeController.dispose();
+
+    super.dispose();
   }
 }

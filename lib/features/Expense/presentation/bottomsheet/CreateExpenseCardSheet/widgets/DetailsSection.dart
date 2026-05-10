@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'SectionCard.dart';
-import '../../../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../../../core/constants/AppColors.dart';
 
 class DetailsSection extends StatelessWidget {
   final TextEditingController titleController;

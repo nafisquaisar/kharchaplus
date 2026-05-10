@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../../../core/constants/KharchaThemeColors.dart';
+import '../../../../../../../core/constants/AppColors.dart';
 import '../../../../../../../core/utils/AppFlushbar.dart';
 import '../../../../../data/model/category_model.dart';
 import '../../../../viewmodel/CategoryViewModel.dart';

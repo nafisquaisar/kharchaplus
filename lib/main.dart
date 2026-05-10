@@ -5,6 +5,7 @@ import 'package:expense_tracker/features/Expense/presentation/viewmodel/Category
 import 'package:expense_tracker/features/Expense/presentation/viewmodel/ExpenseCardViewModel.dart';
 import 'package:expense_tracker/features/Profile/presentation/viewmodel/profile_viewmodel.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
-import 'core/constants/KharchaThemeColors.dart';
+import 'core/constants/AppColors.dart';
 import 'core/utils/system_ui.dart';
 import 'features/Expense/data/repository/expense_repository.dart';
 import 'features/Expense/presentation/viewmodel/ExpenseFilterViewModel.dart';
@@ -20,6 +21,9 @@ import 'features/Expense/presentation/viewmodel/expense_viewmodel.dart';
 import 'features/Profile/data/datasource/profile_remote_data_source.dart';
 import 'features/Profile/data/repository/profile_repository.dart';
 import 'features/Profile/data/repository/profile_repository_impl.dart';
+import 'features/Track/FoodTracking/domain/repository/food_repository_impl.dart';
+import 'features/Track/FoodTracking/presentation/viewmodel/food_cycle_viewmodel.dart';
+import 'features/Track/FoodTracking/services/FirebaseFoodService.dart';
 import 'features/auth/data/datasources/firebase_auth_data_source.dart';
 import 'features/auth/data/datasources/firestore_user_data_source.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -167,6 +171,17 @@ class ExpenseTrackerApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ExpenseFilterViewModel(),
+        ),
+
+        ChangeNotifierProvider(
+          create: (_) => FoodCycleViewModel(
+            FoodRepositoryImpl(
+              firebaseService:  FirebaseFoodService(
+                firestore: FirebaseFirestore.instance,
+                auth: FirebaseAuth.instance,
+              ),
+            ),
+          )..loadCycles(),
         ),
       ],
       child: MaterialApp(
