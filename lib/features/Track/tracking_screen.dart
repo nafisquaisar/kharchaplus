@@ -1,5 +1,5 @@
   import 'package:flutter/material.dart';
-  import 'ElectricityTracking/ElectricityTrackingScreen.dart';
+  import 'ElectricityTracking/presentation/screens/ElectricityTrackingScreen.dart';
   import 'FoodTracking/presentation/screens/food_tracking_screen.dart';
   import 'WaterTracking/WaterTrackingScreen.dart';
   import 'widgets/tracking_card.dart';

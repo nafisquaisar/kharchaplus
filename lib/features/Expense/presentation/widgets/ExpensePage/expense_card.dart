@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/AppColors.dart';
-import '../../../../../core/constants/colors.dart';
 
 class ExpenseCard extends StatefulWidget {
   final String title;

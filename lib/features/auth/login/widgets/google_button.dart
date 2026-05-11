@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/AppColors.dart';
-import '../../../../core/constants/colors.dart';
 import '../../viewmodel/auth_viewmodel.dart';
 
 class GoogleButton extends StatelessWidget {

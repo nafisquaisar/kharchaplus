@@ -10,9 +10,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:provider/provider.dart' as provider;
 
 import 'core/constants/AppColors.dart';
 import 'core/utils/system_ui.dart';
@@ -75,116 +76,375 @@ void main() async {
   );
 
 
-  runApp(const ExpenseTrackerApp());
+  runApp(
+
+    const ProviderScope(
+      child: ExpenseTrackerApp(),
+    ),
+  );
 }
 
 class ExpenseTrackerApp extends StatelessWidget {
-  const ExpenseTrackerApp({super.key});
+
+  const ExpenseTrackerApp({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider(
-          create: (_) => AuthLogger(
-            analytics: FirebaseAnalytics.instance,
-            crashlytics: FirebaseCrashlytics.instance,
-          ),
-        ),
-        Provider(create: (_) => AuthCooldownStorage()),
-        Provider(create: (_) => FirebaseAuthDataSource()),
-        Provider(create: (_) => FirestoreUserDataSource()),
-        ProxyProvider3<FirebaseAuthDataSource, FirestoreUserDataSource,
-            AuthLogger, AuthRepository>(
-          update: (_, authSource, userSource, logger, __) =>
-              AuthRepositoryImpl(authSource, userSource, logger),
-        ),
-        Provider(
-          create: (context) =>
-              SignInWithGoogleUseCase(context.read<AuthRepository>()),
-        ),
-        Provider(
-          create: (context) =>
-              SignInWithEmailPasswordUseCase(context.read<AuthRepository>()),
-        ),
-        Provider(
-          create: (context) =>
-              SignUpWithEmailPasswordUseCase(context.read<AuthRepository>()),
-        ),
-        Provider(
-          create: (context) => SendOtpUseCase(context.read<AuthRepository>()),
-        ),
-        Provider(
-          create: (context) => VerifyOtpUseCase(context.read<AuthRepository>()),
-        ),
-        Provider(
-          create: (context) => LinkPhoneUseCase(context.read<AuthRepository>()),
-        ),
-        Provider(
-          create: (context) =>
-              LinkEmailPasswordUseCase(context.read<AuthRepository>()),
-        ),
-        Provider(
-          create: (context) => LogoutUseCase(context.read<AuthRepository>()),
-        ),
-        Provider(
-          create: (context) =>
-              GetUserProfileUseCase(context.read<AuthRepository>()),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => AuthViewModel(
-            authRepository: context.read<AuthRepository>(),
-            signInWithGoogle: context.read<SignInWithGoogleUseCase>(),
-            signInWithEmailPassword:
-                context.read<SignInWithEmailPasswordUseCase>(),
-            signUpWithEmailPassword:
-                context.read<SignUpWithEmailPasswordUseCase>(),
-            sendOtp: context.read<SendOtpUseCase>(),
-            verifyOtp: context.read<VerifyOtpUseCase>(),
-            linkPhone: context.read<LinkPhoneUseCase>(),
-            linkEmailPassword: context.read<LinkEmailPasswordUseCase>(),
-            logout: context.read<LogoutUseCase>(),
-            getUserProfile: context.read<GetUserProfileUseCase>(),
-            logger: context.read<AuthLogger>(),
-            cooldownStorage: context.read<AuthCooldownStorage>(),
-          ),
-        ),
-        Provider<ProfileRemoteDataSource>(
-          create: (_) => ProfileRemoteDataSource(),
-        ),
-        Provider<ProfileRepository>(
-          create: (context) => ProfileRepositoryImpl(
-            context.read<ProfileRemoteDataSource>(),
-          ),
-        ),
-        ChangeNotifierProxyProvider<AuthViewModel, ProfileViewModel>(
-          create: (context) => ProfileViewModel(
-            context.read<ProfileRepository>(),
-          ),
-          update: (_, authVm, profileVm) =>
-              profileVm!..bindUser(authVm.currentUser?.uid),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ExpenseViewModel(ExpenseRepository()),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ExpenseCardViewModel(ExpenseCardRepository()),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => CategoryViewModel(CategoryRepository()),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ExpenseFilterViewModel(),
-        ),
-        ChangeNotifierProvider(
 
-          create: (_) => MealEntryViewModel(
+    return provider.MultiProvider(
+
+      providers: [
+
+        // =========================
+        // AUTH LOGGER
+        // =========================
+
+        provider.Provider(
+
+          create: (_) => AuthLogger(
+
+            analytics:
+            FirebaseAnalytics.instance,
+
+            crashlytics:
+            FirebaseCrashlytics.instance,
+          ),
+        ),
+
+        provider.Provider(
+          create: (_) =>
+              AuthCooldownStorage(),
+        ),
+
+        provider.Provider(
+          create: (_) =>
+              FirebaseAuthDataSource(),
+        ),
+
+        provider.Provider(
+          create: (_) =>
+              FirestoreUserDataSource(),
+        ),
+
+        // =========================
+        // AUTH REPOSITORY
+        // =========================
+
+        provider.ProxyProvider3<
+            FirebaseAuthDataSource,
+            FirestoreUserDataSource,
+            AuthLogger,
+            AuthRepository>(
+
+          update: (
+              _,
+              authSource,
+              userSource,
+              logger,
+              __,
+              ) {
+
+            return AuthRepositoryImpl(
+              authSource,
+              userSource,
+              logger,
+            );
+          },
+        ),
+
+        // =========================
+        // AUTH USECASES
+        // =========================
+
+        provider.Provider(
+
+          create: (context) =>
+
+              SignInWithGoogleUseCase(
+
+                context.read<AuthRepository>(),
+              ),
+        ),
+
+        provider.Provider(
+
+          create: (context) =>
+
+              SignInWithEmailPasswordUseCase(
+
+                context.read<AuthRepository>(),
+              ),
+        ),
+
+        provider.Provider(
+
+          create: (context) =>
+
+              SignUpWithEmailPasswordUseCase(
+
+                context.read<AuthRepository>(),
+              ),
+        ),
+
+        provider.Provider(
+
+          create: (context) =>
+
+              SendOtpUseCase(
+
+                context.read<AuthRepository>(),
+              ),
+        ),
+
+        provider.Provider(
+
+          create: (context) =>
+
+              VerifyOtpUseCase(
+
+                context.read<AuthRepository>(),
+              ),
+        ),
+
+        provider.Provider(
+
+          create: (context) =>
+
+              LinkPhoneUseCase(
+
+                context.read<AuthRepository>(),
+              ),
+        ),
+
+        provider.Provider(
+
+          create: (context) =>
+
+              LinkEmailPasswordUseCase(
+
+                context.read<AuthRepository>(),
+              ),
+        ),
+
+        provider.Provider(
+
+          create: (context) =>
+
+              LogoutUseCase(
+
+                context.read<AuthRepository>(),
+              ),
+        ),
+
+        provider.Provider(
+
+          create: (context) =>
+
+              GetUserProfileUseCase(
+
+                context.read<AuthRepository>(),
+              ),
+        ),
+
+        // =========================
+        // AUTH VIEWMODEL
+        // =========================
+
+        provider.ChangeNotifierProvider(
+
+          create: (context) =>
+
+              AuthViewModel(
+
+                authRepository:
+                context.read<AuthRepository>(),
+
+                signInWithGoogle:
+                context.read<
+                    SignInWithGoogleUseCase>(),
+
+                signInWithEmailPassword:
+                context.read<
+                    SignInWithEmailPasswordUseCase>(),
+
+                signUpWithEmailPassword:
+                context.read<
+                    SignUpWithEmailPasswordUseCase>(),
+
+                sendOtp:
+                context.read<
+                    SendOtpUseCase>(),
+
+                verifyOtp:
+                context.read<
+                    VerifyOtpUseCase>(),
+
+                linkPhone:
+                context.read<
+                    LinkPhoneUseCase>(),
+
+                linkEmailPassword:
+                context.read<
+                    LinkEmailPasswordUseCase>(),
+
+                logout:
+                context.read<
+                    LogoutUseCase>(),
+
+                getUserProfile:
+                context.read<
+                    GetUserProfileUseCase>(),
+
+                logger:
+                context.read<AuthLogger>(),
+
+                cooldownStorage:
+                context.read<
+                    AuthCooldownStorage>(),
+              ),
+        ),
+
+        // =========================
+        // PROFILE
+        // =========================
+
+        provider.Provider<ProfileRemoteDataSource>(
+
+          create: (_) =>
+              ProfileRemoteDataSource(),
+        ),
+
+        provider.Provider<ProfileRepository>(
+
+          create: (context) =>
+
+              ProfileRepositoryImpl(
+
+                context.read<
+                    ProfileRemoteDataSource>(),
+              ),
+        ),
+
+        provider.ChangeNotifierProxyProvider<
+            AuthViewModel,
+            ProfileViewModel>(
+
+          create: (context) =>
+
+              ProfileViewModel(
+
+                context.read<
+                    ProfileRepository>(),
+              ),
+
+          update: (
+              _,
+              authVm,
+              profileVm,
+              ) {
+
+            return profileVm!
+              ..bindUser(
+                authVm.currentUser?.uid,
+              );
+          },
+        ),
+
+        // =========================
+        // EXPENSE
+        // =========================
+
+        provider.ChangeNotifierProvider(
+
+          create: (_) =>
+
+              ExpenseViewModel(
+                ExpenseRepository(),
+              ),
+        ),
+
+        provider.ChangeNotifierProvider(
+
+          create: (_) =>
+
+              ExpenseCardViewModel(
+                ExpenseCardRepository(),
+              ),
+        ),
+
+        provider.ChangeNotifierProvider(
+
+          create: (_) =>
+
+              CategoryViewModel(
+                CategoryRepository(),
+              ),
+        ),
+
+        provider.ChangeNotifierProvider(
+
+          create: (_) =>
+              ExpenseFilterViewModel(),
+        ),
+
+        // =========================
+        // FOOD TRACKING
+        // =========================
+
+        provider.ChangeNotifierProvider(
+
+          create: (_) =>
+
+              MealEntryViewModel(
+
+                MealRepositoryImpl(
+
+                  remote:
+                  MealRemoteDataSourceImpl(
+
+                    service:
+                    FirebaseFoodService(
+
+                      firestore:
+                      FirebaseFirestore.instance,
+
+                      auth:
+                      FirebaseAuth.instance,
+                    ),
+                  ),
+                ),
+              ),
+        ),
+
+        provider.ChangeNotifierProvider(
+
+          create: (_) =>
+
+          FoodCycleViewModel(
+
+            FoodRepositoryImpl(
+
+              firebaseService:
+
+              FirebaseFoodService(
+
+                firestore:
+                FirebaseFirestore.instance,
+
+                auth:
+                FirebaseAuth.instance,
+              ),
+            ),
 
             MealRepositoryImpl(
 
-              remote: MealRemoteDataSourceImpl(
+              remote:
+              MealRemoteDataSourceImpl(
 
-                service: FirebaseFoodService(
+                service:
+                FirebaseFoodService(
 
                   firestore:
                   FirebaseFirestore.instance,
@@ -194,43 +454,34 @@ class ExpenseTrackerApp extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ),
-
-        ChangeNotifierProvider(
-          create: (_) => FoodCycleViewModel(
-            FoodRepositoryImpl(
-              firebaseService:  FirebaseFoodService(
-                firestore: FirebaseFirestore.instance,
-                auth: FirebaseAuth.instance,
-              ),
-            ),
-              MealRepositoryImpl(
-                remote: MealRemoteDataSourceImpl(
-                  service: FirebaseFoodService(
-                    firestore: FirebaseFirestore.instance,
-                    auth: FirebaseAuth.instance,
-                  ),
-                ),
-              ),
           )..loadCycles(),
         ),
       ],
+
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+
+        debugShowCheckedModeBanner:
+        false,
+
         title: 'Kharcha Plus',
+
         builder: (context, child) {
+
           SystemUI.setLight();
+
           return child!;
         },
 
         theme: ThemeData(
+
           useMaterial3: true,
-          colorSchemeSeed: AppColors.primary,
+
+          colorSchemeSeed:
+          AppColors.primary,
         ),
 
         home: const AuthWrapper(),
-      )
+      ),
     );
   }
 }

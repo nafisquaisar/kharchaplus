@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../constants/colors.dart';
+import '../constants/AppColors.dart';
 
 class CommonAppBar extends StatelessWidget {
   final String title;
@@ -41,8 +41,8 @@ class CommonAppBar extends StatelessWidget {
 
 
     return Container(
-      decoration: const BoxDecoration(
-        gradient: AppColorsTheme.kharchaGradient, // 🔥 gradient applied
+      decoration: BoxDecoration(
+        gradient: AppColors.kharchaGradient, // 🔥 gradient applied
       ),
       child: SafeArea(
         child: Container(
