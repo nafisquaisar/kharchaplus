@@ -1,4 +1,4 @@
-import '../../core/entities.dart';
+import '../../../../../core/base/base_entity.dart';
 
 class ElectricityEntity extends BaseEntity {
 

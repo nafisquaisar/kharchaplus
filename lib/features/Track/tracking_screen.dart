@@ -2,7 +2,8 @@
   import 'ElectricityTracking/presentation/screens/ElectricityTrackingScreen.dart';
   import 'FoodTracking/presentation/screens/food_tracking_screen.dart';
   import 'WaterTracking/WaterTrackingScreen.dart';
-  import 'widgets/tracking_card.dart';
+  import 'WaterTracking/presentation/screens/water_screen.dart';
+import 'widgets/tracking_card.dart';
 
 
   class TrackingScreen extends StatefulWidget {
@@ -27,7 +28,7 @@
       } else if (title == "Water Tracking") {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const WaterTrackingScreen()),
+          MaterialPageRoute(builder: (_) => const WaterScreen()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

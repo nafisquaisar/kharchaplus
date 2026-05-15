@@ -16,6 +16,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:provider/provider.dart' as provider;
 
 import 'core/constants/AppColors.dart';
+import 'core/services/isar_service.dart';
 import 'core/utils/system_ui.dart';
 import 'features/Expense/data/repository/expense_repository.dart';
 import 'features/Expense/presentation/viewmodel/ExpenseFilterViewModel.dart';
@@ -61,6 +62,8 @@ void main() async {
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.debug,
   );
+
+  await IsarService.init();
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

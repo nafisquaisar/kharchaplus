@@ -6,19 +6,23 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.10.0
+  sdk: ">=3.5.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  intl: ^0.20.2
-  provider: ^6.1.2
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  shared_preferences: ^2.3.2
   cupertino_icons: ^1.0.8
 
+  # Core
+  intl: ^0.20.2
+  provider: ^6.1.2
+  flutter_riverpod: ^2.6.1
+  shared_preferences: ^2.3.2
+  path_provider: ^2.1.5
+  uuid: ^4.5.3
+
+  # Firebase
   firebase_core: ^4.7.0
   firebase_auth: ^6.4.0
   cloud_firestore: ^6.3.0
@@ -26,26 +30,56 @@ dependencies:
   firebase_messaging: ^16.2.0
   firebase_analytics: ^12.3.0
   firebase_crashlytics: ^5.0.2
-  google_sign_in: ^6.2.1
   firebase_app_check: ^0.4.3
-  flutter_riverpod: ^2.6.1
-  sms_autofill: ^2.4.1
-  image_picker: ^1.2.2
+  google_sign_in: ^6.2.1
+  # UI
   flutter_slidable: ^4.0.3
-  another_flushbar: ^1.12.32
-  uuid: ^4.5.3
+  another_flushbar: ^2.1.0
   shimmer: ^3.0.0
   cached_network_image: ^3.4.1
+  image_picker: ^1.2.2
   flutter_image_compress: ^2.4.0
+  fl_chart: ^1.2.0
+  go_router: ^17.2.3
+  flutter_local_notifications: ^21.0.0
+  sms_autofill: ^2.4.1
+  timezone: ^0.11.0
+  flutter_timezone: ^4.1.0
+  permission_handler: ^11.3.1
+  android_intent_plus: ^5.0.2
+  package_info_plus: ^8.0.2
+  connectivity_plus: ^6.0.3
+
+  # Hive
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Isar
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+
+  # JSON
+  json_annotation: ^4.9.0
+  percent_indicator: ^4.2.5
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
-  hive_generator: ^2.0.1
-  build_runner: ^2.4.6
-  mocktail: ^1.0.3
 
+  flutter_lints: ^6.0.0
+
+  # Code Generation
+  build_runner: ^2.4.13
+  json_serializable: ^6.7.1
+
+  # Isar Generator
+  isar_generator: ^3.1.0+1
+
+  # Hive Generator
+  hive_generator: ^2.0.1
+
+  mocktail: ^1.0.3
   flutter_launcher_icons: ^0.14.4
 
 flutter:
@@ -53,9 +87,9 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/icon/
+    - assets/icon/premiumicon/
 
-
-# 🔥 IMPORTANT: THIS SHOULD BE OUTSIDE flutter
 flutter_launcher_icons:
   android: true
   ios: true

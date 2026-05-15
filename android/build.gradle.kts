@@ -5,6 +5,21 @@ allprojects {
     }
 }
 
+
+subprojects {
+    afterEvaluate {
+        if (project.hasProperty("android")) {
+            extensions.findByName("android")?.let { ext ->
+                if (ext is com.android.build.gradle.BaseExtension) {
+                    if (ext.namespace == null) {
+                        ext.namespace = project.group.toString()
+                    }
+                }
+            }
+        }
+    }
+}
+
 val newBuildDir: Directory =
     rootProject.layout.buildDirectory
         .dir("../../build")

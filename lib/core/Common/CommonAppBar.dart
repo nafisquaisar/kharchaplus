@@ -11,6 +11,7 @@ class CommonAppBar extends StatelessWidget {
   final VoidCallback onNotificationTap;
   final bool hasNotification;
   final bool showMore;
+  final IconData? moreIcon;
   final VoidCallback? onMoreTap;
 
   const CommonAppBar({
@@ -24,6 +25,7 @@ class CommonAppBar extends StatelessWidget {
     this.showMore = false,
     this.onMoreTap,
     this.isDashboard=false,
+    this.moreIcon,
   });
 
   String getGreeting() {
@@ -165,7 +167,8 @@ class CommonAppBar extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(width * 0.02),
         child: Icon(
-          Icons.more_vert,
+          moreIcon ??
+              Icons.more_vert,
           size: width * 0.07,
           color: Colors.white,
         ),
