@@ -102,12 +102,12 @@ class AccountSection extends StatelessWidget {
           ),
         ),
 
-
-        tile(
-          "Linked Accounts",
-          Icons.link,
-          onTap: () {},
-        ),
+        //
+        // tile(
+        //   "Linked Accounts",
+        //   Icons.link,
+        //   onTap: () {},
+        // ),
 
         // 🔥 LOGOUT (DANGER STYLE)
         tile(

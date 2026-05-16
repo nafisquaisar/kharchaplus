@@ -30,7 +30,7 @@ class ProfileHeader extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primary.withOpacity(0.06),
+                color: AppColors.accent.withOpacity(0.06),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -149,19 +149,19 @@ class ProfileHeader extends StatelessWidget {
                                 horizontal: 14, vertical: 6),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: AppColors.primary),
-                              color: AppColors.primary.withOpacity(0.05),
+                              border: Border.all(color: AppColors.accent),
+                              color: AppColors.accent.withOpacity(0.05),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(Icons.edit,
-                                    size: 14, color: AppColors.primary),
+                                    size: 14, color: AppColors.accent),
                                 const SizedBox(width: 6),
                                 Text(
                                   "Edit Profile",
                                   style: TextStyle(
-                                    color: AppColors.primary,
+                                    color: AppColors.accent,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),

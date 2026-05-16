@@ -79,7 +79,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text("Edit Profile"),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.accent,
         foregroundColor: Colors.white,
       ),
 
@@ -176,7 +176,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ? null
                         : () => _save(context.read<ProfileViewModel>()),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: AppColors.accent,
                       minimumSize: const Size(double.infinity, 50),
                     ),
                     child: isBusy
