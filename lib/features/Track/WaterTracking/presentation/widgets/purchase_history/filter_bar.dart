@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../core/constants/AppColors.dart';
+import '../../../domain/enum/purchase_type.dart';
 import '../../providers/purchase_history/purchase_history_filter_provider.dart';
 
 class PurchaseHistoryFilterBar extends ConsumerWidget {
@@ -72,33 +73,23 @@ class PurchaseHistoryFilterBar extends ConsumerWidget {
                 }).toList(),
                 onChanged: (value) => notifier.setYear(value),
               ),
-              _buildDropdown<PurchaseTypeFilter>(
+              _buildDropdown<PurchaseType?>(
                 context: context,
                 label: 'Type',
                 value: filter.type,
-                items: const [
-                  DropdownMenuItem(
-                    value: PurchaseTypeFilter.all,
+                items: [
+                  const DropdownMenuItem(
+                    value: null,
                     child: Text('All'),
                   ),
-                  DropdownMenuItem(
-                    value: PurchaseTypeFilter.tanker,
-                    child: Text('Tanker'),
-                  ),
-                  DropdownMenuItem(
-                    value: PurchaseTypeFilter.can20,
-                    child: Text('20L Can'),
-                  ),
-                  DropdownMenuItem(
-                    value: PurchaseTypeFilter.bisleri,
-                    child: Text('Bisleri'),
+                  ...PurchaseType.values.map(
+                    (type) => DropdownMenuItem(
+                      value: type,
+                      child: Text(type.label),
+                    ),
                   ),
                 ],
-                onChanged: (value) {
-                  if (value != null) {
-                    notifier.setType(value);
-                  }
-                },
+                onChanged: (value) => notifier.setType(value),
               ),
               _buildDropdown<PurchaseSort>(
                 context: context,

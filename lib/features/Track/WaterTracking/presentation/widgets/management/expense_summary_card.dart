@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../../core/constants/AppColors.dart';
 import '../../providers/analytics/water_analytics_provider.dart';
 import '../../providers/filters/expense_filter_provider.dart';
+import '../../../domain/enum/purchase_type.dart';
 
 class ExpenseSummaryCard extends ConsumerWidget {
   const ExpenseSummaryCard({
@@ -23,7 +24,8 @@ class ExpenseSummaryCard extends ConsumerWidget {
 
     final currentTotal = analytics.monthlyExpense;
     final totalPurchases = analytics.totalPurchases;
-    final tankerQty = analytics.purchaseCountByType['Tanker'] ?? 0;
+    final tankerQty =
+        analytics.purchaseCountByType[PurchaseType.tanker] ?? 0;
     final previousTotal = analytics.previousMonthExpense;
     final hasPrevious = previousTotal > 0;
     final diff = currentTotal - previousTotal;
@@ -472,7 +474,7 @@ class _MonthYearPickerSheetState extends ConsumerState<_MonthYearPickerSheet> {
               ),
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.close, size: 20),
+                icon: Icon(Icons.cancel, color: Colors.red.withOpacity(0.6), size: 20),
               ),
             ],
           ),

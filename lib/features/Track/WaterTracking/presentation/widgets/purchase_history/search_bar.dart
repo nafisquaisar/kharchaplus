@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../core/constants/AppColors.dart';
@@ -18,62 +19,156 @@ class _PurchaseHistorySearchBarState
     extends ConsumerState<PurchaseHistorySearchBar> {
   late final TextEditingController _controller;
 
+  late final FocusNode _focusNode;
+
   @override
   void initState() {
     super.initState();
+
+    _focusNode = FocusNode();
+
     _controller = TextEditingController(
-      text: ref.read(purchaseHistorySearchProvider),
+      text: ref.read(
+        purchaseHistorySearchProvider,
+      ),
     );
+
     _controller.addListener(_onChange);
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_onChange);
+    _controller.removeListener(
+      _onChange,
+    );
+
     _controller.dispose();
+
+    _focusNode.dispose();
+
     super.dispose();
   }
 
   void _onChange() {
-    ref.read(purchaseHistorySearchProvider.notifier).state =
-        _controller.text;
+    ref
+        .read(
+          purchaseHistorySearchProvider.notifier,
+        )
+        .state = _controller.text;
+
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    final search = ref.watch(purchaseHistorySearchProvider);
+    final search = ref.watch(
+      purchaseHistorySearchProvider,
+    );
 
     if (_controller.text != search) {
       _controller.text = search;
+
       _controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: search.length),
+        TextPosition(
+          offset: search.length,
+        ),
       );
     }
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: _controller,
-        decoration: const InputDecoration(
-          hintText: 'Search by type or vendor',
-          prefixIcon: Icon(Icons.search),
-          border: InputBorder.none,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      behavior: HitTestBehavior.translucent,
+      child: Container(
+        height: 58,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 14,
         ),
-        cursorColor: AppColors.accent,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: _focusNode.hasFocus ? AppColors.primary : AppColors.border,
+            width: 1.2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: TextField(
+          controller: _controller,
+          focusNode: _focusNode,
+          textInputAction: TextInputAction.search,
+          textAlignVertical: TextAlignVertical.center,
+          cursorColor: AppColors.accent,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: AppColors.black,
+          ),
+          decoration: InputDecoration(
+            hintText: 'Search by type or vendor',
+            hintStyle: TextStyle(
+              color: AppColors.textSecondary.withOpacity(0.75),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+            border: InputBorder.none,
+            isDense: true,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 14,
+            ),
+            prefixIcon: Container(
+              margin: const EdgeInsets.only(
+                right: 10,
+              ),
+              child: Container(
+                height: 36,
+                width: 36,
+                decoration: BoxDecoration(
+                  color: AppColors.primarybg,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.search_rounded,
+                  color: AppColors.accent,
+                  size: 20,
+                ),
+              ),
+            ),
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 46,
+              minHeight: 46,
+            ),
+            suffixIcon: _controller.text.isNotEmpty
+                ? GestureDetector(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+
+                      _controller.clear();
+
+                      FocusScope.of(
+                        context,
+                      ).unfocus();
+                    },
+                    child: const Icon(
+                      Icons.close_rounded,
+                      size: 18,
+                      color: AppColors.textSecondary,
+                    ),
+                  )
+                : null,
+          ),
+          onTapOutside: (_) {
+            FocusScope.of(context).unfocus();
+          },
+        ),
       ),
     );
   }
 }
-
-

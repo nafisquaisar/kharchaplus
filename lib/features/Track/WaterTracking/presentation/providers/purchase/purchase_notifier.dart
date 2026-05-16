@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../domain/entities/water_purchase_entity.dart';
+import '../../../domain/enum/payment_status.dart';
+import '../../../domain/enum/purchase_type.dart';
 
 import '../../../domain/usecases/purchase/add_purchase.dart';
 import '../../../domain/usecases/purchase/get_purchases.dart';
@@ -69,21 +71,27 @@ class PurchaseNotifier extends StateNotifier<PurchaseState> {
     }
   }
 
-  Future<void> addPurchase({
-    required String type,
+  Future<bool> addPurchase({
+    required PurchaseType type,
+    String? customTypeName,
     required int quantity,
     required double price,
     String? vendor,
+    PaymentStatus paymentStatus = PaymentStatus.unpaid,
   }) async {
+    final previousPurchases = state.purchases;
+
     try {
       final userId = await authService.getCurrentUserId();
 
       final purchase = WaterPurchaseEntity(
         id: uuid.v4(),
         type: type,
+        customTypeName: customTypeName,
         quantity: quantity,
         price: price,
         vendor: vendor,
+        paymentStatus: paymentStatus,
         date: DateTime.now(),
         isSynced: false,
         isDeleted: false,
@@ -112,11 +120,14 @@ class PurchaseNotifier extends StateNotifier<PurchaseState> {
       await loadPurchases();
 
       ref.read(waterSyncNotifierProvider.notifier).syncNow();
+      return true;
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
+        purchases: previousPurchases,
         error: _mapError(e),
       );
+      return false;
     }
   }
 

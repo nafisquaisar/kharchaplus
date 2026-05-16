@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/constants/AppColors.dart';
+import '../../domain/enum/purchase_type.dart';
 import '../providers/purchase_history/purchase_history_filter_provider.dart';
 
 class PurchaseHistoryFilterSheet extends ConsumerStatefulWidget {
@@ -21,7 +22,7 @@ class _PurchaseHistoryFilterSheetState
     extends ConsumerState<PurchaseHistoryFilterSheet> {
   late int? _month;
   late int? _year;
-  late PurchaseTypeFilter _type;
+  late PurchaseType? _type;
   late PurchaseSort _sort;
 
   @override
@@ -113,31 +114,22 @@ class _PurchaseHistoryFilterSheetState
             },
           ),
           const SizedBox(height: 12),
-          _buildDropdown<PurchaseTypeFilter>(
+          _buildDropdown<PurchaseType?>(
             label: 'Type',
             value: _type,
-            items: const [
-              DropdownMenuItem(
-                value: PurchaseTypeFilter.all,
+            items: [
+              const DropdownMenuItem(
+                value: null,
                 child: Text('All'),
               ),
-              DropdownMenuItem(
-                value: PurchaseTypeFilter.tanker,
-                child: Text('Tanker'),
-              ),
-              DropdownMenuItem(
-                value: PurchaseTypeFilter.can20,
-                child: Text('20L Can'),
-              ),
-              DropdownMenuItem(
-                value: PurchaseTypeFilter.bisleri,
-                child: Text('Bisleri'),
+              ...PurchaseType.values.map(
+                (type) => DropdownMenuItem(
+                  value: type,
+                  child: Text(type.label),
+                ),
               ),
             ],
             onChanged: (value) {
-              if (value == null) {
-                return;
-              }
               setState(() {
                 _type = value;
               });

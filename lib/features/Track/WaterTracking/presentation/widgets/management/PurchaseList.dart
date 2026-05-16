@@ -6,6 +6,7 @@ import '../../../../../../core/constants/AppColors.dart';
 import '../../providers/purchase/purchase_provider.dart';
 import '../../providers/filters/expense_filter_provider.dart';
 import '../../screens/purchase_history_screen.dart';
+import '../../../domain/enum/purchase_type.dart';
 
 class PurchaseList extends ConsumerWidget {
   const PurchaseList({
@@ -24,6 +25,11 @@ class PurchaseList extends ConsumerWidget {
     final purchases = ref.watch(
       filteredPurchasesProvider,
     );
+    final latestPurchases = [...purchases]
+      ..sort((a, b) => b.date.compareTo(a.date));
+
+    final recentFivePurchases = latestPurchases.take(5).toList();
+
     final isLoading = state.isLoading;
     final error = state.error;
 
@@ -148,7 +154,7 @@ class PurchaseList extends ConsumerWidget {
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: purchases.length,
+              itemCount: recentFivePurchases.length,
               separatorBuilder: (context, index) {
                 return Divider(
                   color: Colors.grey.shade200,
@@ -156,22 +162,7 @@ class PurchaseList extends ConsumerWidget {
                 );
               },
               itemBuilder: (context, index) {
-                final item = purchases[index];
-
-                // =========================
-                // ICON LOGIC
-                // =========================
-
-                String iconPath;
-
-                if (item.type == 'Tanker') {
-                  iconPath = "assets/icon/premiumicon/kharchaplus_tanker.png";
-                } else if (item.type == '20L Can') {
-                  iconPath = "assets/icon/premiumicon/kharchaplus_20l.png";
-                } else {
-                  iconPath = "assets/icon/premiumicon/kharcha_plus_1l.png";
-                }
-
+                final item = recentFivePurchases[index];
                 return Row(
                   children: [
                     // =========================
@@ -189,7 +180,7 @@ class PurchaseList extends ConsumerWidget {
                         ),
                       ),
                       child: Image.asset(
-                        iconPath,
+                        item.type.iconPath,
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -207,7 +198,7 @@ class PurchaseList extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            item.type,
+                            item.displayTypeName,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 12,

@@ -2,6 +2,7 @@ import 'water_purchase_local_ds.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../../../../core/services/isar_service.dart';
+import '../../../../domain/enum/payment_status.dart';
 import '../../../models/water_purchase_model.dart';
 
 class WaterPurchaseLocalDataSourceImpl implements WaterPurchaseLocalDataSource {
@@ -11,6 +12,8 @@ class WaterPurchaseLocalDataSourceImpl implements WaterPurchaseLocalDataSource {
   Future<void> addPurchase(
     WaterPurchaseModel model,
   ) async {
+    model.paymentStatus = _normalizedPaymentStatus(model.paymentStatus);
+
     try {
       await isar.writeTxn(() async {
         await isar.waterPurchaseModels.putById(model);
@@ -39,6 +42,7 @@ class WaterPurchaseLocalDataSourceImpl implements WaterPurchaseLocalDataSource {
     existing.quantity = model.quantity;
     existing.price = model.price;
     existing.vendor = model.vendor;
+    existing.paymentStatus = _normalizedPaymentStatus(model.paymentStatus);
     existing.date = model.date;
     existing.userId = model.userId;
     existing.serverId = model.serverId ?? existing.serverId;
@@ -105,6 +109,8 @@ class WaterPurchaseLocalDataSourceImpl implements WaterPurchaseLocalDataSource {
 
   @override
   Future<void> upsertFromRemote(WaterPurchaseModel model) async {
+    model.paymentStatus = _normalizedPaymentStatus(model.paymentStatus);
+
     try {
       await isar.writeTxn(() async {
         await isar.waterPurchaseModels.putById(model);
@@ -133,6 +139,10 @@ class WaterPurchaseLocalDataSourceImpl implements WaterPurchaseLocalDataSource {
     await isar.writeTxn(() async {
       await isar.waterPurchaseModels.put(existing);
     });
+  }
+
+  String _normalizedPaymentStatus(String? value) {
+    return PaymentStatusX.fromValue(value).value;
   }
 }
 

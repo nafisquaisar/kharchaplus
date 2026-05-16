@@ -1,11 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum PurchaseTypeFilter {
-  all,
-  tanker,
-  can20,
-  bisleri,
-}
+import '../../../domain/enum/purchase_type.dart';
 
 enum PurchaseSort {
   latest,
@@ -17,7 +12,7 @@ enum PurchaseSort {
 class PurchaseHistoryFilterState {
   final int? month;
   final int? year;
-  final PurchaseTypeFilter type;
+  final PurchaseType? type;
   final PurchaseSort sort;
 
   const PurchaseHistoryFilterState({
@@ -30,7 +25,7 @@ class PurchaseHistoryFilterState {
   PurchaseHistoryFilterState copyWith({
     int? month,
     int? year,
-    PurchaseTypeFilter? type,
+    PurchaseType? type,
     PurchaseSort? sort,
     bool clearMonth = false,
     bool clearYear = false,
@@ -47,7 +42,7 @@ class PurchaseHistoryFilterState {
     return const PurchaseHistoryFilterState(
       month: null,
       year: null,
-      type: PurchaseTypeFilter.all,
+      type: null,
       sort: PurchaseSort.latest,
     );
   }
@@ -66,7 +61,7 @@ class PurchaseHistoryFilterNotifier
     state = state.copyWith(year: year, clearYear: year == null);
   }
 
-  void setType(PurchaseTypeFilter type) {
+  void setType(PurchaseType? type) {
     state = state.copyWith(type: type);
   }
 

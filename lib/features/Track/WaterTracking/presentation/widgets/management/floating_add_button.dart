@@ -57,7 +57,7 @@ class FloatingAddButton extends StatelessWidget {
 		  padding: EdgeInsets.only(
 			bottom: MediaQuery.of(context).viewInsets.bottom,
 		  ),
-		  child: const AddPurchaseSheet(),
+		  child: const PurchaseFormSheet(),
 		);
 	  },
 	);

@@ -1,10 +1,10 @@
 import 'package:isar/isar.dart';
+import '../../domain/enum/payment_status.dart';
 
 part 'water_purchase_model.g.dart';
 
 @collection
 class WaterPurchaseModel {
-
   Id isarId = Isar.autoIncrement;
 
   @Index(unique: true)
@@ -16,6 +16,8 @@ class WaterPurchaseModel {
 
   late String type;
 
+  String? customTypeName;
+
   late int quantity;
 
   late double price;
@@ -23,8 +25,10 @@ class WaterPurchaseModel {
   String? vendor;
 
   @Index()
-  late DateTime date;
+  String paymentStatus = PaymentStatus.unpaid.value;
 
+  @Index()
+  late DateTime date;
 
   // =========================
   // Sync Fields

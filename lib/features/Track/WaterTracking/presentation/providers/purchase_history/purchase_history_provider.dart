@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/entities/water_purchase_entity.dart';
+import '../../../domain/enum/payment_status.dart';
+import '../../../domain/enum/purchase_type.dart';
 import '../purchase/purchase_provider.dart';
 import 'purchase_history_filter_provider.dart';
 
@@ -9,12 +11,18 @@ class PurchaseHistoryAnalytics {
   final int totalPurchases;
   final int tankerCount;
   final double averageMonthlyExpense;
+  final double totalUnpaidAmount;
+  final int paidPurchases;
+  final double pendingAmount;
 
   const PurchaseHistoryAnalytics({
     required this.totalExpense,
     required this.totalPurchases,
     required this.tankerCount,
     required this.averageMonthlyExpense,
+    required this.totalUnpaidAmount,
+    required this.paidPurchases,
+    required this.pendingAmount,
   });
 }
 
@@ -47,15 +55,13 @@ final purchaseHistoryFilteredProvider =
       return false;
     }
 
-    if (filter.type != PurchaseTypeFilter.all) {
-      final match = _typeMatches(filter.type, purchase.type);
-      if (!match) {
-        return false;
-      }
+    if (filter.type != null && purchase.type != filter.type) {
+      return false;
     }
 
     if (searchTerm.isNotEmpty) {
-      final typeMatch = purchase.type.toLowerCase().contains(searchTerm);
+      final typeMatch =
+          purchase.displayTypeName.toLowerCase().contains(searchTerm);
       final vendorMatch =
           (purchase.vendor ?? '').toLowerCase().contains(searchTerm);
       if (!typeMatch && !vendorMatch) {
@@ -88,12 +94,25 @@ final purchaseHistoryAnalyticsProvider =
 
   double totalExpense = 0;
   int tankerCount = 0;
+  double totalUnpaidAmount = 0;
+  double pendingAmount = 0;
+  int paidPurchases = 0;
   final months = <String, double>{};
 
   for (final purchase in purchases) {
     totalExpense += purchase.price;
-    if (purchase.type == 'Tanker') {
+    if (purchase.type == PurchaseType.tanker) {
       tankerCount += 1;
+    }
+
+    if (purchase.paymentStatus == PaymentStatus.paid) {
+      paidPurchases += 1;
+    }
+    if (purchase.paymentStatus == PaymentStatus.unpaid) {
+      totalUnpaidAmount += purchase.price;
+    }
+    if (purchase.paymentStatus.isPending) {
+      pendingAmount += purchase.price;
     }
 
     final key = '${purchase.date.year}-${purchase.date.month}';
@@ -109,6 +128,9 @@ final purchaseHistoryAnalyticsProvider =
     totalPurchases: purchases.length,
     tankerCount: tankerCount,
     averageMonthlyExpense: averageMonthlyExpense,
+    totalUnpaidAmount: totalUnpaidAmount,
+    paidPurchases: paidPurchases,
+    pendingAmount: pendingAmount,
   );
 });
 
@@ -125,15 +147,3 @@ final purchaseHistoryProvider = Provider<PurchaseHistoryViewState>((ref) {
   );
 });
 
-bool _typeMatches(PurchaseTypeFilter filter, String type) {
-  switch (filter) {
-    case PurchaseTypeFilter.tanker:
-      return type == 'Tanker';
-    case PurchaseTypeFilter.can20:
-      return type == '20L Can';
-    case PurchaseTypeFilter.bisleri:
-      return type == 'Bisleri';
-    case PurchaseTypeFilter.all:
-      return true;
-  }
-}

@@ -23,78 +23,88 @@ const WaterPurchaseModelSchema = CollectionSchema(
       name: r'createdAt',
       type: IsarType.dateTime,
     ),
-    r'date': PropertySchema(
+    r'customTypeName': PropertySchema(
       id: 1,
+      name: r'customTypeName',
+      type: IsarType.string,
+    ),
+    r'date': PropertySchema(
+      id: 2,
       name: r'date',
       type: IsarType.dateTime,
     ),
     r'id': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'id',
       type: IsarType.string,
     ),
     r'isActive': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'isActive',
       type: IsarType.bool,
     ),
     r'isDeleted': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'isDeleted',
       type: IsarType.bool,
     ),
     r'isEdited': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'isEdited',
       type: IsarType.bool,
     ),
     r'isOfflineCreated': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'isOfflineCreated',
       type: IsarType.bool,
     ),
     r'isSynced': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'isSynced',
       type: IsarType.bool,
     ),
+    r'paymentStatus': PropertySchema(
+      id: 9,
+      name: r'paymentStatus',
+      type: IsarType.string,
+    ),
     r'price': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'price',
       type: IsarType.double,
     ),
     r'quantity': PropertySchema(
-      id: 9,
+      id: 11,
       name: r'quantity',
       type: IsarType.long,
     ),
     r'serverId': PropertySchema(
-      id: 10,
+      id: 12,
       name: r'serverId',
       type: IsarType.string,
     ),
     r'type': PropertySchema(
-      id: 11,
+      id: 13,
       name: r'type',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 12,
+      id: 14,
       name: r'updatedAt',
       type: IsarType.dateTime,
     ),
     r'userId': PropertySchema(
-      id: 13,
+      id: 15,
       name: r'userId',
       type: IsarType.string,
     ),
     r'vendor': PropertySchema(
-      id: 14,
+      id: 16,
       name: r'vendor',
       type: IsarType.string,
     ),
     r'version': PropertySchema(
-      id: 15,
+      id: 17,
       name: r'version',
       type: IsarType.long,
     )
@@ -113,6 +123,19 @@ const WaterPurchaseModelSchema = CollectionSchema(
       properties: [
         IndexPropertySchema(
           name: r'id',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'paymentStatus': IndexSchema(
+      id: 7011973130100993011,
+      name: r'paymentStatus',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'paymentStatus',
           type: IndexType.hash,
           caseSensitive: true,
         )
@@ -159,7 +182,14 @@ int _waterPurchaseModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.customTypeName;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.id.length * 3;
+  bytesCount += 3 + object.paymentStatus.length * 3;
   {
     final value = object.serverId;
     if (value != null) {
@@ -184,21 +214,23 @@ void _waterPurchaseModelSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.createdAt);
-  writer.writeDateTime(offsets[1], object.date);
-  writer.writeString(offsets[2], object.id);
-  writer.writeBool(offsets[3], object.isActive);
-  writer.writeBool(offsets[4], object.isDeleted);
-  writer.writeBool(offsets[5], object.isEdited);
-  writer.writeBool(offsets[6], object.isOfflineCreated);
-  writer.writeBool(offsets[7], object.isSynced);
-  writer.writeDouble(offsets[8], object.price);
-  writer.writeLong(offsets[9], object.quantity);
-  writer.writeString(offsets[10], object.serverId);
-  writer.writeString(offsets[11], object.type);
-  writer.writeDateTime(offsets[12], object.updatedAt);
-  writer.writeString(offsets[13], object.userId);
-  writer.writeString(offsets[14], object.vendor);
-  writer.writeLong(offsets[15], object.version);
+  writer.writeString(offsets[1], object.customTypeName);
+  writer.writeDateTime(offsets[2], object.date);
+  writer.writeString(offsets[3], object.id);
+  writer.writeBool(offsets[4], object.isActive);
+  writer.writeBool(offsets[5], object.isDeleted);
+  writer.writeBool(offsets[6], object.isEdited);
+  writer.writeBool(offsets[7], object.isOfflineCreated);
+  writer.writeBool(offsets[8], object.isSynced);
+  writer.writeString(offsets[9], object.paymentStatus);
+  writer.writeDouble(offsets[10], object.price);
+  writer.writeLong(offsets[11], object.quantity);
+  writer.writeString(offsets[12], object.serverId);
+  writer.writeString(offsets[13], object.type);
+  writer.writeDateTime(offsets[14], object.updatedAt);
+  writer.writeString(offsets[15], object.userId);
+  writer.writeString(offsets[16], object.vendor);
+  writer.writeLong(offsets[17], object.version);
 }
 
 WaterPurchaseModel _waterPurchaseModelDeserialize(
@@ -209,22 +241,24 @@ WaterPurchaseModel _waterPurchaseModelDeserialize(
 ) {
   final object = WaterPurchaseModel();
   object.createdAt = reader.readDateTime(offsets[0]);
-  object.date = reader.readDateTime(offsets[1]);
-  object.id = reader.readString(offsets[2]);
-  object.isActive = reader.readBool(offsets[3]);
-  object.isDeleted = reader.readBool(offsets[4]);
-  object.isEdited = reader.readBool(offsets[5]);
-  object.isOfflineCreated = reader.readBool(offsets[6]);
-  object.isSynced = reader.readBool(offsets[7]);
+  object.customTypeName = reader.readStringOrNull(offsets[1]);
+  object.date = reader.readDateTime(offsets[2]);
+  object.id = reader.readString(offsets[3]);
+  object.isActive = reader.readBool(offsets[4]);
+  object.isDeleted = reader.readBool(offsets[5]);
+  object.isEdited = reader.readBool(offsets[6]);
+  object.isOfflineCreated = reader.readBool(offsets[7]);
+  object.isSynced = reader.readBool(offsets[8]);
   object.isarId = id;
-  object.price = reader.readDouble(offsets[8]);
-  object.quantity = reader.readLong(offsets[9]);
-  object.serverId = reader.readStringOrNull(offsets[10]);
-  object.type = reader.readString(offsets[11]);
-  object.updatedAt = reader.readDateTime(offsets[12]);
-  object.userId = reader.readString(offsets[13]);
-  object.vendor = reader.readStringOrNull(offsets[14]);
-  object.version = reader.readLong(offsets[15]);
+  object.paymentStatus = reader.readString(offsets[9]);
+  object.price = reader.readDouble(offsets[10]);
+  object.quantity = reader.readLong(offsets[11]);
+  object.serverId = reader.readStringOrNull(offsets[12]);
+  object.type = reader.readString(offsets[13]);
+  object.updatedAt = reader.readDateTime(offsets[14]);
+  object.userId = reader.readString(offsets[15]);
+  object.vendor = reader.readStringOrNull(offsets[16]);
+  object.version = reader.readLong(offsets[17]);
   return object;
 }
 
@@ -238,11 +272,11 @@ P _waterPurchaseModelDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 3:
-      return (reader.readBool(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 4:
       return (reader.readBool(offset)) as P;
     case 5:
@@ -252,20 +286,24 @@ P _waterPurchaseModelDeserializeProp<P>(
     case 7:
       return (reader.readBool(offset)) as P;
     case 8:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 9:
-      return (reader.readLong(offset)) as P;
-    case 10:
-      return (reader.readStringOrNull(offset)) as P;
-    case 11:
       return (reader.readString(offset)) as P;
+    case 10:
+      return (reader.readDouble(offset)) as P;
+    case 11:
+      return (reader.readLong(offset)) as P;
     case 12:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 13:
       return (reader.readString(offset)) as P;
     case 14:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 15:
+      return (reader.readString(offset)) as P;
+    case 16:
+      return (reader.readStringOrNull(offset)) as P;
+    case 17:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -475,6 +513,51 @@ extension WaterPurchaseModelQueryWhere
   }
 
   QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterWhereClause>
+      paymentStatusEqualTo(String paymentStatus) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'paymentStatus',
+        value: [paymentStatus],
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterWhereClause>
+      paymentStatusNotEqualTo(String paymentStatus) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'paymentStatus',
+              lower: [],
+              upper: [paymentStatus],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'paymentStatus',
+              lower: [paymentStatus],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'paymentStatus',
+              lower: [paymentStatus],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'paymentStatus',
+              lower: [],
+              upper: [paymentStatus],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterWhereClause>
       dateEqualTo(DateTime date) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
@@ -667,6 +750,160 @@ extension WaterPurchaseModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      customTypeNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'customTypeName',
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      customTypeNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'customTypeName',
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      customTypeNameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'customTypeName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      customTypeNameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'customTypeName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      customTypeNameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'customTypeName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      customTypeNameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'customTypeName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      customTypeNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'customTypeName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      customTypeNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'customTypeName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      customTypeNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'customTypeName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      customTypeNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'customTypeName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      customTypeNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'customTypeName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      customTypeNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'customTypeName',
+        value: '',
       ));
     });
   }
@@ -965,6 +1202,142 @@ extension WaterPurchaseModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      paymentStatusEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'paymentStatus',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      paymentStatusGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'paymentStatus',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      paymentStatusLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'paymentStatus',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      paymentStatusBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'paymentStatus',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      paymentStatusStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'paymentStatus',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      paymentStatusEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'paymentStatus',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      paymentStatusContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'paymentStatus',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      paymentStatusMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'paymentStatus',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      paymentStatusIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'paymentStatus',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterFilterCondition>
+      paymentStatusIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'paymentStatus',
+        value: '',
       ));
     });
   }
@@ -1807,6 +2180,20 @@ extension WaterPurchaseModelQuerySortBy
   }
 
   QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterSortBy>
+      sortByCustomTypeName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'customTypeName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterSortBy>
+      sortByCustomTypeNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'customTypeName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterSortBy>
       sortByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
@@ -1901,6 +2288,20 @@ extension WaterPurchaseModelQuerySortBy
       sortByIsSyncedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isSynced', Sort.desc);
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterSortBy>
+      sortByPaymentStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'paymentStatus', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterSortBy>
+      sortByPaymentStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'paymentStatus', Sort.desc);
     });
   }
 
@@ -2034,6 +2435,20 @@ extension WaterPurchaseModelQuerySortThenBy
   }
 
   QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterSortBy>
+      thenByCustomTypeName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'customTypeName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterSortBy>
+      thenByCustomTypeNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'customTypeName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterSortBy>
       thenByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
@@ -2142,6 +2557,20 @@ extension WaterPurchaseModelQuerySortThenBy
       thenByIsarIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterSortBy>
+      thenByPaymentStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'paymentStatus', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QAfterSortBy>
+      thenByPaymentStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'paymentStatus', Sort.desc);
     });
   }
 
@@ -2268,6 +2697,14 @@ extension WaterPurchaseModelQueryWhereDistinct
   }
 
   QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QDistinct>
+      distinctByCustomTypeName({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'customTypeName',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QDistinct>
       distinctByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'date');
@@ -2313,6 +2750,14 @@ extension WaterPurchaseModelQueryWhereDistinct
       distinctByIsSynced() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isSynced');
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, WaterPurchaseModel, QDistinct>
+      distinctByPaymentStatus({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'paymentStatus',
+          caseSensitive: caseSensitive);
     });
   }
 
@@ -2388,6 +2833,13 @@ extension WaterPurchaseModelQueryProperty
     });
   }
 
+  QueryBuilder<WaterPurchaseModel, String?, QQueryOperations>
+      customTypeNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'customTypeName');
+    });
+  }
+
   QueryBuilder<WaterPurchaseModel, DateTime, QQueryOperations> dateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'date');
@@ -2428,6 +2880,13 @@ extension WaterPurchaseModelQueryProperty
   QueryBuilder<WaterPurchaseModel, bool, QQueryOperations> isSyncedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isSynced');
+    });
+  }
+
+  QueryBuilder<WaterPurchaseModel, String, QQueryOperations>
+      paymentStatusProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'paymentStatus');
     });
   }
 

@@ -7,7 +7,6 @@ import '../../../../../../core/constants/AppColors.dart';
 import '../../../../../../core/utils/AppFlushbar.dart';
 import '../../../../../core/Common/CommonAppBar.dart';
 import '../../domain/entities/water_purchase_entity.dart';
-import '../bottomsheet/edit_purchase_sheet.dart';
 import '../bottomsheet/purchase_history_filter_sheet.dart';
 import '../bottomsheet/add_purchase_sheet.dart';
 import '../providers/purchase/purchase_provider.dart';
@@ -28,8 +27,7 @@ class PurchaseHistoryScreen extends ConsumerStatefulWidget {
       _PurchaseHistoryScreenState();
 }
 
-class _PurchaseHistoryScreenState
-    extends ConsumerState<PurchaseHistoryScreen> {
+class _PurchaseHistoryScreenState extends ConsumerState<PurchaseHistoryScreen> {
   final Map<String, Timer> _deleteTimers = {};
   final Map<String, WaterPurchaseEntity> _pendingDelete = {};
 
@@ -58,86 +56,78 @@ class _PurchaseHistoryScreenState
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: PreferredSize(
-
-        preferredSize:
-        const Size.fromHeight(
+        preferredSize: const Size.fromHeight(
           kToolbarHeight,
         ),
-
         child: CommonAppBar(
-
           title: "All Purchases",
-
           isHome: false,
-
           isDashboard: false,
-
           showMore: true,
-
           moreIcon: Icons.tune,
-
           onMenuTap: () {
-
             Navigator.pop(context);
           },
-
           onNotificationTap: () {},
-
           onMoreTap: () {
-
             _openFilterSheet(years);
           },
         ),
       ),
-
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.accent,
         onPressed: _openAddSheet,
         child: const Icon(Icons.add, color: Colors.white),
       ),
-      body: RefreshIndicator(
-        color: AppColors.accent,
-        backgroundColor: Colors.white,
-        onRefresh: () {
-          return ref.read(purchaseNotifierProvider.notifier).loadPurchases();
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
         },
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics(),
-          ),
-          padding: EdgeInsets.fromLTRB(
-            16,
-            16,
-            16,
-            MediaQuery.of(context).padding.bottom + 20,
-          ),
-          children: [
-            PurchaseHistoryAnalyticsHeader(
-              analytics: viewState.analytics,
+        child: RefreshIndicator(
+          color: AppColors.accent,
+          backgroundColor: Colors.white,
+          onRefresh: () {
+            return ref.read(purchaseNotifierProvider.notifier).loadPurchases();
+          },
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
             ),
-            const SizedBox(height: 14),
-            const PurchaseHistorySearchBar(),
-            const SizedBox(height: 14),
-            if (viewState.isLoading)
-              const PurchaseHistoryLoadingList()
-            else if (viewState.error != null)
-              _ErrorState(
-                message: viewState.error!,
-                onRetry: () => ref
-                    .read(purchaseNotifierProvider.notifier)
-                    .loadPurchases(),
-              )
-            else if (viewState.purchases.isEmpty)
-              const PurchaseHistoryEmptyState()
-            else
-              ...viewState.purchases.map(
-                (purchase) => PurchaseHistoryCard(
-                  purchase: purchase,
-                  onEdit: () => _openEditSheet(purchase),
-                  onDelete: () => _deleteWithUndo(purchase),
-                ),
+            padding: EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              MediaQuery.of(context).padding.bottom + 20,
+            ),
+            children: [
+              PurchaseHistoryAnalyticsHeader(
+                analytics: viewState.analytics,
               ),
-          ],
+              const SizedBox(height: 14),
+              const PurchaseHistorySearchBar(),
+              const SizedBox(height: 14),
+              if (viewState.isLoading)
+                const PurchaseHistoryLoadingList()
+              else if (viewState.error != null)
+                _ErrorState(
+                  message: viewState.error!,
+                  onRetry: () => ref
+                      .read(purchaseNotifierProvider.notifier)
+                      .loadPurchases(),
+                )
+              else if (viewState.purchases.isEmpty)
+                const PurchaseHistoryEmptyState()
+              else
+                ...viewState.purchases
+                    .map(
+                  (purchase) => PurchaseHistoryCard(
+                    purchase: purchase,
+                    onEdit: () => _openEditSheet(purchase),
+                    onDelete: () => _deleteWithUndo(purchase),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -153,7 +143,7 @@ class _PurchaseHistoryScreenState
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          child: EditPurchaseSheet(purchase: purchase),
+          child: PurchaseFormSheet(purchase: purchase),
         );
       },
     );
@@ -233,7 +223,7 @@ class _PurchaseHistoryScreenState
   }
 
   Future<void> _openAddSheet() async {
-    await showModalBottomSheet(
+    final result = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -242,10 +232,18 @@ class _PurchaseHistoryScreenState
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          child: const AddPurchaseSheet(),
+          child: const PurchaseFormSheet(),
         );
       },
     );
+
+    if (!mounted) {
+      return;
+    }
+
+    if (result == 'added') {
+      AppFlushbar.showSuccess(context, 'Purchase saved');
+    }
   }
 }
 

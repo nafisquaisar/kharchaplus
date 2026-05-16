@@ -63,128 +63,159 @@ class _AddWaterSheetState extends ConsumerState<AddWaterSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        left: 24,
-        right: 24,
-        top: 24,
-        bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
-      ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(30),
-        ),
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                height: 5,
-                width: 60,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(20),
-                ),
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.60,
+      minChildSize: 0.60,
+      maxChildSize: 0.95,
+      builder: (
+        context,
+        scrollController,
+      ) {
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(30),
               ),
             ),
-            const SizedBox(height: 24),
-            Text(
-              isEditMode ? 'Update Water Intake' : 'Add Water Intake',
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 18,
               ),
-            ),
-            const SizedBox(height: 24),
-            TextField(
-              controller: controller,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: 'Enter amount in ml',
-                filled: true,
-                fillColor: AppColors.primarybg,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-            const SizedBox(height: 14),
-            _DateTimeCard(
-              dateTime: selectedDateTime,
-              onPickDate: _pickDate,
-              onPickTime: _pickTime,
-            ),
-            const SizedBox(height: 14),
-            DropdownButtonFormField<String>(
-              initialValue: selectedSourceType,
-              decoration: InputDecoration(
-                hintText: 'Source Type',
-                filled: true,
-                fillColor: AppColors.primarybg,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              items: _sourceOptions
-                  .map(
-                    (item) => DropdownMenuItem(
-                      value: item,
-                      child: Text(item),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                if (value == null) {
-                  return;
-                }
-                setState(() {
-                  selectedSourceType = value;
-                });
-              },
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                ),
-                onPressed: isSaving ? null : _save,
-                child: isSaving
-                    ? const SizedBox(
-                        height: 18,
-                        width: 18,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white,
-                          ),
-                        ),
-                      )
-                    : Text(
-                        isEditMode ? 'Update Intake' : 'Add Intake',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+              child: ListView(
+                controller: scrollController,
+                physics: const BouncingScrollPhysics(),
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                children: [
+                  Center(
+                    child: Container(
+                      height: 5,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(
+                          20,
                         ),
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    isEditMode ? 'Update Water Intake' : 'Add Water Intake',
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  TextField(
+                    controller: controller,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    onTapOutside: (_) {
+                      FocusScope.of(context).unfocus();
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Enter amount in ml',
+                      filled: true,
+                      fillColor: AppColors.primarybg,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          18,
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  _DateTimeCard(
+                    dateTime: selectedDateTime,
+                    onPickDate: _pickDate,
+                    onPickTime: _pickTime,
+                  ),
+                  const SizedBox(height: 14),
+                  DropdownButtonFormField<String>(
+                    initialValue: selectedSourceType,
+                    decoration: InputDecoration(
+                      hintText: 'Source Type',
+                      filled: true,
+                      fillColor: AppColors.primarybg,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          18,
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    items: _sourceOptions
+                        .map(
+                          (item) => DropdownMenuItem(
+                            value: item,
+                            child: Text(item),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      if (value == null) {
+                        return;
+                      }
+
+                      setState(() {
+                        selectedSourceType = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.accent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            18,
+                          ),
+                        ),
+                      ),
+                      onPressed: isSaving ? null : _save,
+                      child: isSaving
+                          ? const SizedBox(
+                              height: 18,
+                              width: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                          : Text(
+                              isEditMode ? 'Update Intake' : 'Add Intake',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                ],
               ),
             ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

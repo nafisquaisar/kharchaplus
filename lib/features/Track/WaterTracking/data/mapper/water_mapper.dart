@@ -1,6 +1,8 @@
 import '../../domain/entities/water_goal_entity.dart';
 import '../../domain/entities/water_intake_entity.dart';
 import '../../domain/entities/water_purchase_entity.dart';
+import '../../domain/enum/payment_status.dart';
+import '../../domain/enum/purchase_type.dart';
 
 import '../models/water_goal_model.dart';
 import '../models/water_intake_model.dart';
@@ -79,13 +81,17 @@ class WaterMapper {
 
     model.id = entity.id;
 
-    model.type = entity.type;
+    model.type = entity.type.name;
+
+    model.customTypeName = entity.customTypeName;
 
     model.quantity = entity.quantity;
 
     model.price = entity.price;
 
     model.vendor = entity.vendor;
+
+    model.paymentStatus = entity.paymentStatus.value;
 
     model.date = entity.date;
 
@@ -117,10 +123,12 @@ class WaterMapper {
   ) {
     return WaterPurchaseEntity(
       id: model.id,
-      type: model.type,
+      type: PurchaseTypeX.fromName(model.type),
+      customTypeName: model.customTypeName,
       quantity: model.quantity,
       price: model.price,
       vendor: model.vendor,
+      paymentStatus: PaymentStatusX.fromValue(model.paymentStatus),
       date: model.date,
       isSynced: model.isSynced,
       isDeleted: model.isDeleted,

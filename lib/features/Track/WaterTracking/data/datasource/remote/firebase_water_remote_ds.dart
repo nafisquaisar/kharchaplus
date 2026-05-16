@@ -6,6 +6,8 @@ import '../../models/water_goal_model.dart';
 import '../../models/water_intake_model.dart';
 import '../../models/water_purchase_model.dart';
 import '../../models/water_reminder_model.dart';
+import '../../../domain/enum/purchase_type.dart';
+import '../../../domain/enum/payment_status.dart';
 
 class RemoteWaterData {
   final List<WaterIntakeModel> intakes;
@@ -262,12 +264,16 @@ class FirebaseWaterRemoteDataSourceImpl
   }
 
   Map<String, dynamic> _purchaseToMap(WaterPurchaseModel model) {
+    final paymentStatus = PaymentStatusX.fromValue(model.paymentStatus).value;
+
     return {
       'id': model.id,
       'type': model.type,
+      'customTypeName': model.customTypeName,
       'quantity': model.quantity,
       'price': model.price,
       'vendor': model.vendor,
+      'paymentStatus': paymentStatus,
       'date': Timestamp.fromDate(model.date),
       'isSynced': model.isSynced,
       'isDeleted': model.isDeleted,
@@ -285,10 +291,13 @@ class FirebaseWaterRemoteDataSourceImpl
   WaterPurchaseModel _purchaseFromMap(Map<String, dynamic> data) {
     final model = WaterPurchaseModel();
     model.id = data['id'] as String;
-    model.type = data['type'] as String? ?? '';
+    model.type = PurchaseTypeX.fromName(data['type'] as String?).name;
+    model.customTypeName = data['customTypeName'] as String?;
     model.quantity = (data['quantity'] as num?)?.toInt() ?? 0;
     model.price = (data['price'] as num?)?.toDouble() ?? 0.0;
     model.vendor = data['vendor'] as String?;
+    model.paymentStatus =
+        PaymentStatusX.fromValue(data['paymentStatus'] as String?).value;
     model.date = _toDateTime(data['date']);
     _applySyncFields(model, data);
     return model;

@@ -15,10 +15,14 @@ class PurchaseHistoryAnalyticsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14),
+
+      padding: const EdgeInsets.all(10),
+
       decoration: BoxDecoration(
         color: Colors.white,
+
         borderRadius: BorderRadius.circular(12),
+
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -27,49 +31,52 @@ class PurchaseHistoryAnalyticsHeader extends StatelessWidget {
           ),
         ],
       ),
+
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Analytics',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              color: AppColors.black,
-            ),
-          ),
-          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
                 child: _MetricTile(
                   title: 'Total Expense',
-                  value: '₹${analytics.totalExpense.toStringAsFixed(0)}',
+                  value:
+                  '₹${analytics.totalExpense.toStringAsFixed(0)}',
+                  icon: Icons.currency_rupee_rounded,
                 ),
               ),
-              const SizedBox(width: 10),
+
+              const SizedBox(width: 8),
+
               Expanded(
                 child: _MetricTile(
-                  title: 'Total Purchases',
+                  title: 'Purchases',
                   value: '${analytics.totalPurchases}',
+                  icon: Icons.shopping_bag_rounded,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+
+          const SizedBox(height: 8),
+
           Row(
             children: [
               Expanded(
                 child: _MetricTile(
                   title: 'Tanker Count',
                   value: '${analytics.tankerCount}',
+                  icon: Icons.local_shipping_rounded,
                 ),
               ),
-              const SizedBox(width: 10),
+
+              const SizedBox(width: 8),
+
               Expanded(
                 child: _MetricTile(
                   title: 'Avg Monthly',
-                  value: '₹${analytics.averageMonthlyExpense.toStringAsFixed(0)}',
+                  value:
+                  '₹${analytics.averageMonthlyExpense.toStringAsFixed(0)}',
+                  icon: Icons.bar_chart_rounded,
                 ),
               ),
             ],
@@ -83,39 +90,112 @@ class PurchaseHistoryAnalyticsHeader extends StatelessWidget {
 class _MetricTile extends StatelessWidget {
   final String title;
   final String value;
+  final IconData icon;
 
   const _MetricTile({
     required this.title,
     required this.value,
+    required this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth =
+        MediaQuery.of(context).size.width;
+
+    final valueFontSize =
+    screenWidth < 360 ? 16.0 : 18.0;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.primarybg,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.border),
+      height: 68,
+
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 8,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+
+      decoration: BoxDecoration(
+        gradient: AppColors.kharchaGradient,
+
+        borderRadius: BorderRadius.circular(12),
+
+        boxShadow: [
+          BoxShadow(
+            color:
+            AppColors.primary.withOpacity(0.10),
+
+            blurRadius: 6,
+
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+
+      child: Row(
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
+          Container(
+            height: 34,
+            width: 34,
+
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.18),
+
+              borderRadius:
+              BorderRadius.circular(10),
+            ),
+
+            child: Icon(
+              icon,
+              color: Colors.white,
+              size: 18,
             ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: AppColors.black,
+
+          const SizedBox(width: 10),
+
+          Expanded(
+            child: Column(
+              mainAxisAlignment:
+              MainAxisAlignment.center,
+
+              crossAxisAlignment:
+              CrossAxisAlignment.start,
+
+              children: [
+                Text(
+                  title,
+
+                  maxLines: 1,
+
+                  overflow: TextOverflow.ellipsis,
+
+                  style: const TextStyle(
+                    fontSize: 10,
+
+                    fontWeight: FontWeight.w500,
+
+                    color: Colors.white70,
+                  ),
+                ),
+
+                const SizedBox(height: 4),
+
+                Text(
+                  value,
+
+                  maxLines: 1,
+
+                  overflow: TextOverflow.ellipsis,
+
+                  style: TextStyle(
+                    fontSize: valueFontSize,
+
+                    fontWeight: FontWeight.w700,
+
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -123,4 +203,3 @@ class _MetricTile extends StatelessWidget {
     );
   }
 }
-

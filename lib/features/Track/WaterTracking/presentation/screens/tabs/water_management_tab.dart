@@ -25,24 +25,52 @@ class _WaterManagementTabState extends ConsumerState<WaterManagementTab> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(
-        left: 16,
-        right: 16,
-        bottom: 100,
-      ),
-      child: const Column(
-        children: [
-          ExpenseSummaryCard(),
-          SizedBox(height: 16),
-          PurchaseList(),
-          SizedBox(height: 16),
-          QuickPurchaseType(),
 
-        ],
-      ),
+    return CustomScrollView(
+
+      physics:
+      const BouncingScrollPhysics(),
+
+      keyboardDismissBehavior:
+      ScrollViewKeyboardDismissBehavior
+          .onDrag,
+
+      slivers: [
+
+        SliverPadding(
+
+          padding:
+          const EdgeInsets.only(
+
+            left: 16,
+            right: 16,
+            bottom: 100,
+          ),
+
+          sliver: SliverList(
+
+            delegate:
+            SliverChildListDelegate(
+
+              const [
+
+                ExpenseSummaryCard(),
+
+                SizedBox(height: 16),
+
+                PurchaseList(),
+
+                SizedBox(height: 16),
+
+                QuickPurchaseType(),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

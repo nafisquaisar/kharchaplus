@@ -316,48 +316,45 @@ class _AddExpenseWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.82,
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
-      minChildSize: 0.60,
+    return AnimatedPadding(
+      padding: EdgeInsets.only(bottom: bottomInset),
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOut,
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.82,
+        minChildSize: 0.60,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (_, scrollController) {
+          return SafeArea(
+            top: false,
+            child: ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(30)),
+              child: SingleChildScrollView(
+                controller: scrollController,
+                physics: const ClampingScrollPhysics(),
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                child: AddExpenseSheet(
+                  cardId: cardId,
+                  onAdd: (expense) async {
+                    final expenseVM = context.read<ExpenseViewModel>();
 
-      maxChildSize: 0.95,
+                    await expenseVM.addExpense(expense);
 
-      expand: false,
-
-      builder: (_, scrollController) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: AppColors.primarybg,
-
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-          ),
-
-          child: ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-
-            child: SingleChildScrollView(
-              controller: scrollController,
-
-              physics: const BouncingScrollPhysics(),
-
-              child: AddExpenseSheet(
-                cardId: cardId,
-
-                onAdd: (expense) async {
-                  final expenseVM = context.read<ExpenseViewModel>();
-
-                  await expenseVM.addExpense(expense);
-
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
-                },
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

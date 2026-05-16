@@ -1,17 +1,11 @@
-import 'package:expense_tracker/features/Expense/presentation/bottomsheet/AddExpenseSheet/widgets/CategoryCard/AddCategoryDialog.dart';
 import 'package:expense_tracker/features/Expense/presentation/bottomsheet/AddExpenseSheet/widgets/AmountCard.dart';
-import 'package:expense_tracker/features/Expense/presentation/bottomsheet/AddExpenseSheet/widgets/AmountCard/AmountField.dart';
 import 'package:expense_tracker/features/Expense/presentation/bottomsheet/AddExpenseSheet/widgets/CategoryCard.dart';
-import 'package:expense_tracker/features/Expense/presentation/bottomsheet/AddExpenseSheet/widgets/CategoryCard/CategoryDropdown.dart';
-import 'package:expense_tracker/features/Expense/presentation/bottomsheet/AddExpenseSheet/widgets/DetailCard/DatePickerField.dart';
-import 'package:expense_tracker/features/Expense/presentation/bottomsheet/AddExpenseSheet/widgets/DetailCard/NoteField.dart';
 import 'package:expense_tracker/features/Expense/presentation/bottomsheet/AddExpenseSheet/widgets/DetailsCard.dart';
 import 'package:expense_tracker/features/Expense/presentation/bottomsheet/AddExpenseSheet/widgets/SaveButton.dart';
 import 'package:expense_tracker/features/Expense/presentation/bottomsheet/AddExpenseSheet/widgets/header.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../core/constants/AppColors.dart';
@@ -106,7 +100,6 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         left: 20,
         right: 20,
         top: 14,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
       ),
       decoration: const BoxDecoration(
         color: AppColors.primarybg,

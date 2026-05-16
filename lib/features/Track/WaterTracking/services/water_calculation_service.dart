@@ -1,5 +1,6 @@
 import '../domain/entities/water_intake_entity.dart';
 import '../domain/entities/water_purchase_entity.dart';
+import '../domain/enum/purchase_type.dart';
 
 class WaterCalculationService {
   int dayKey(DateTime date) {
@@ -101,8 +102,8 @@ class WaterCalculationService {
   }
 
   PurchaseBreakdown calculatePurchaseBreakdown(List<WaterPurchaseEntity> purchases) {
-	final countByType = <String, int>{};
-	final costByType = <String, double>{};
+	final countByType = <PurchaseType, int>{};
+	final costByType = <PurchaseType, double>{};
 
 	for (final item in purchases) {
 	  countByType[item.type] = (countByType[item.type] ?? 0) + 1;
@@ -129,8 +130,8 @@ class StreakResult {
 }
 
 class PurchaseBreakdown {
-  final Map<String, int> countByType;
-  final Map<String, double> costByType;
+	final Map<PurchaseType, int> countByType;
+	final Map<PurchaseType, double> costByType;
 
   const PurchaseBreakdown({
 	required this.countByType,
