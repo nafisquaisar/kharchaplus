@@ -21,6 +21,7 @@ class GoalStreakCards extends ConsumerWidget {
         ? '...'
         : '${streakAnalytics.data.currentStreak} Days';
 
+
     return Row(
       children: [
         Expanded(
@@ -43,6 +44,9 @@ class GoalStreakCards extends ConsumerWidget {
         Expanded(
           child: _StreakCard(
             streakText: streakText,
+            bestStreak: streakAnalytics.isLoading
+                ? 0
+                : streakAnalytics.data.bestStreak,
           ),
         ),
       ],
@@ -160,9 +164,11 @@ class _GoalCard extends StatelessWidget {
 
 class _StreakCard extends StatelessWidget {
   final String streakText;
+  final int bestStreak;
 
   const _StreakCard({
     required this.streakText,
+    required this.bestStreak,
   });
 
   @override
@@ -210,9 +216,9 @@ class _StreakCard extends StatelessWidget {
 
                 const SizedBox(height: 2),
 
-                const Text(
-                  'Best: 12 Days',
-                  style: TextStyle(
+                Text(
+                  'Best: $bestStreak Days',
+                  style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textSecondary,
@@ -222,9 +228,9 @@ class _StreakCard extends StatelessWidget {
             ),
           ),
 
-          SizedBox(width: 6),
+          const SizedBox(width: 6),
 
-          Text(
+          const Text(
             '🔥',
             style: TextStyle(
               fontSize: 22,

@@ -442,16 +442,19 @@ class HistoryNotifier extends StateNotifier<HistoryState> {
     required int dailyGoalMl,
   }) {
     final totals = <DateTime, int>{};
+
     for (final item in entries) {
       final date = DateTime(
         item.dateTime.year,
         item.dateTime.month,
         item.dateTime.day,
       );
+
       totals[date] = (totals[date] ?? 0) + item.amountMl;
     }
 
     var streak = 0;
+
     var cursor = DateTime(
       anchor.year,
       anchor.month,
@@ -460,15 +463,25 @@ class HistoryNotifier extends StateNotifier<HistoryState> {
 
     while (true) {
       final value = totals[cursor] ?? 0;
+
+      print('Date: $cursor');
+      print('Value: $value');
+      print('Goal: $dailyGoalMl');
+
       if (value >= dailyGoalMl) {
         streak += 1;
+
         cursor = cursor.subtract(
           const Duration(days: 1),
         );
+
         continue;
       }
+
       break;
     }
+
+    print('Final Streak: $streak');
 
     return streak;
   }

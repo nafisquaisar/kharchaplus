@@ -5,6 +5,14 @@ enum PurchaseType {
   other,
 }
 
+enum PurchaseTypeFilter {
+  all,
+  tanker,
+  can20L,
+  water1L,
+  other,
+}
+
 extension PurchaseTypeX on PurchaseType {
   String get label {
     switch (this) {

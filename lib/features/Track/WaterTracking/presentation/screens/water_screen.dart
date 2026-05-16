@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/Common/CommonAppBar.dart';
 import '../../../../../core/constants/AppColors.dart';
+import '../providers/session/water_session_provider.dart';
 import '../widgets/management/floating_add_button.dart';
 import 'tabs/drinking_tab.dart';
 import 'tabs/water_management_tab.dart';
 
-class WaterScreen extends StatefulWidget {
+class WaterScreen extends ConsumerStatefulWidget {
   const WaterScreen({
     super.key,
   });
 
   @override
-  State<WaterScreen> createState() => _WaterScreenState();
+  ConsumerState<WaterScreen> createState() => _WaterScreenState();
 }
 
-class _WaterScreenState extends State<WaterScreen>
+class _WaterScreenState extends ConsumerState<WaterScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -24,6 +26,8 @@ class _WaterScreenState extends State<WaterScreen>
   @override
   void initState() {
     super.initState();
+
+    ref.read(waterSessionControllerProvider);
 
     _tabController = TabController(
       length: 2,
@@ -68,8 +72,10 @@ class _WaterScreenState extends State<WaterScreen>
           },
         ),
       ),
+
       floatingActionButton: FloatingAddButton(
         currentIndex: currentIndex,
+
       ),
       body: Column(
         children: [

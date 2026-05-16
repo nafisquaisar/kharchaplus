@@ -94,6 +94,7 @@ class _WaterIntakeHistoryScreenState
           },
         ),
       ),
+
       body: RefreshIndicator(
         color: AppColors.accent,
         backgroundColor: Colors.white,
@@ -369,6 +370,7 @@ class _WaterIntakeHistoryScreenState
 
 class _AnalyticsGrid extends StatelessWidget {
   final HistoryState state;
+
 
   const _AnalyticsGrid({
     required this.state,

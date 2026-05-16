@@ -51,9 +51,7 @@ class WaterNotificationService {
     await _permissionService.openExactAlarmSettings();
   }
 
-  Future<void> scheduleHydrationReminders({
-    required int intervalMinutes,
-  }) async {
+  Future<void> scheduleHydrationReminders({required int intervalMinutes,}) async {
     await cancelHydrationReminders();
 
     if (intervalMinutes <= 0) return;
@@ -61,8 +59,17 @@ class WaterNotificationService {
     final maxCount = (24 * 60 / intervalMinutes).floor();
     final now = tz.TZDateTime.now(tz.local);
 
+    final scheduleMode = await _resolveScheduleMode();
     for (var i = 1; i <= maxCount; i++) {
-      final scheduled = now.add(Duration(minutes: intervalMinutes * i));
+      final scheduled = tz.TZDateTime(
+        tz.local,
+        now.year,
+        now.month,
+        now.day,
+        8,
+        0,
+      ).add(Duration(minutes: intervalMinutes * (i - 1)));
+
       await _notificationService.zonedSchedule(
         id: _hydrationBaseId + i,
         title: 'Time to drink water',
@@ -72,6 +79,7 @@ class WaterNotificationService {
         channelName: _hydrationChannelName,
         channelDescription: _hydrationChannelDesc,
         matchDateTimeComponents: DateTimeComponents.time,
+        scheduleMode: scheduleMode,
       );
     }
   }
@@ -80,6 +88,7 @@ class WaterNotificationService {
     required int hour,
     required int minute,
   }) async {
+    final scheduleMode = await _resolveScheduleMode();
     await _notificationService.zonedSchedule(
       id: _morningId,
       title: 'Start your day with water 🚰',
@@ -89,6 +98,7 @@ class WaterNotificationService {
       channelName: _morningChannelName,
       channelDescription: _morningChannelDesc,
       matchDateTimeComponents: DateTimeComponents.time,
+      scheduleMode: scheduleMode,
     );
   }
 
@@ -102,6 +112,7 @@ class WaterNotificationService {
         ? 'You still need $remainingL L water 💧'
         : 'Great job hitting your goal today!';
 
+    final scheduleMode = await _resolveScheduleMode();
     await _notificationService.zonedSchedule(
       id: _goalId,
       title: 'Daily Goal Check',
@@ -111,6 +122,7 @@ class WaterNotificationService {
       channelName: _goalChannelName,
       channelDescription: _goalChannelDesc,
       matchDateTimeComponents: DateTimeComponents.time,
+      scheduleMode: scheduleMode,
     );
   }
 
@@ -134,6 +146,7 @@ class WaterNotificationService {
     required String body,
     required bool repeatDaily,
   }) async {
+    final scheduleMode = await _resolveScheduleMode();
     await _notificationService.zonedSchedule(
       id: notificationId,
       title: title,
@@ -144,6 +157,7 @@ class WaterNotificationService {
       channelDescription: _hydrationChannelDesc,
       matchDateTimeComponents:
           repeatDaily ? DateTimeComponents.time : null,
+      scheduleMode: scheduleMode,
     );
   }
 
@@ -176,6 +190,7 @@ class WaterNotificationService {
 
   tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
     final now = tz.TZDateTime.now(tz.local);
+
     var scheduled = tz.TZDateTime(
       tz.local,
       now.year,
@@ -185,11 +200,46 @@ class WaterNotificationService {
       minute,
     );
 
-    if (scheduled.isBefore(now)) {
+    // IMPORTANT FIX
+    if (!scheduled.isAfter(now)) {
       scheduled = scheduled.add(const Duration(days: 1));
     }
 
+    print('NOW TIME: $now');
+    print('SCHEDULE TIME: $scheduled');
+
     return scheduled;
   }
+
+  Future<void> testReminder() async {
+    final now = tz.TZDateTime.now(tz.local);
+
+    final scheduled = now.add(const Duration(seconds: 10));
+
+    await _notificationService.zonedSchedule(
+      id: 12345,
+      title: 'Water Reminder Test',
+      body: 'This should appear in 10 sec',
+      scheduledDate: scheduled,
+      channelId: _hydrationChannelId,
+      channelName: _hydrationChannelName,
+      channelDescription: _hydrationChannelDesc,
+      scheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
+
+    print('TEST REMINDER SET FOR: $scheduled');
+  }
+
+  Future<AndroidScheduleMode> _resolveScheduleMode() async {
+    final hasExact = await _permissionService.hasExactAlarmPermission();
+    return hasExact
+        ? AndroidScheduleMode.exactAllowWhileIdle
+        : AndroidScheduleMode.inexact;
+  }
+
+
+
+
+
 }
 

@@ -13,6 +13,7 @@ class IntakeHistoryAnalytics {
   final DateTime? bestDayDate;
   final int currentStreak;
 
+
   const IntakeHistoryAnalytics({
     required this.totalMl,
     required this.dailyAverageMl,

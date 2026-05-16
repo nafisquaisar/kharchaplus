@@ -37,9 +37,8 @@ class NotificationService {
   Future<void> createAndroidChannels(
     List<AndroidNotificationChannel> channels,
   ) async {
-    final android =
-        _plugin.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
 
     if (android == null) return;
 
@@ -56,8 +55,7 @@ class NotificationService {
     required String channelId,
     required String channelName,
     required String channelDescription,
-    AndroidScheduleMode scheduleMode =
-        AndroidScheduleMode.exactAllowWhileIdle,
+    AndroidScheduleMode scheduleMode = AndroidScheduleMode.exactAllowWhileIdle,
     DateTimeComponents? matchDateTimeComponents,
     String? payload,
   }) async {
@@ -70,6 +68,25 @@ class NotificationService {
         priority: Priority.high,
       ),
     );
+
+    print('========== SCHEDULING ==========');
+    print('ID: $id');
+    print('TITLE: $title');
+    print('BODY: $body');
+    print('NOW: ${tz.TZDateTime.now(tz.local)}');
+    print('SCHEDULED: $scheduledDate');
+    print('TIMEZONE: ${tz.local.name}');
+
+    final pending = await _plugin.pendingNotificationRequests();
+
+    print('PENDING COUNT: ${pending.length}');
+
+    for (final item in pending) {
+      print('Pending ID: ${item.id}');
+      print('Pending Title: ${item.title}');
+    }
+
+    print('================================');
 
     await _plugin.zonedSchedule(
       id: id,
@@ -92,19 +109,48 @@ class NotificationService {
   }
 
   Future<void> _configureTimeZones() async {
-    if (_isTimeZoneReady()) return;
-
     tz.initializeTimeZones();
-    final tzName = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(tzName));
+
+    try {
+      final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+
+      print('DEVICE TIMEZONE: $timeZoneName');
+
+      tz.setLocalLocation(
+        tz.getLocation(timeZoneName),
+      );
+    } catch (e) {
+      print('TIMEZONE ERROR: $e');
+
+      tz.setLocalLocation(
+        tz.getLocation('Asia/Kolkata'),
+      );
+    }
+
+    print('FINAL TIMEZONE: ${tz.local.name}');
   }
 
-  bool _isTimeZoneReady() {
-    try {
-      tz.local;
-      return true;
-    } catch (_) {
-      return false;
-    }
+
+  Future<void> testInstantNotification() async {
+
+    const details = NotificationDetails(
+      android: AndroidNotificationDetails(
+        'instant_channel',
+        'Instant Channel',
+        channelDescription: 'Instant test',
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+    );
+
+    await _plugin.show(
+      id: 99999,
+      title: 'Instant Test',
+      body: 'If this appears, notification system works',
+      notificationDetails: details,
+    );
+
+    print('INSTANT NOTIFICATION TRIGGERED');
   }
+
 }

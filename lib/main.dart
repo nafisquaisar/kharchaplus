@@ -14,6 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:provider/provider.dart' as provider;
+import 'package:timezone/data/latest.dart' as tz;
 
 import 'core/constants/AppColors.dart';
 import 'core/services/isar_service.dart';
@@ -53,6 +54,8 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  tz.initializeTimeZones();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -67,25 +70,23 @@ void main() async {
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // 👈 same as your theme
-      statusBarIconBrightness: Brightness.light, // white icons
-      statusBarBrightness: Brightness.dark, // iOS support
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
     ),
   );
-
 
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
   );
 
-
   runApp(
-
     const ProviderScope(
       child: ExpenseTrackerApp(),
     ),
   );
 }
+
 
 class ExpenseTrackerApp extends StatelessWidget {
 

@@ -55,7 +55,7 @@ class _DrinkingTabState extends ConsumerState<DrinkingTab> {
           SizedBox(height: 16),
           GoalStreakCards(),
           SizedBox(height: 16),
-          ReminderTile(),
+          // ReminderTile(),
 
         ],
       ),
