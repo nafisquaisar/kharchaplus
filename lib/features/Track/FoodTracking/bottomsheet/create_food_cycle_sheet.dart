@@ -6,27 +6,25 @@ import 'package:expense_tracker/features/Track/FoodTracking/bottomsheet/widgets/
 import 'package:expense_tracker/features/Track/FoodTracking/bottomsheet/widgets/meal_rules_section.dart';
 import 'package:expense_tracker/features/Track/FoodTracking/bottomsheet/widgets/pricing_section.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import '../../../../core/constants/AppColors.dart';
 
 import '../../../../core/utils/AppFlushbar.dart';
 import '../domain/entities/FoodCycle.dart';
-import '../domain/enum/SundayRule.dart';
-import '../domain/enum/cycle_status.dart';
 
-import '../presentation/viewmodel/food_cycle_viewmodel.dart';
+import '../presentation/providers/food_tracking_providers.dart';
 
-class CreateFoodCycleSheet extends StatefulWidget {
+class CreateFoodCycleSheet extends ConsumerStatefulWidget {
   final FoodCycle? cycle;
 
   const CreateFoodCycleSheet({super.key, this.cycle});
 
   @override
-  State<CreateFoodCycleSheet> createState() => _CreateFoodCycleSheetState();
+  ConsumerState<CreateFoodCycleSheet> createState() => _CreateFoodCycleSheetState();
 }
 
-class _CreateFoodCycleSheetState extends State<CreateFoodCycleSheet> {
+class _CreateFoodCycleSheetState extends ConsumerState<CreateFoodCycleSheet> {
   // =========================
   // CONTROLLERS
   // =========================
@@ -164,8 +162,10 @@ class _CreateFoodCycleSheetState extends State<CreateFoodCycleSheet> {
         sundayOption: sundayOption,
       );
 
+      final vm = ref.read(foodCycleViewModelProvider);
+
       await FoodCycleSheetService.saveCycle(
-        context: context,
+        vm: vm,
 
         cycle: cycle,
 

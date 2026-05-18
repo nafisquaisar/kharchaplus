@@ -1,5 +1,9 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../../Home/domain/entities/RecentActivityEntity.dart';
+import '../../../../Home/domain/usecases/recent/add_recent_activity_usecase.dart';
+import '../../../../Home/domain/usecases/recent/delete_recent_activity_usecase.dart';
+import '../../../../Home/domain/usecases/recent/update_recent_activity_usecase.dart';
 import '../datasource/local/electricity_local_datasource.dart';
 import '../datasource/remote/electricity_remote_datasource.dart';
 import '../mapper/electricity_mapper.dart';
@@ -11,10 +15,16 @@ class ElectricityRepositoryImpl
     implements ElectricityRepository {
   final ElectricityRemoteDataSource remoteDataSource;
   final ElectricityLocalDataSource localDataSource;
+  final AddRecentActivityUseCase addRecentActivityUseCase;
+  final UpdateRecentActivityUseCase updateRecentActivityUseCase;
+  final DeleteRecentActivityUseCase deleteRecentActivityUseCase;
 
   ElectricityRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
+    required this.addRecentActivityUseCase,
+    required this.updateRecentActivityUseCase,
+    required this.deleteRecentActivityUseCase,
   });
 
   // =========================
@@ -83,6 +93,31 @@ class ElectricityRepositoryImpl
           isEdited: false,
         ),
       );
+
+      await addRecentActivityUseCase.call(
+        RecentActivityEntity(
+          id: DateTime.now()
+              .millisecondsSinceEpoch
+              .toString(),
+
+          type: 'electricity',
+
+          title: 'Electricity Bill',
+
+          subtitle:
+          model.title ?? 'Electricity Added',
+
+          amount:
+          ((model.currentUnit - model.prevUnit) *
+              model.rate)
+              .toDouble(),
+
+          createdAt: DateTime.now(),
+
+          referenceId: model.id,
+        ),
+      );
+
     } catch (e) {
       debugPrint('[Repository] [ERROR] Remote add failed: $e');
       await localDataSource.upsertElectricity(
@@ -117,6 +152,19 @@ class ElectricityRepositoryImpl
           isSynced: true,
           isOfflineCreated: false,
           isEdited: false,
+        ),
+      );
+
+      debugPrint('[Repository] [RECENT UPDATE] referenceId=${model.id}');
+      await updateRecentActivityUseCase.call(
+        RecentActivityEntity(
+          id: model.id,
+          type: 'electricity',
+          title: 'Electricity Bill',
+          subtitle: model.title ?? 'Electricity Updated',
+          amount: ((model.currentUnit - model.prevUnit) * model.rate).toDouble(),
+          createdAt: DateTime.now(),
+          referenceId: model.id,
         ),
       );
     } catch (e) {
@@ -159,6 +207,9 @@ class ElectricityRepositoryImpl
           ),
         );
       }
+
+      debugPrint('[Repository] [RECENT DELETE] referenceId=$id');
+      await deleteRecentActivityUseCase.call(id);
     } catch (e) {
       debugPrint('[Repository] [ERROR] Remote delete failed: $e');
       if (cached != null) {

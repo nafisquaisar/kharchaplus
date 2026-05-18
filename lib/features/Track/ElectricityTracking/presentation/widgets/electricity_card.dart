@@ -38,6 +38,7 @@ class ElectricityCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.card,
           borderRadius: BorderRadius.circular(10),
+
           boxShadow: [
             BoxShadow(
               color: AppColors.accent.withOpacity(0.08),

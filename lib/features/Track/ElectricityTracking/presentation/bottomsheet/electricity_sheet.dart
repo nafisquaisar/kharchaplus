@@ -363,7 +363,7 @@ class _ElectricitySheetState
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppColors.primary,
+                color: AppColors.accent,
               ),
             ),
 
@@ -484,7 +484,7 @@ class _ElectricitySheetState
                   style: ElevatedButton.styleFrom(
 
                     backgroundColor:
-                    AppColors.primary,
+                    AppColors.accent,
 
                     foregroundColor:
                     AppColors.textPrimary,
@@ -555,7 +555,7 @@ class _SectionCard extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              color: AppColors.primary,
+              color: AppColors.accent,
               fontWeight: FontWeight.w600,
               fontSize: 14,
             ),
@@ -627,7 +627,7 @@ class _DateRow extends StatelessWidget {
           children: [
             Text(
               '$label: $value',
-              style: TextStyle(color: AppColors.primary),
+              style: TextStyle(color: AppColors.accent),
             ),
             Icon(
               Icons.calendar_today_rounded,
@@ -668,7 +668,7 @@ class _ReadOnlyRow extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              color: AppColors.primary,
+              color: AppColors.accent,
               fontWeight: FontWeight.w600,
             ),
           ),

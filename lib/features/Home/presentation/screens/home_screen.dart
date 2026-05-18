@@ -96,7 +96,6 @@ class _HomeState
                         /// BALANCE
                         BalanceCard(
                           selectedCard: selectedCard,
-
                           expenseVm: expenseVm,
                         ),
 

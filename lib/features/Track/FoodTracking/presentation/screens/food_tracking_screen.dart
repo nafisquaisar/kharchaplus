@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/Common/CommonAppBar.dart';
 import '../../../../../core/constants/AppColors.dart';
@@ -10,7 +10,7 @@ import '../../bottomsheet/create_food_cycle_sheet.dart';
 import '../../domain/entities/FoodCycle.dart';
 import '../../domain/enum/cycle_status.dart';
 
-import '../viewmodel/food_cycle_viewmodel.dart';
+import '../providers/food_tracking_providers.dart';
 
 import '../widgets/food_tracking_screen/empty_food_cycle.dart';
 import '../widgets/food_tracking_screen/filterbottomsheet/food_filter_bottom_sheet.dart';
@@ -20,14 +20,14 @@ import '../widgets/food_tracking_screen/loading_widget.dart';
 
 import 'food_tracking_detail_screen.dart';
 
-class FoodTrackingScreen extends StatefulWidget {
+class FoodTrackingScreen extends ConsumerStatefulWidget {
   const FoodTrackingScreen({super.key});
 
   @override
-  State<FoodTrackingScreen> createState() => _FoodTrackingScreenState();
+  ConsumerState<FoodTrackingScreen> createState() => _FoodTrackingScreenState();
 }
 
-class _FoodTrackingScreenState extends State<FoodTrackingScreen> {
+class _FoodTrackingScreenState extends ConsumerState<FoodTrackingScreen> {
   String searchQuery = "";
   String selectedStatus = "All";
 
@@ -44,7 +44,7 @@ class _FoodTrackingScreenState extends State<FoodTrackingScreen> {
     super.initState();
 
     Future.microtask(() {
-      context.read<FoodCycleViewModel>().loadCycles();
+      ref.read(foodCycleViewModelProvider).loadCycles();
     });
   }
 
@@ -125,7 +125,7 @@ class _FoodTrackingScreenState extends State<FoodTrackingScreen> {
   // =========================
 
   Future<void> deleteCycleWithUndo(FoodCycle cycle) async {
-    final vm = context.read<FoodCycleViewModel>();
+    final vm = ref.read(foodCycleViewModelProvider);
 
     // HIDE UI
 
@@ -258,8 +258,10 @@ class _FoodTrackingScreenState extends State<FoodTrackingScreen> {
           FocusManager.instance.primaryFocus?.unfocus();
         },
 
-        child: Consumer<FoodCycleViewModel>(
-          builder: (context, vm, _) {
+        child: Consumer(
+          builder: (context, ref, _) {
+            final vm = ref.watch(foodCycleViewModelProvider);
+
             // =========================
             // LOADING
             // =========================

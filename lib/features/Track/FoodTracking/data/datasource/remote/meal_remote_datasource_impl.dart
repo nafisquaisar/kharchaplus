@@ -132,6 +132,32 @@ class MealRemoteDataSourceImpl
       entry.cycleId,
     );
   }
+
+  // =========================
+  // DELETE MEAL ENTRY
+  // =========================
+
+  @override
+  Future<void> deleteMealEntry(
+      String cycleId,
+      String entryId,
+      ) async {
+
+    await service
+        .mealEntriesRef(
+      cycleId,
+    )
+        .doc(entryId)
+        .set({
+      "isDeleted": true,
+      "updatedAt": Timestamp.now(),
+    }, SetOptions(merge: true));
+
+    await updateCycleStats(
+      cycleId,
+    );
+  }
+
   // =========================
   // GET MEAL ENTRIES
   // =========================

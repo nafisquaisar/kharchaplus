@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../core/providers/auth_provider.dart';
+import '../../../../../Home/presentation/providers/recent/recent_activity_providers.dart';
 import '../../../data/datasource/local/isar/water_goal_local_ds.dart';
 import '../../../data/datasource/local/isar/water_goal_local_ds_imple.dart';
 import '../../../data/datasource/local/isar/water_intake_local_ds.dart';
@@ -153,6 +154,15 @@ StateNotifierProvider<
       ref.read(
         updatePurchaseProvider,
       ),
+
+      addRecentActivityUseCase:
+      ref.read(addRecentActivityUseCaseProvider),
+
+      updateRecentActivityUseCase:
+      ref.read(updateRecentActivityUseCaseProvider),
+
+      deleteRecentActivityUseCase:
+      ref.read(deleteRecentActivityUseCaseProvider),
     );
   },
 );

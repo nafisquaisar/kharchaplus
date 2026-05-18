@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../../core/utils/AppFlushbar.dart';
 
@@ -183,14 +182,12 @@ class FoodCycleSheetService {
   // =========================
 
   static Future<void> saveCycle({
-    required BuildContext context,
+    required FoodCycleViewModel vm,
 
     required FoodCycle cycle,
 
     required bool isEdit,
   }) async {
-    final vm = context.read<FoodCycleViewModel>();
-
     if (isEdit) {
       await vm.updateCycle(cycle);
     } else {

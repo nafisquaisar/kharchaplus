@@ -52,7 +52,7 @@ class _StatCell extends StatelessWidget {
 		Text(
 		  item.value,
 		  style: TextStyle(
-			color: AppColors.accent,
+			color: AppColors.black,
 			fontWeight: FontWeight.w600,
 		  ),
 		),

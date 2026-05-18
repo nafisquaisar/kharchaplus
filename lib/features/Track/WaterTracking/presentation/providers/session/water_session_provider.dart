@@ -35,4 +35,3 @@ final waterSessionControllerProvider = Provider<void>((ref) {
     fireImmediately: true,
   );
 });
-

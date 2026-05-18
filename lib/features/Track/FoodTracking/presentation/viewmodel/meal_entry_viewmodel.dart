@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../../core/utils/AppFlushbar.dart';
 import '../../domain/entities/FoodCycle.dart';
@@ -9,11 +10,24 @@ import '../../domain/repository/MealRepository.dart';
 import '../../services/meal_mapper_service.dart';
 import '../../services/meal_summary_service.dart';
 import '../widgets/food_tracking_detail_widgets/meal_date_key.dart';
+import '../../../../../core/utils/formatters.dart';
+import '../../../../Home/domain/entities/RecentActivityEntity.dart';
+import '../../../../Home/domain/usecases/recent/add_recent_activity_usecase.dart';
+import '../../../../Home/domain/usecases/recent/delete_recent_activity_usecase.dart';
+import '../../../../Home/domain/usecases/recent/update_recent_activity_usecase.dart';
 
 class MealEntryViewModel extends ChangeNotifier {
   final MealRepository repository;
+  final AddRecentActivityUseCase addRecentActivityUseCase;
+  final UpdateRecentActivityUseCase updateRecentActivityUseCase;
+  final DeleteRecentActivityUseCase deleteRecentActivityUseCase;
 
-  MealEntryViewModel(this.repository);
+  MealEntryViewModel(
+    this.repository, {
+    required this.addRecentActivityUseCase,
+    required this.updateRecentActivityUseCase,
+    required this.deleteRecentActivityUseCase,
+  });
 
   // =========================
   // STATE
@@ -410,6 +424,8 @@ class MealEntryViewModel extends ChangeNotifier {
   // =========================
 
   Future<void> _saveMeal(MealEntry entry) async {
+    final existed = _meals.any((e) => e.id == entry.id);
+
     await repository.saveMealEntry(entry);
 
     final index = _meals.indexWhere((e) => e.id == entry.id);
@@ -421,11 +437,78 @@ class MealEntryViewModel extends ChangeNotifier {
     }
 
     notifyListeners();
+
+    await _syncRecentActivity(
+      entry: entry,
+      isUpdate: existed,
+    );
+  }
+
+  Future<void> deleteMealEntry(
+      MealEntry entry,
+      ) async {
+    final previousMeals = List<MealEntry>.from(_meals);
+
+    try {
+      _meals.removeWhere((e) => e.id == entry.id);
+      notifyListeners();
+
+      debugPrint('[Food] recent activity delete referenceId=${entry.id}');
+      await deleteRecentActivityUseCase.call(entry.id);
+
+      await repository.deleteMealEntry(entry.cycleId, entry.id);
+    } catch (e) {
+      _meals
+        ..clear()
+        ..addAll(previousMeals);
+      notifyListeners();
+      debugPrint('[Food] delete failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> _syncRecentActivity({
+    required MealEntry entry,
+    required bool isUpdate,
+  }) async {
+    final cycleTitle = _cycle?.title ?? 'Food Cycle';
+    final dateLabel = AppFormatters.date(entry.date);
+
+    final mealCount = (entry.breakfast ? 1 : 0) +
+        (entry.lunch ? 1 : 0) +
+        (entry.dinner ? 1 : 0);
+
+    final mealPrice = _cycle?.mealPrice ?? 0;
+    final amount = (mealPrice * mealCount) + entry.extraCharge;
+
+    final recent = RecentActivityEntity(
+      id: entry.id,
+      type: 'food',
+      title: isUpdate ? 'Food Cycle Updated' : 'Food Cycle Added',
+      subtitle: '$cycleTitle • $dateLabel',
+      amount: amount,
+      createdAt: entry.updatedAt,
+      referenceId: entry.id,
+    );
+
+    if (isUpdate) {
+      debugPrint('[Food] recent activity updated referenceId=${entry.id}');
+      await updateRecentActivityUseCase.call(recent);
+    } else {
+      debugPrint('[Food] recent activity added referenceId=${entry.id}');
+      await addRecentActivityUseCase.call(recent);
+    }
   }
 
   // =========================
-  // FIND
+  // HELPERS
   // =========================
+
+  void _setLoading(bool value) {
+    _isLoading = value;
+
+    notifyListeners();
+  }
 
   MealEntry? _findMeal(String cycleId, DateTime date) {
     try {
@@ -441,10 +524,6 @@ class MealEntryViewModel extends ChangeNotifier {
     }
   }
 
-  // =========================
-  // ENTRY ID
-  // =========================
-
   String _entryId(String cycleId, DateTime date) {
     return "${cycleId}_"
         "${date.year}_"
@@ -452,15 +531,6 @@ class MealEntryViewModel extends ChangeNotifier {
         "${date.day}";
   }
 
-  // =========================
-  // HELPERS
-  // =========================
-
-  void _setLoading(bool value) {
-    _isLoading = value;
-
-    notifyListeners();
-  }
 
   Future<void> toggleMeal({
     required BuildContext context,

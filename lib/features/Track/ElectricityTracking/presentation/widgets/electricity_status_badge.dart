@@ -49,7 +49,7 @@ class ElectricityStatusBadge extends StatelessWidget {
       return AppColors.deleteBackground;
     }
     if (!entity.isSynced || entity.isEdited || entity.isOfflineCreated) {
-      return AppColors.accent;
+      return AppColors.black;
     }
     return AppColors.kharchaGradientStart;
   }

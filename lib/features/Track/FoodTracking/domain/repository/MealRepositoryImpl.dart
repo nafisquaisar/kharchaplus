@@ -87,10 +87,14 @@ class MealRepositoryImpl
 
   @override
   Future<void> deleteMealEntry(
+      String cycleId,
       String entryId,
       ) async {
 
-    // optional
+    await remote.deleteMealEntry(
+      cycleId,
+      entryId,
+    );
   }
 
   @override

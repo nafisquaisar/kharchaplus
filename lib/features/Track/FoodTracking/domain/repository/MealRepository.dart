@@ -35,6 +35,7 @@ abstract class MealRepository {
   // =========================
 
   Future<void> deleteMealEntry(
+      String cycleId,
       String entryId,
       );
 

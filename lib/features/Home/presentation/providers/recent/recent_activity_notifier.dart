@@ -1,0 +1,173 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../domain/entities/RecentActivityEntity.dart';
+import 'recent_activity_providers.dart';
+
+class RecentActivityNotifier
+    extends StateNotifier<
+        AsyncValue<List<RecentActivityEntity>>> {
+  final Ref ref;
+  StreamSubscription<List<RecentActivityEntity>>? _localSubscription;
+  StreamSubscription<List<RecentActivityEntity>>? _remoteSubscription;
+
+  RecentActivityNotifier(
+      this.ref,
+      ) : super(const AsyncLoading()) {
+    _bindLocalStream();
+    _bindRemoteStream();
+    _bootstrap();
+  }
+
+  void _bindLocalStream() {
+    _localSubscription?.cancel();
+
+    _localSubscription = ref
+        .read(
+          watchRecentActivitiesUseCaseProvider,
+        )
+        .call()
+        .listen(
+          (activities) {
+        state = AsyncData(activities);
+      },
+      onError: (e, stack) {
+        debugPrint('RecentActivityNotifier: local stream error $e');
+        state = AsyncError(e, stack);
+      },
+    );
+  }
+
+  void _bindRemoteStream() {
+    _remoteSubscription?.cancel();
+
+    _remoteSubscription = ref
+        .read(
+          watchRemoteRecentActivitiesUseCaseProvider,
+        )
+        .call()
+        .listen(
+          (_) {},
+      onError: (e, stack) {
+        debugPrint('RecentActivityNotifier: remote stream error $e');
+        if (state is AsyncLoading) {
+          state = AsyncError(e, stack);
+        }
+      },
+    );
+  }
+
+  Future<void> _bootstrap() async {
+    try {
+      await ref
+          .read(
+            syncRecentActivitiesUseCaseProvider,
+          )
+          .call();
+    } catch (e, stack) {
+      debugPrint('RecentActivityNotifier: initial sync failed $e');
+      if (state is AsyncLoading) {
+        state = AsyncError(e, stack);
+      }
+    }
+  }
+
+  /// LOAD RECENT
+  Future<void> loadRecentActivities() async {
+    try {
+      state = const AsyncLoading();
+
+      final activities = await ref
+          .read(
+        getRecentActivitiesUseCaseProvider,
+      )
+          .call();
+
+      state = AsyncData(activities);
+    } catch (e, stack) {
+      state = AsyncError(e, stack);
+    }
+  }
+
+  /// ADD RECENT
+  Future<void> addRecentActivity(
+      RecentActivityEntity activity,
+      ) async {
+    try {
+      await ref
+          .read(
+        addRecentActivityUseCaseProvider,
+      )
+          .call(activity);
+    } catch (e, stack) {
+      debugPrint('RecentActivityNotifier: add failed $e');
+      state = AsyncError(e, stack);
+    }
+  }
+
+  /// UPDATE RECENT
+  Future<void> updateRecentActivity(
+      RecentActivityEntity activity,
+      ) async {
+    final previous = state;
+
+    state = state.whenData(
+          (items) {
+        return items
+            .map((item) => item.referenceId == activity.referenceId
+            ? activity
+            : item)
+            .toList();
+      },
+    );
+
+    try {
+      await ref
+          .read(
+        updateRecentActivityUseCaseProvider,
+      )
+          .call(activity);
+    } catch (e, stack) {
+      debugPrint('RecentActivityNotifier: update failed $e');
+      state = previous is AsyncValue<List<RecentActivityEntity>>
+          ? previous
+          : AsyncError(e, stack);
+    }
+  }
+
+  /// DELETE RECENT
+  Future<void> deleteRecentActivity(
+      String referenceId,
+      ) async {
+    final previous = state;
+
+    state = state.whenData(
+          (items) {
+        return items
+            .where((item) => item.referenceId != referenceId)
+            .toList();
+      },
+    );
+
+    try {
+      await ref
+          .read(
+        deleteRecentActivityUseCaseProvider,
+      )
+          .call(referenceId);
+    } catch (e, stack) {
+      debugPrint('RecentActivityNotifier: delete failed $e');
+      state = previous is AsyncValue<List<RecentActivityEntity>>
+          ? previous
+          : AsyncError(e, stack);
+    }
+  }
+
+  @override
+  void dispose() {
+    _localSubscription?.cancel();
+    _remoteSubscription?.cancel();
+    super.dispose();
+  }
+}

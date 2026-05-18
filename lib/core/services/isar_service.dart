@@ -5,6 +5,7 @@ import '../../features/Track/WaterTracking/data/models/water_goal_model.dart';
 import '../../features/Track/WaterTracking/data/models/water_intake_model.dart';
 import '../../features/Track/WaterTracking/data/models/water_purchase_model.dart';
 import '../../features/Track/WaterTracking/data/models/water_reminder_model.dart';
+import '../../features/Home/data/models/recent_activity_model.dart';
 
 class IsarService {
 
@@ -18,6 +19,7 @@ class IsarService {
     isar = await Isar.open(
 
       [
+        RecentActivityModelSchema,
         WaterIntakeModelSchema,
         WaterPurchaseModelSchema,
         WaterGoalModelSchema,

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../Home/presentation/providers/recent/recent_activity_providers.dart';
 import '../../data/datasource/local/electricity_local_datasource.dart';
 import '../../data/datasource/remote/electricity_remote_datasource.dart';
 import '../../data/repository/electricity_repository_impl.dart';
@@ -17,6 +18,8 @@ import '../../domain/usecases/update_electricity_usecase.dart';
 import '../../service/FirebaseElectricityService.dart';
 import 'electricity_provider.dart';
 import '../states/electricity_state.dart';
+import '../../../../Home/domain/usecases/recent/delete_recent_activity_usecase.dart';
+import '../../../../Home/domain/usecases/recent/update_recent_activity_usecase.dart';
 
 // =========================
 // FIREBASE CORE
@@ -72,6 +75,12 @@ final electricityRepositoryProvider = Provider<ElectricityRepository>((ref) {
   return ElectricityRepositoryImpl(
     remoteDataSource: ref.read(electricityRemoteDataSourceProvider),
     localDataSource: ref.read(electricityLocalDataSourceProvider),
+    addRecentActivityUseCase:
+    ref.read(addRecentActivityUseCaseProvider,),
+    updateRecentActivityUseCase:
+    ref.read(updateRecentActivityUseCaseProvider,),
+    deleteRecentActivityUseCase:
+    ref.read(deleteRecentActivityUseCaseProvider,),
   );
 });
 

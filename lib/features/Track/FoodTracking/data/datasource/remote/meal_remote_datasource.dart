@@ -36,4 +36,9 @@ abstract class MealRemoteDataSource {
   watchMealEntries(
       String cycleId,
       );
+
+  Future<void> deleteMealEntry(
+      String cycleId,
+      String entryId,
+      );
 }

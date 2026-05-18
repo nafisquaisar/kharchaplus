@@ -62,11 +62,11 @@ class _ElectricityTrackingScreenState extends ConsumerState<ElectricityTrackingS
                 await safeCloseBottomSheet();
               }
 
-              if (next.actionMessage != null) {
-                await _runAfterFrame(() {
-                  AppFlushbar.showSuccess(context, next.actionMessage!);
-                });
-              }
+              // if (next.actionMessage != null) {
+              //   await _runAfterFrame(() {
+              //     AppFlushbar.showSuccess(context, next.actionMessage!);
+              //   });
+              // }
             },
           );
         } else if (next.actionError != null) {
