@@ -1,17 +1,39 @@
 import 'package:expense_tracker/features/Track/WaterTracking/presentation/screens/water_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/constants/AppColors.dart';
 import '../../../../Track/WaterTracking/WaterTrackingScreen.dart';
+import '../../../domain/entities/water_tracking_entity.dart';
+import '../../providers/water_tracking/water_tracking_home_providers.dart';
 
-class WaterTrackingCard extends StatelessWidget {
+class WaterTrackingCard extends ConsumerWidget {
   const WaterTrackingCard({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
+    final snapshot = ref.watch(waterTrackingHomeNotifierProvider);
+    final drinking = snapshot.maybeWhen(
+      data: (data) => data,
+      orElse: () => null,
+    );
+
+    final todayMl = drinking?.todayIntakeMl ?? 0;
+    final goalMl = drinking?.dailyGoalMl ?? 0;
+    final progress = _safeProgress(drinking);
+    final progressText = _formatPercent(progress);
+
+    final intakeText = _formatLiters(todayMl);
+    final goalText = _formatLiters(goalMl);
+
+    final expenseValue = drinking?.monthlyExpense ?? 0;
+    final expensePercent = drinking?.expensePercentChange ?? 0;
+    final expenseTrend = _parseTrend(drinking?.expenseTrend);
+    final expenseText = _formatCurrency(expenseValue);
+    final trendText = _formatTrendPercent(expensePercent);
 
     return Container(
       margin: EdgeInsets.symmetric(
@@ -90,10 +112,10 @@ class WaterTrackingCard extends StatelessWidget {
             width: width,
             icon: Icons.local_drink_rounded,
             title: "Drinking",
-            value: "2.4L",
-            subValue: "/ 3L",
-            progress: 0.8,
-            progressText: "80%",
+            value: intakeText,
+            subValue: "/ $goalText",
+            progress: progress,
+            progressText: progressText,
             iconBg: const Color(0xFFEAF7F6),
             iconColor: const Color(0xFF2D8C82),
           ),
@@ -151,18 +173,7 @@ class WaterTrackingCard extends StatelessWidget {
                         height: width * 0.008,
                       ),
                       Text(
-                        "This Month Expense",
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontWeight: FontWeight.w500,
-                          fontSize: width * 0.032,
-                        ),
-                      ),
-                      SizedBox(
-                        height: width * 0.012,
-                      ),
-                      Text(
-                        "₹880",
+                        expenseText,
                         style: TextStyle(
                           color: AppColors.black,
                           fontWeight: FontWeight.w700,
@@ -188,14 +199,14 @@ class WaterTrackingCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.arrow_upward_rounded,
+                        _trendIcon(expenseTrend),
                         color: const Color(
                           0xFF2D8C82,
                         ),
                         size: width * 0.04,
                       ),
                       Text(
-                        "12%",
+                        trendText,
                         style: TextStyle(
                           color: const Color(
                             0xFF2D8C82,
@@ -213,6 +224,58 @@ class WaterTrackingCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  double _safeProgress(WaterTrackingHomeEntity? data) {
+    if (data == null) {
+      return 0;
+    }
+    final value = data.intakePercent;
+    if (value.isNaN || value.isInfinite) {
+      return 0;
+    }
+    return value.clamp(0.0, 1.0);
+  }
+
+  String _formatLiters(int ml) {
+    final liters = ml / 1000.0;
+    final isWhole = (liters - liters.roundToDouble()).abs() < 0.01;
+    final value = liters.toStringAsFixed(isWhole ? 0 : 1);
+    return '${value}L';
+  }
+
+  String _formatPercent(double progress) {
+    final percent = (progress * 100).round();
+    return '${percent.clamp(0, 100)}%';
+  }
+
+  String _formatCurrency(double value) {
+    final rounded = value.round();
+    return '₹$rounded';
+  }
+
+  String _formatTrendPercent(double percent) {
+    final safe = percent.isNaN || percent.isInfinite ? 0.0 : percent.abs();
+    return '${safe.round()}%';
+  }
+
+  WaterExpenseTrend _parseTrend(String? value) {
+    if (value == null) {
+      return WaterExpenseTrend.flat;
+    }
+    return waterExpenseTrendFromValue(value);
+  }
+
+  IconData _trendIcon(WaterExpenseTrend trend) {
+    switch (trend) {
+      case WaterExpenseTrend.down:
+        return Icons.arrow_downward_rounded;
+      case WaterExpenseTrend.flat:
+        return Icons.horizontal_rule_rounded;
+      case WaterExpenseTrend.up:
+      default:
+        return Icons.arrow_upward_rounded;
+    }
   }
 
   Widget _waterCard({

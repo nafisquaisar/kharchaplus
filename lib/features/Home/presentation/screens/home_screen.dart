@@ -2,11 +2,15 @@ import 'package:expense_tracker/features/Home/presentation/widgets/header/home_h
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../core/constants/AppColors.dart';
 import '../../../Expense/data/model/ExpenseCardModel.dart';
 import '../../../Expense/presentation/viewmodel/ExpenseCardViewModel.dart';
 import '../../../Expense/presentation/viewmodel/expense_viewmodel.dart';
+import '../../../Track/WaterTracking/presentation/providers/session/water_session_provider.dart';
+import '../../../Track/WaterTracking/presentation/providers/sync/sync_provider.dart';
+import '../providers/water_tracking/water_tracking_home_providers.dart';
 
 import '../widgets/electricity_tracking/electricity_tracking_card.dart';
 import '../widgets/food_tracking/food_tracking_card.dart';
@@ -33,6 +37,11 @@ class _HomeState
   @override
   void initState() {
     super.initState();
+
+    ref.read(waterSessionControllerProvider);
+    ref.read(waterSyncNotifierProvider);
+    ref.read(waterTrackingHomeNotifierProvider);
+    debugPrint('[HomeScreen] water home providers initialized');
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final cardId = selectedCard?.id;

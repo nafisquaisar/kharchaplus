@@ -80,69 +80,51 @@ void main() async {
   );
 }
 
-
 class ExpenseTrackerApp extends StatelessWidget {
-
   const ExpenseTrackerApp({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-
     return provider.MultiProvider(
-
       providers: [
-
         // =========================
         // AUTH LOGGER
         // =========================
 
         provider.Provider(
-
           create: (_) => AuthLogger(
-
-            analytics:
-            FirebaseAnalytics.instance,
-
-            crashlytics:
-            FirebaseCrashlytics.instance,
+            analytics: FirebaseAnalytics.instance,
+            crashlytics: FirebaseCrashlytics.instance,
           ),
         ),
 
         provider.Provider(
-          create: (_) =>
-              AuthCooldownStorage(),
+          create: (_) => AuthCooldownStorage(),
         ),
 
         provider.Provider(
-          create: (_) =>
-              FirebaseAuthDataSource(),
+          create: (_) => FirebaseAuthDataSource(),
         ),
 
         provider.Provider(
-          create: (_) =>
-              FirestoreUserDataSource(),
+          create: (_) => FirestoreUserDataSource(),
         ),
 
         // =========================
         // AUTH REPOSITORY
         // =========================
 
-        provider.ProxyProvider3<
-            FirebaseAuthDataSource,
-            FirestoreUserDataSource,
-            AuthLogger,
-            AuthRepository>(
-
+        provider.ProxyProvider3<FirebaseAuthDataSource, FirestoreUserDataSource,
+            AuthLogger, AuthRepository>(
           update: (
-              _,
-              authSource,
-              userSource,
-              logger,
-              __,
-              ) {
-
+            _,
+            authSource,
+            userSource,
+            logger,
+            __,
+          ) {
             return AuthRepositoryImpl(
               authSource,
               userSource,
@@ -156,93 +138,57 @@ class ExpenseTrackerApp extends StatelessWidget {
         // =========================
 
         provider.Provider(
-
-          create: (context) =>
-
-              SignInWithGoogleUseCase(
-
-                context.read<AuthRepository>(),
-              ),
+          create: (context) => SignInWithGoogleUseCase(
+            context.read<AuthRepository>(),
+          ),
         ),
 
         provider.Provider(
-
-          create: (context) =>
-
-              SignInWithEmailPasswordUseCase(
-
-                context.read<AuthRepository>(),
-              ),
+          create: (context) => SignInWithEmailPasswordUseCase(
+            context.read<AuthRepository>(),
+          ),
         ),
 
         provider.Provider(
-
-          create: (context) =>
-
-              SignUpWithEmailPasswordUseCase(
-
-                context.read<AuthRepository>(),
-              ),
+          create: (context) => SignUpWithEmailPasswordUseCase(
+            context.read<AuthRepository>(),
+          ),
         ),
 
         provider.Provider(
-
-          create: (context) =>
-
-              SendOtpUseCase(
-
-                context.read<AuthRepository>(),
-              ),
+          create: (context) => SendOtpUseCase(
+            context.read<AuthRepository>(),
+          ),
         ),
 
         provider.Provider(
-
-          create: (context) =>
-
-              VerifyOtpUseCase(
-
-                context.read<AuthRepository>(),
-              ),
+          create: (context) => VerifyOtpUseCase(
+            context.read<AuthRepository>(),
+          ),
         ),
 
         provider.Provider(
-
-          create: (context) =>
-
-              LinkPhoneUseCase(
-
-                context.read<AuthRepository>(),
-              ),
+          create: (context) => LinkPhoneUseCase(
+            context.read<AuthRepository>(),
+          ),
         ),
 
         provider.Provider(
-
-          create: (context) =>
-
-              LinkEmailPasswordUseCase(
-
-                context.read<AuthRepository>(),
-              ),
+          create: (context) => LinkEmailPasswordUseCase(
+            context.read<AuthRepository>(),
+          ),
         ),
 
         provider.Provider(
-
-          create: (context) =>
-
-              LogoutUseCase(
-
-                context.read<AuthRepository>(),
-              ),
+          create: (context) => LogoutUseCase(
+            context.read<AuthRepository>(),
+          ),
         ),
 
         provider.Provider(
-
-          create: (context) =>
-
-              GetUserProfileUseCase(
-
-                context.read<AuthRepository>(),
-              ),
+          create: (context) => GetUserProfileUseCase(
+            context.read<AuthRepository>(),
+          ),
         ),
 
         // =========================
@@ -250,57 +196,22 @@ class ExpenseTrackerApp extends StatelessWidget {
         // =========================
 
         provider.ChangeNotifierProvider(
-
-          create: (context) =>
-
-              AuthViewModel(
-
-                authRepository:
-                context.read<AuthRepository>(),
-
-                signInWithGoogle:
-                context.read<
-                    SignInWithGoogleUseCase>(),
-
-                signInWithEmailPassword:
-                context.read<
-                    SignInWithEmailPasswordUseCase>(),
-
-                signUpWithEmailPassword:
-                context.read<
-                    SignUpWithEmailPasswordUseCase>(),
-
-                sendOtp:
-                context.read<
-                    SendOtpUseCase>(),
-
-                verifyOtp:
-                context.read<
-                    VerifyOtpUseCase>(),
-
-                linkPhone:
-                context.read<
-                    LinkPhoneUseCase>(),
-
-                linkEmailPassword:
-                context.read<
-                    LinkEmailPasswordUseCase>(),
-
-                logout:
-                context.read<
-                    LogoutUseCase>(),
-
-                getUserProfile:
-                context.read<
-                    GetUserProfileUseCase>(),
-
-                logger:
-                context.read<AuthLogger>(),
-
-                cooldownStorage:
-                context.read<
-                    AuthCooldownStorage>(),
-              ),
+          create: (context) => AuthViewModel(
+            authRepository: context.read<AuthRepository>(),
+            signInWithGoogle: context.read<SignInWithGoogleUseCase>(),
+            signInWithEmailPassword:
+                context.read<SignInWithEmailPasswordUseCase>(),
+            signUpWithEmailPassword:
+                context.read<SignUpWithEmailPasswordUseCase>(),
+            sendOtp: context.read<SendOtpUseCase>(),
+            verifyOtp: context.read<VerifyOtpUseCase>(),
+            linkPhone: context.read<LinkPhoneUseCase>(),
+            linkEmailPassword: context.read<LinkEmailPasswordUseCase>(),
+            logout: context.read<LogoutUseCase>(),
+            getUserProfile: context.read<GetUserProfileUseCase>(),
+            logger: context.read<AuthLogger>(),
+            cooldownStorage: context.read<AuthCooldownStorage>(),
+          ),
         ),
 
         // =========================
@@ -308,40 +219,24 @@ class ExpenseTrackerApp extends StatelessWidget {
         // =========================
 
         provider.Provider<ProfileRemoteDataSource>(
-
-          create: (_) =>
-              ProfileRemoteDataSource(),
+          create: (_) => ProfileRemoteDataSource(),
         ),
 
         provider.Provider<ProfileRepository>(
-
-          create: (context) =>
-
-              ProfileRepositoryImpl(
-
-                context.read<
-                    ProfileRemoteDataSource>(),
-              ),
+          create: (context) => ProfileRepositoryImpl(
+            context.read<ProfileRemoteDataSource>(),
+          ),
         ),
 
-        provider.ChangeNotifierProxyProvider<
-            AuthViewModel,
-            ProfileViewModel>(
-
-          create: (context) =>
-
-              ProfileViewModel(
-
-                context.read<
-                    ProfileRepository>(),
-              ),
-
+        provider.ChangeNotifierProxyProvider<AuthViewModel, ProfileViewModel>(
+          create: (context) => ProfileViewModel(
+            context.read<ProfileRepository>(),
+          ),
           update: (
-              _,
-              authVm,
-              profileVm,
-              ) {
-
+            _,
+            authVm,
+            profileVm,
+          ) {
             return profileVm!
               ..bindUser(
                 authVm.currentUser?.uid,
@@ -354,62 +249,39 @@ class ExpenseTrackerApp extends StatelessWidget {
         // =========================
 
         provider.ChangeNotifierProvider(
-
-          create: (_) =>
-
-              ExpenseViewModel(
-                ExpenseRepository(),
-              ),
+          create: (_) => ExpenseViewModel(
+            ExpenseRepository(),
+          ),
         ),
 
         provider.ChangeNotifierProvider(
-
-          create: (_) =>
-
-              ExpenseCardViewModel(
-                ExpenseCardRepository(),
-              ),
+          create: (_) => ExpenseCardViewModel(
+            ExpenseCardRepository(),
+          ),
         ),
 
         provider.ChangeNotifierProvider(
-
-          create: (_) =>
-
-              CategoryViewModel(
-                CategoryRepository(),
-              ),
+          create: (_) => CategoryViewModel(
+            CategoryRepository(),
+          ),
         ),
 
         provider.ChangeNotifierProvider(
-
-          create: (_) =>
-              ExpenseFilterViewModel(),
+          create: (_) => ExpenseFilterViewModel(),
         ),
-
       ],
-
       child: MaterialApp(
-
-        debugShowCheckedModeBanner:
-        false,
-
+        debugShowCheckedModeBanner: false,
         title: 'Kharcha Plus',
-
         builder: (context, child) {
-
           SystemUI.setLight();
 
           return child!;
         },
-
         theme: ThemeData(
-
           useMaterial3: true,
-
-          colorSchemeSeed:
-          AppColors.primary,
+          colorSchemeSeed: AppColors.primary,
         ),
-
         home: const AuthWrapper(),
       ),
     );

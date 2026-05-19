@@ -6,6 +6,9 @@ import '../../features/Track/WaterTracking/data/models/water_intake_model.dart';
 import '../../features/Track/WaterTracking/data/models/water_purchase_model.dart';
 import '../../features/Track/WaterTracking/data/models/water_reminder_model.dart';
 import '../../features/Home/data/models/recent_activity_model.dart';
+import '../../features/Home/data/models/food_tracking_model.dart';
+import '../../features/Home/data/models/electricity_tracking_model.dart';
+  import '../../features/Home/data/models/water_tracking_model.dart';
 
 class IsarService {
 
@@ -20,10 +23,13 @@ class IsarService {
 
       [
         RecentActivityModelSchema,
+        FoodTrackingHomeModelSchema,
+        ElectricityTrackingHomeModelSchema,
         WaterIntakeModelSchema,
         WaterPurchaseModelSchema,
         WaterGoalModelSchema,
         WaterReminderModelSchema,
+        WaterTrackingHomeModelSchema,
       ],
 
       directory: dir.path,
