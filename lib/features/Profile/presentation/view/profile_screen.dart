@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
 
 
-            const DashboardStatsCard(),
+            DashboardStatsCard(),
 
             const ExpenseOverview(),
 

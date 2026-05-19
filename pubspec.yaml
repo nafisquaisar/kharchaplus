@@ -90,6 +90,7 @@ flutter:
     - assets/images/
     - assets/icon/
     - assets/icon/premiumicon/
+    - assets/achievements/svg_medals/
 
 flutter_launcher_icons:
   android: true

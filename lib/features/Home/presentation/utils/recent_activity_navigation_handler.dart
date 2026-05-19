@@ -5,6 +5,8 @@ import '../../../Track/FoodTracking/presentation/screens/food_tracking_screen.da
 import '../../../Track/ElectricityTracking/presentation/screens/ElectricityTrackingScreen.dart';
 import '../../../Track/WaterTracking/presentation/screens/purchase_history_screen.dart';
 import '../../../Track/WaterTracking/presentation/screens/water_intake_history_screen.dart';
+import '../../../Expense/presentation/screens/expense_screen.dart';
+import '../../../Expense/presentation/screens/expense_detail_screen.dart';
 
 class RecentActivityNavigationHandler {
   const RecentActivityNavigationHandler();
@@ -17,7 +19,7 @@ class RecentActivityNavigationHandler {
       '[RecentActivityNav] clicked type=${activity.type} referenceId=${activity.referenceId}',
     );
 
-    final route = _resolveRoute(activity.type);
+    final route = _resolveRoute(activity);
     if (route == null) {
       debugPrint('[RecentActivityNav] unknown type=${activity.type}');
       _showFallback(context, activity.type);
@@ -37,8 +39,8 @@ class RecentActivityNavigationHandler {
     }
   }
 
-  Widget Function()? _resolveRoute(String type) {
-    switch (type) {
+  Widget Function()? _resolveRoute(RecentActivityEntity activity) {
+    switch (activity.type) {
       case 'food':
         return () => const FoodTrackingScreen();
       case 'electricity':
@@ -47,6 +49,13 @@ class RecentActivityNavigationHandler {
         return () => const PurchaseHistoryScreen();
       case 'water_intake':
         return () => const WaterIntakeHistoryScreen();
+      case 'expense_cycle':
+        if (activity.referenceId.isEmpty) {
+          return null;
+        }
+        return () => ExpenseDetailScreen(cardId: activity.referenceId);
+      case 'expense_item':
+        return () => const ExpenseScreen();
       default:
         return null;
     }
@@ -60,4 +69,3 @@ class RecentActivityNavigationHandler {
     );
   }
 }
-

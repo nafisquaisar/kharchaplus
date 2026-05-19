@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/constants/AppColors.dart';
 import '../../../../core/utils/AppFlushbar.dart';
+import '../../../../core/services/recent_activity_service.dart';
 
 import '../../data/model/ExpenseCardModel.dart';
 import '../../data/repository/expense_repository.dart';
@@ -338,8 +339,10 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                                 providers: [
                                   ChangeNotifierProvider(
                                     create: (_) =>
-                                        ExpenseViewModel(ExpenseRepository())
-                                          ..listenExpensesByCard(card.id),
+                                        ExpenseViewModel(
+                                          ExpenseRepository(),
+                                          context.read<RecentActivityService>(),
+                                        )..listenExpensesByCard(card.id),
                                   ),
 
                                   ChangeNotifierProvider(

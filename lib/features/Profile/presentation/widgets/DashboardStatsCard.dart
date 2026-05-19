@@ -1,5 +1,8 @@
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../viewmodel/profile_streak_viewmodel.dart';
+import '../viewmodel/profile_achievement_viewmodel.dart';
 
 class DashboardStatsCard extends StatelessWidget {
   const DashboardStatsCard({super.key});
@@ -25,36 +28,51 @@ class DashboardStatsCard extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: _StatItem(
-              icon: Icons.local_fire_department_rounded,
-              iconColor: Colors.orange,
-              value: "7",
-              title: "Day Streak",
-              subtitle: "Keep it up!",
+            child: Selector<ProfileStreakViewModel, int>(
+              selector: (_, vm) => vm.currentStreak,
+              builder: (context, streak, _) {
+                return _StatItem(
+                  icon: Icons.local_fire_department_rounded,
+                  iconColor: Colors.orange,
+                  value: streak.toString(),
+                  title: "Day Streak",
+                  subtitle: "Keep it up!",
+                );
+              },
             ),
           ),
 
           _buildDivider(),
 
           Expanded(
-            child: _StatItem(
-              icon: Icons.emoji_events_rounded,
-              iconColor: Colors.amber,
-              value: "12",
-              title: "Achievements",
-              subtitle: "View all",
+            child: Selector<ProfileAchievementViewModel, int>(
+              selector: (_, vm) => vm.unlockedCount,
+              builder: (context, count, _) {
+                return _StatItem(
+                  icon: Icons.emoji_events_rounded,
+                  iconColor: Colors.amber,
+                  value: count.toString(),
+                  title: "Achievements",
+                  subtitle: "",
+                );
+              },
             ),
           ),
 
           _buildDivider(),
 
           Expanded(
-            child: _StatItem(
-              icon: Icons.track_changes_rounded,
-              iconColor: Colors.blue,
-              value: "85%",
-              title: "Monthly Goal",
-              subtitle: "Completed",
+            child: Selector<ProfileStreakViewModel, String>(
+              selector: (_, vm) => vm.monthlyGoalLabel,
+              builder: (context, label, _) {
+                return _StatItem(
+                  icon: Icons.track_changes_rounded,
+                  iconColor: Colors.blue,
+                  value: label,
+                  title: "Monthly Goal",
+                  subtitle: "Completed",
+                );
+              },
             ),
           ),
         ],

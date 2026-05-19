@@ -102,6 +102,12 @@ IconData recentActivityIcon(String type) {
     case 'electricity':
       return Icons.bolt_rounded;
 
+    case 'expense_cycle':
+      return Icons.folder_rounded;
+
+    case 'expense_item':
+      return Icons.payments_rounded;
+
     case 'expense':
       return Icons.account_balance_wallet_rounded;
 
@@ -124,6 +130,8 @@ Color recentActivityBgColor(String type) {
     case 'electricity':
       return const Color(0xFFFFF4E8);
 
+    case 'expense_cycle':
+    case 'expense_item':
     case 'expense':
       return const Color(0xFFFFF1F3);
 
@@ -144,6 +152,8 @@ Color recentActivityIconColor(String type) {
     case 'electricity':
       return const Color(0xFFE58A00);
 
+    case 'expense_cycle':
+    case 'expense_item':
     case 'expense':
       return const Color(0xFFE11D48);
 

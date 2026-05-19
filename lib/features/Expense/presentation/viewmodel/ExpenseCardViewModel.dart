@@ -5,11 +5,16 @@ import 'package:flutter/material.dart';
 
 import '../../data/model/ExpenseCardModel.dart';
 import '../../data/repository/ExpenseCardRepository.dart';
+import '../../../../core/services/recent_activity_service.dart';
 
 class ExpenseCardViewModel extends ChangeNotifier {
   final ExpenseCardRepository _repo;
+  final RecentActivityService _recentActivityService;
 
-  ExpenseCardViewModel(this._repo);
+  ExpenseCardViewModel(
+    this._repo,
+    this._recentActivityService,
+  );
 
   StreamSubscription<List<ExpenseCardModel>>? _cardSubscription;
 
@@ -118,6 +123,7 @@ class ExpenseCardViewModel extends ChangeNotifier {
       notifyListeners();
 
       await _repo.addCard(card);
+      await _recentActivityService.addExpenseCycleCreated(card);
 
       _error = null;
     } catch (e) {
@@ -142,6 +148,7 @@ class ExpenseCardViewModel extends ChangeNotifier {
       notifyListeners();
 
       await _repo.updateCard(card);
+      await _recentActivityService.updateExpenseCycle(card);
 
       _error = null;
     } catch (e) {
@@ -166,6 +173,7 @@ class ExpenseCardViewModel extends ChangeNotifier {
       notifyListeners();
 
       await _repo.deleteCard(userId: userId, cardId: cardId);
+      await _recentActivityService.deleteExpenseCycle(cardId);
       _error = null;
     } catch (e) {
       _error = "Failed to delete card";

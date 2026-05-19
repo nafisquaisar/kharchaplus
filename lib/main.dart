@@ -43,6 +43,22 @@ import 'features/auth/data/services/auth_logger.dart';
 import 'features/auth/data/services/auth_cooldown_storage.dart';
 import 'features/auth/data/services/auth_debug_diagnostics.dart';
 import 'firebase_options.dart';
+import 'core/services/recent_activity_service.dart';
+import 'features/Home/data/datasource/local/RecentActivityLocalDataSource.dart';
+import 'features/Home/data/datasource/remote/recent_activity_remote_datasource.dart';
+import 'features/Home/data/repository/recent_activity_repository_impl.dart';
+import 'features/Home/domain/repository/RecentActivityRepository.dart';
+import 'features/Profile/data/repository/profile_stats_repository.dart';
+import 'features/Profile/data/repository/profile_stats_repository_impl.dart';
+import 'features/Profile/data/datasource/profile_stats_local_data_source.dart';
+import 'features/Profile/data/datasource/profile_stats_remote_data_source.dart';
+import 'features/Profile/presentation/viewmodel/profile_streak_viewmodel.dart';
+import 'features/Profile/presentation/widgets/profile_streak_lifecycle_handler.dart';
+import 'features/Profile/data/datasource/profile_achievement_local_data_source.dart';
+import 'features/Profile/data/datasource/profile_achievement_remote_data_source.dart';
+import 'features/Profile/data/repository/profile_achievement_repository.dart';
+import 'features/Profile/data/repository/profile_achievement_repository_impl.dart';
+import 'features/Profile/presentation/viewmodel/profile_achievement_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -244,19 +260,106 @@ class ExpenseTrackerApp extends StatelessWidget {
           },
         ),
 
+        provider.Provider<ProfileStatsLocalDataSource>(
+          create: (_) => ProfileStatsLocalDataSourceImpl(IsarService.isar),
+        ),
+
+        provider.Provider<ProfileStatsRemoteDataSource>(
+          create: (_) => ProfileStatsRemoteDataSource(),
+        ),
+
+        provider.Provider<ProfileStatsRepository>(
+          create: (context) => ProfileStatsRepositoryImpl(
+            context.read<ProfileStatsLocalDataSource>(),
+            context.read<ProfileStatsRemoteDataSource>(),
+            IsarService.isar,
+          ),
+        ),
+
+        provider.ChangeNotifierProxyProvider<AuthViewModel, ProfileStreakViewModel>(
+          create: (context) => ProfileStreakViewModel(
+            context.read<ProfileStatsRepository>(),
+          ),
+          update: (
+            _,
+            authVm,
+            streakVm,
+          ) {
+            return streakVm!
+              ..bindUser(
+                authVm.currentUser?.uid,
+              );
+          },
+        ),
+
+        provider.Provider<ProfileAchievementLocalDataSource>(
+          create: (_) => ProfileAchievementLocalDataSourceImpl(IsarService.isar),
+        ),
+
+        provider.Provider<ProfileAchievementRemoteDataSource>(
+          create: (_) => ProfileAchievementRemoteDataSource(),
+        ),
+
+        provider.Provider<ProfileAchievementRepository>(
+          create: (context) => ProfileAchievementRepositoryImpl(
+            context.read<ProfileAchievementLocalDataSource>(),
+            context.read<ProfileAchievementRemoteDataSource>(),
+            context.read<ProfileStatsLocalDataSource>(),
+            IsarService.isar,
+          ),
+        ),
+
+        provider.ChangeNotifierProxyProvider<AuthViewModel, ProfileAchievementViewModel>(
+          create: (context) => ProfileAchievementViewModel(
+            context.read<ProfileAchievementRepository>(),
+          ),
+          update: (
+            _,
+            authVm,
+            achievementVm,
+          ) {
+            return achievementVm!
+              ..bindUser(
+                authVm.currentUser?.uid,
+              );
+          },
+        ),
+
+        // =========================
+        // RECENT ACTIVITY
+        // =========================
+
+        provider.Provider<RecentActivityRepository>(
+          create: (_) => RecentActivityRepositoryImpl(
+            RecentActivityLocalDataSourceImpl(IsarService.isar),
+            RecentActivityRemoteDataSourceImpl(
+              firestore: FirebaseFirestore.instance,
+              auth: FirebaseAuth.instance,
+            ),
+          ),
+        ),
+
+        provider.Provider<RecentActivityService>(
+          create: (context) => RecentActivityService(
+            context.read<RecentActivityRepository>(),
+          ),
+        ),
+
         // =========================
         // EXPENSE
         // =========================
 
         provider.ChangeNotifierProvider(
-          create: (_) => ExpenseViewModel(
+          create: (context) => ExpenseViewModel(
             ExpenseRepository(),
+            context.read<RecentActivityService>(),
           ),
         ),
 
         provider.ChangeNotifierProvider(
-          create: (_) => ExpenseCardViewModel(
+          create: (context) => ExpenseCardViewModel(
             ExpenseCardRepository(),
+            context.read<RecentActivityService>(),
           ),
         ),
 
@@ -282,7 +385,9 @@ class ExpenseTrackerApp extends StatelessWidget {
           useMaterial3: true,
           colorSchemeSeed: AppColors.primary,
         ),
-        home: const AuthWrapper(),
+        home: const ProfileStreakLifecycleHandler(
+          child: AuthWrapper(),
+        ),
       ),
     );
   }

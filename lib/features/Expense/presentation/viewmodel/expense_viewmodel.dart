@@ -5,12 +5,17 @@ import 'package:flutter/material.dart';
 
 import '../../data/model/ExpenseModel.dart';
 import '../../data/repository/expense_repository.dart';
+import '../../../../core/services/recent_activity_service.dart';
 
 class ExpenseViewModel extends ChangeNotifier {
 
   final ExpenseRepository _repository;
+  final RecentActivityService _recentActivityService;
 
-  ExpenseViewModel(this._repository);
+  ExpenseViewModel(
+    this._repository,
+    this._recentActivityService,
+  );
 
   StreamSubscription<List<ExpenseModel>>?
   _expenseSubscription;
@@ -232,6 +237,7 @@ class ExpenseViewModel extends ChangeNotifier {
 
       await _repository
           .addExpense(expense);
+      await _recentActivityService.addExpenseItemCreated(expense);
 
       _error = null;
 
@@ -271,6 +277,7 @@ class ExpenseViewModel extends ChangeNotifier {
         expense,
         oldAmount,
       );
+      await _recentActivityService.updateExpenseItem(expense);
 
       _error = null;
 
@@ -305,6 +312,7 @@ class ExpenseViewModel extends ChangeNotifier {
 
       await _repository
           .deleteExpense(expense);
+      await _recentActivityService.deleteExpenseItem(expense.id);
 
       _error = null;
 
@@ -339,11 +347,8 @@ class ExpenseViewModel extends ChangeNotifier {
 
       final deletedExpense =
       expense.copyWith(
-
         isDeleted: true,
-
-        updatedAt:
-        DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
       await _repository
@@ -351,6 +356,7 @@ class ExpenseViewModel extends ChangeNotifier {
         deletedExpense,
         expense.amount,
       );
+      await _recentActivityService.deleteExpenseItem(expense.id);
 
       _error = null;
 
