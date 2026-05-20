@@ -17,17 +17,17 @@ import '../widgets/purchase_history/loading_list.dart';
 import '../widgets/purchase_history/purchase_card.dart';
 import '../widgets/purchase_history/search_bar.dart';
 
-class PurchaseHistoryScreen extends ConsumerStatefulWidget {
-  const PurchaseHistoryScreen({
+class WaterPurchaseHistoryScreen extends ConsumerStatefulWidget {
+  const WaterPurchaseHistoryScreen({
     super.key,
   });
 
   @override
-  ConsumerState<PurchaseHistoryScreen> createState() =>
+  ConsumerState<WaterPurchaseHistoryScreen> createState() =>
       _PurchaseHistoryScreenState();
 }
 
-class _PurchaseHistoryScreenState extends ConsumerState<PurchaseHistoryScreen> {
+class _PurchaseHistoryScreenState extends ConsumerState<WaterPurchaseHistoryScreen> {
   final Map<String, Timer> _deleteTimers = {};
   final Map<String, WaterPurchaseEntity> _pendingDelete = {};
 

@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:expense_tracker/Setting/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../about/about_app_screen.dart';
 import '../../features/auth/viewmodel/auth_viewmodel.dart';
+import '../../privacypolicy/privacy_policy_screen.dart';
 import '../constants/AppColors.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -278,7 +281,12 @@ class AppDrawer extends StatelessWidget {
 
                 child: Column(
                   children: [
-                    _buildItem(context, Icons.home_rounded, "Home", 0),
+                    _buildItem(
+                      context,
+                      Icons.home_rounded,
+                      "Home",
+                      0,
+                    ),
 
                     _buildItem(
                       context,
@@ -294,29 +302,67 @@ class AppDrawer extends StatelessWidget {
                       2,
                     ),
 
-                    // _buildItem(context, Icons.people_rounded, "Friend", 3),
+                    _buildItem(
+                      context,
+                      Icons.person_rounded,
+                      "Profile",
+                      3,
+                    ),
 
-                    _buildItem(context, Icons.person_rounded, "Profile", 3),
-
-                    const SizedBox(height: 10),
-
-                    Divider(color: AppColors.border),
-
-                    const SizedBox(height: 6),
-
-                    _buildItem(context, Icons.settings, "Settings", -1),
+                    const SizedBox(height: 8),
 
                     Divider(color: AppColors.border),
 
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 1),
 
-                    _buildItem(context, Icons.settings, "Privacy Policy", -1),
+                    _buildItem(
+                      context,
+                      Icons.settings,
+                      "Settings",
+                      -1,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsScreen(),
+                          ),
+                        );
+                      },
+                    ),
 
-                    Divider(color: AppColors.border),
+                    const SizedBox(height: 1),
 
-                    const SizedBox(height: 6),
+                    _buildItem(
+                      context,
+                      Icons.security,
+                      "Privacy Policy",
+                      -1,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PrivacyPolicyScreen(),
+                          ),
+                        );
+                      },
+                    ),
 
-                    _buildItem(context, Icons.settings, "About", -1),
+                    const SizedBox(height: 2),
+
+                    _buildItem(
+                      context,
+                      Icons.info,
+                      "About",
+                      -1,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AboutAppScreen(),
+                          ),
+                        );
+                      },
+                    ),
 
                     _buildLogoutItem(context),
                   ],
@@ -368,49 +414,53 @@ class AppDrawer extends StatelessWidget {
   /// MENU ITEM
   /// =========================
   Widget _buildItem(
-    BuildContext context,
-    IconData icon,
-    String title,
-    int index,
-  ) {
+      BuildContext context,
+      IconData icon,
+      String title,
+      int index, {
+        VoidCallback? onTap,
+      }) {
     final isSelected = selectedIndex == index;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-
+      padding: const EdgeInsets.only(bottom: 1),
       child: Material(
         color: Colors.transparent,
-
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(10),
 
           onTap: () {
             Navigator.pop(context);
 
-            if (index != -1) {
+            if (onTap != null) {
+              onTap();
+            } else if (index != -1) {
               onItemTap(index);
             }
           },
 
           child: Ink(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 10,
+            ),
 
             decoration: BoxDecoration(
               color: isSelected
                   ? AppColors.primary.withOpacity(0.10)
                   : Colors.transparent,
 
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(10),
             ),
 
             child: Row(
               children: [
                 Icon(
                   icon,
-
                   size: 22,
-
-                  color: isSelected ? AppColors.primary : AppColors.accent,
+                  color: isSelected
+                      ? AppColors.primary
+                      : AppColors.accent,
                 ),
 
                 const SizedBox(width: 14),
@@ -418,10 +468,8 @@ class AppDrawer extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-
                     style: TextStyle(
                       fontSize: 15,
-
                       fontWeight: isSelected
                           ? FontWeight.w700
                           : FontWeight.w500,
@@ -440,7 +488,6 @@ class AppDrawer extends StatelessWidget {
 
                     decoration: const BoxDecoration(
                       color: AppColors.primary,
-
                       shape: BoxShape.circle,
                     ),
                   ),

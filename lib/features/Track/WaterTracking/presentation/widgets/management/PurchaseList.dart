@@ -70,7 +70,7 @@ class PurchaseList extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const PurchaseHistoryScreen(),
+                      builder: (_) => const WaterPurchaseHistoryScreen(),
                     ),
                   );
                 },

@@ -46,7 +46,7 @@ class RecentActivityNavigationHandler {
       case 'electricity':
         return () => const ElectricityTrackingScreen();
       case 'water_management':
-        return () => const PurchaseHistoryScreen();
+        return () => const WaterPurchaseHistoryScreen();
       case 'water_intake':
         return () => const WaterIntakeHistoryScreen();
       case 'expense_cycle':

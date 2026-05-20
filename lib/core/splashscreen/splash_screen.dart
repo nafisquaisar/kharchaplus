@@ -1,10 +1,12 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../constants/AppColors.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+
+  const SplashScreen({
+    super.key,
+  });
 
   @override
   State<SplashScreen> createState() =>
@@ -13,22 +15,19 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState
     extends State<SplashScreen>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
 
-  late AnimationController _controller;
+  late AnimationController
+  _controller;
 
-  late Animation<double> leftCurveAnim;
-  late Animation<double> rightCurveAnim;
+  late Animation<double>
+  _scaleAnimation;
 
-  late Animation<double> dropAnim;
+  late Animation<double>
+  _fadeAnimation;
 
-  late Animation<double> rupeeFade;
-
-  late Animation<double> plusScale;
-
-  late Animation<double> spoonRotate;
-
-  late Animation<double> glowAnim;
+  late Animation<double>
+  _rotationAnimation;
 
   @override
   void initState() {
@@ -37,164 +36,55 @@ class _SplashScreenState
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(
-        milliseconds: 3500,
+        milliseconds: 1800,
       ),
     );
 
-    /// Water drop
-    dropAnim = Tween<double>(
-      begin: -180,
-      end: 0,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Interval(
-          0.0,
-          0.25,
-          curve: Curves.bounceOut,
-        ),
-      ),
-    );
+    /// ✅ Smooth scale
+    _scaleAnimation =
+        Tween<double>(
+          begin: 0.6,
+          end: 1,
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.easeOutBack,
+          ),
+        );
 
-    /// Left infinity curve
-    leftCurveAnim = Tween<double>(
-      begin: -140,
-      end: 0,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(
-          0.20,
-          0.45,
-          curve: Curves.easeOutCubic,
-        ),
-      ),
-    );
+    /// ✅ Fade animation
+    _fadeAnimation =
+        Tween<double>(
+          begin: 0,
+          end: 1,
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.easeIn,
+          ),
+        );
 
-    /// Right infinity curve
-    rightCurveAnim = Tween<double>(
-      begin: 140,
-      end: 0,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(
-          0.20,
-          0.45,
-          curve: Curves.easeOutCubic,
-        ),
-      ),
-    );
-
-    /// Rupee fade
-    rupeeFade = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(
-          0.45,
-          0.60,
-          curve: Curves.easeIn,
-        ),
-      ),
-    );
-
-    /// Plus pop
-    plusScale = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(
-          0.60,
-          0.75,
-          curve: Curves.elasticOut,
-        ),
-      ),
-    );
-
-    /// Spoon rotation
-    spoonRotate = Tween<double>(
-      begin: -1.5,
-      end: 0,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(
-          0.55,
-          0.80,
-          curve: Curves.easeOutBack,
-        ),
-      ),
-    );
-
-    /// Glow pulse
-    glowAnim = Tween<double>(
-      begin: 0,
-      end: 25,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(
-          0.75,
-          1,
-          curve: Curves.easeInOut,
-        ),
-      ),
-    );
+    /// ✅ Slight rotation effect
+    _rotationAnimation =
+        Tween<double>(
+          begin: -0.08,
+          end: 0,
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.easeOut,
+          ),
+        );
 
     _controller.forward();
-
-    /// Navigate after splash
-    Future.delayed(
-      const Duration(seconds: 4),
-          () {
-
-        /// TODO:
-        /// Navigate to home screen
-      },
-    );
   }
 
   @override
   void dispose() {
+
     _controller.dispose();
+
     super.dispose();
-  }
-
-  Widget buildGlow() {
-
-    return AnimatedBuilder(
-      animation: glowAnim,
-
-      builder: (_, child) {
-
-        return Container(
-          width: 180,
-          height: 180,
-
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-
-            boxShadow: [
-
-              BoxShadow(
-                color: AppColors.accent
-                    .withOpacity(0.25),
-
-                blurRadius:
-                glowAnim.value,
-
-                spreadRadius: 6,
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -205,130 +95,129 @@ class _SplashScreenState
       AppColors.background,
 
       body: Center(
-        child: SizedBox(
-          width: 260,
-          height: 260,
+        child: AnimatedBuilder(
+          animation: _controller,
 
-          child: Stack(
-            alignment: Alignment.center,
+          builder: (
+              context,
+              child,
+              ) {
 
-            children: [
+            return Opacity(
+              opacity:
+              _fadeAnimation.value,
 
-              /// Glow
-              buildGlow(),
+              child: Transform.rotate(
+                angle:
+                _rotationAnimation
+                    .value,
 
-              /// LEFT CURVE
-              AnimatedBuilder(
-                animation: leftCurveAnim,
-                builder: (_, child) {
+                child: Transform.scale(
+                  scale:
+                  _scaleAnimation
+                      .value,
 
-                  return Positioned(
-                    left: leftCurveAnim.value,
-                    top: 58,
+                  child: Column(
+                    mainAxisSize:
+                    MainAxisSize.min,
 
-                    child: Image.asset(
-                      'assets/logo/left_curve.png',
-                      width: 122,
-                    ),
-                  );
-                },
-              ),
+                    children: [
 
-              /// RIGHT CURVE
-              AnimatedBuilder(
-                animation: rightCurveAnim,
-                builder: (_, child) {
+                      /// ✅ Logo
+                      Container(
+                        padding:
+                        const EdgeInsets.all(
+                          18,
+                        ),
 
-                  return Positioned(
-                    right: rightCurveAnim.value,
-                    top: 58,
+                        decoration:
+                        BoxDecoration(
+                          shape:
+                          BoxShape.circle,
 
-                    child: Image.asset(
-                      'assets/logo/right_curve.png',
-                      width: 122,
-                    ),
-                  );
-                },
-              ),
+                          boxShadow: [
 
-              /// WATER DROP
-              AnimatedBuilder(
-                animation: dropAnim,
-                builder: (_, child) {
+                            BoxShadow(
+                              color: AppColors
+                                  .accent
+                                  .withOpacity(
+                                0.18,
+                              ),
 
-                  return Positioned(
-                    top: dropAnim.value + 18,
+                              blurRadius:
+                              35,
 
-                    child: Image.asset(
-                      'assets/logo/drop.png',
-                      width: 36,
-                    ),
-                  );
-                },
-              ),
+                              spreadRadius:
+                              8,
+                            ),
+                          ],
+                        ),
 
-              /// RUPEE
-              FadeTransition(
-                opacity: rupeeFade,
+                        child: Image.asset(
+                          'assets/logo/logo2.png',
 
-                child: Positioned(
-                  left: 88,
-                  top: 110,
-
-                  child: Image.asset(
-                    'assets/logo/rupee.png',
-                    width: 28,
-                  ),
-                ),
-              ),
-
-              /// SPOON
-              AnimatedBuilder(
-                animation: spoonRotate,
-                builder: (_, child) {
-
-                  return Positioned(
-                    right: 82,
-                    top: 102,
-
-                    child: Transform.rotate(
-                      angle: spoonRotate.value,
-
-                      child: Image.asset(
-                        'assets/logo/spoon.png',
-                        width: 28,
+                          height: 120,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
 
-              /// PLUS
-              ScaleTransition(
-                scale: plusScale,
+                      const SizedBox(
+                        height: 22,
+                      ),
 
-                child: Positioned(
-                  bottom: 52,
-                  child: Container(
-                    width: 26,
-                    height: 26,
+                      /// ✅ App Name
+                      ShaderMask(
+                        shaderCallback:
+                            (bounds) {
 
-                    decoration: BoxDecoration(
-                      color: AppColors.accent,
-                      borderRadius:
-                      BorderRadius.circular(8),
-                    ),
+                          return LinearGradient(
+                            colors: [
+                              AppColors.accent,
+                              Colors.teal,
+                            ],
+                          ).createShader(
+                            bounds,
+                          );
+                        },
 
-                    child: const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 18,
-                    ),
+                        child: const Text(
+                          'Kharcha Plus',
+
+                          style: TextStyle(
+                            fontSize: 30,
+
+                            fontWeight:
+                            FontWeight.bold,
+
+                            color: Colors.white,
+
+                            letterSpacing: 1,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 10,
+                      ),
+
+                      /// ✅ Tagline
+                      Text(
+                        'Track Smart • Save Better',
+
+                        style: TextStyle(
+                          fontSize: 14,
+
+                          color: AppColors
+                              .textSecondary,
+
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

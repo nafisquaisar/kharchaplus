@@ -1,19 +1,76 @@
+import 'package:expense_tracker/features/Track/WaterTracking/presentation/screens/purchase_history_screen.dart';
+import 'package:expense_tracker/features/Track/WaterTracking/presentation/screens/water_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../Setting/settings_screen.dart';
 import '../../../../../core/constants/AppColors.dart';
 
-class QuickActionsSection
-    extends StatelessWidget {
+import '../../../../Achievements/presentation/view/achievement_screen.dart';
+import '../../../../Track/ElectricityTracking/presentation/screens/ElectricityTrackingScreen.dart';
+import '../../../../Track/FoodTracking/presentation/screens/food_tracking_screen.dart';
+import '../../../../Track/WaterTracking/presentation/screens/water_intake_history_screen.dart';
 
+
+class QuickActionsSection extends StatelessWidget {
   const QuickActionsSection({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
 
-    final width =
-        MediaQuery.of(context).size.width;
+    final actions = [
+      {
+        "title": "Water Intake",
+        "subtitle": "Daily history",
+        "icon": Icons.local_drink_rounded,
+        "color": Colors.blue,
+        "screen": const WaterIntakeHistoryScreen(),
+      },
+      {
+        "title": "Water Manage",
+        "subtitle": "Usage history",
+        "icon": Icons.water_drop_rounded,
+        "color": Colors.cyan,
+        "screen": const WaterPurchaseHistoryScreen(),
+      },
+      {
+        "title": "Electricity",
+        "subtitle": "Track bills",
+        "icon": Icons.bolt_rounded,
+        "color": Colors.amber,
+        "screen": const ElectricityTrackingScreen(),
+      },
+      {
+        "title": "Food Track",
+        "subtitle": "Food expenses",
+        "icon": Icons.restaurant_rounded,
+        "color": Colors.orange,
+        "screen": const FoodTrackingScreen(),
+      },
+      {
+        "title": "Water Track",
+        "subtitle": "Track usage",
+        "icon": Icons.opacity_rounded,
+        "color": Colors.indigo,
+        "screen": const WaterScreen(),
+      },
+      {
+        "title": "Achievement",
+        "subtitle": "Your progress",
+        "icon": Icons.workspace_premium_rounded,
+        "color": Colors.green,
+        "screen": const AchievementScreen(),
+      },
+      {
+        "title": "Settings",
+        "subtitle": "App controls",
+        "icon": Icons.settings_rounded,
+        "color": AppColors.primary,
+        "screen": const SettingsScreen(),
+      },
+    ];
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -26,126 +83,114 @@ class QuickActionsSection
         CrossAxisAlignment.start,
 
         children: [
-
-          /// TITLE
-          Text(
-            "Quick Actions",
-
-            style: TextStyle(
-              fontSize:
-              width * 0.048,
-
-              fontWeight:
-              FontWeight.bold,
-
-              color:
-              AppColors.black,
-            ),
-          ),
-
-          SizedBox(
-            height: width * 0.035,
-          ),
-
-          /// ACTIONS
+          /// HEADER
           Row(
+            mainAxisAlignment:
+            MainAxisAlignment.spaceBetween,
+
             children: [
+              Column(
+                crossAxisAlignment:
+                CrossAxisAlignment.start,
 
-              Expanded(
-                child: _actionCard(
-                  width: width,
+                children: [
+                  Text(
+                    "Quick Actions",
 
-                  icon:
-                  Icons.account_balance_wallet,
+                    style: TextStyle(
+                      fontSize: width * 0.05,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.black,
+                    ),
+                  ),
 
-                  title:
-                  "Add Expense",
+                  const SizedBox(height: 3),
 
-                  iconColor:
-                  AppColors.primary,
+                  Text(
+                    "Access all important tools",
+
+                    style: TextStyle(
+                      fontSize: width * 0.03,
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
                 ),
-              ),
 
-              SizedBox(
-                width:
-                width * 0.025,
-              ),
+                decoration: BoxDecoration(
+                  color:
+                  AppColors.primary.withOpacity(0.08),
 
-              Expanded(
-                child: _actionCard(
-                  width: width,
-
-                  icon:
-                  Icons.restaurant,
-
-                  title:
-                  "Add Food Cycle",
-
-                  iconColor:
-                  Colors.orange,
+                  borderRadius:
+                  BorderRadius.circular(12),
                 ),
-              ),
 
-              SizedBox(
-                width:
-                width * 0.025,
-              ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.flash_on_rounded,
+                      color: AppColors.primary,
+                      size: 16,
+                    ),
 
-              Expanded(
-                child: _actionCard(
-                  width: width,
+                    const SizedBox(width: 4),
 
-                  icon:
-                  Icons.bolt,
-
-                  title:
-                  "Add Electric Bill",
-
-                  iconColor:
-                  Colors.amber,
-                ),
-              ),
-
-              SizedBox(
-                width:
-                width * 0.025,
-              ),
-
-              Expanded(
-                child: _actionCard(
-                  width: width,
-
-                  icon:
-                  Icons.water_drop,
-
-                  title:
-                  "Add Water",
-
-                  iconColor:
-                  AppColors.primary,
-                ),
-              ),
-
-              SizedBox(
-                width:
-                width * 0.025,
-              ),
-
-              Expanded(
-                child: _actionCard(
-                  width: width,
-
-                  icon:
-                  Icons.more_horiz,
-
-                  title:
-                  "More",
-
-                  iconColor:
-                  AppColors.accent,
+                    Text(
+                      "Quick",
+                      style: TextStyle(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: width * 0.028,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
+          ),
+
+          SizedBox(height: width * 0.04),
+
+          /// GRID
+          GridView.builder(
+            shrinkWrap: true,
+
+            physics:
+            const NeverScrollableScrollPhysics(),
+
+            itemCount: actions.length,
+
+            gridDelegate:
+            SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+
+              crossAxisSpacing: width * 0.03,
+
+              mainAxisSpacing: width * 0.03,
+
+              childAspectRatio: 1.45,
+            ),
+
+            itemBuilder: (context, index) {
+              final item = actions[index];
+
+              return _actionCard(
+                context: context,
+                width: width,
+                title: item["title"] as String,
+                subtitle: item["subtitle"] as String,
+                icon: item["icon"] as IconData,
+                iconColor: item["color"] as Color,
+                screen: item["screen"] as Widget,
+              );
+            },
           ),
         ],
       ),
@@ -153,103 +198,143 @@ class QuickActionsSection
   }
 
   Widget _actionCard({
+    required BuildContext context,
     required double width,
-    required IconData icon,
     required String title,
+    required String subtitle,
+    required IconData icon,
     required Color iconColor,
+    required Widget screen,
   }) {
+    return Material(
+      color: Colors.transparent,
 
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: width * 0.03,
-        horizontal: width * 0.02,
-      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
 
-      decoration: BoxDecoration(
-        color: AppColors.card,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => screen,
+            ),
+          );
+        },
 
-        borderRadius:
-        BorderRadius.circular(18),
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
 
-        border: Border.all(
-          color:
-          AppColors.border,
-        ),
-
-        boxShadow: [
-
-          BoxShadow(
-            color:
-            Colors.black.withOpacity(
-              0.03,
+              colors: [
+                Colors.white,
+                iconColor.withOpacity(0.05),
+              ],
             ),
 
-            blurRadius: 8,
+            borderRadius:
+            BorderRadius.circular(22),
 
-            offset:
-            const Offset(0, 2),
-          ),
-        ],
-      ),
-
-      child: Column(
-        mainAxisAlignment:
-        MainAxisAlignment.center,
-
-        children: [
-
-          Container(
-            padding:
-            const EdgeInsets.all(
-              10,
+            border: Border.all(
+              color: iconColor.withOpacity(0.10),
             ),
 
-            decoration: BoxDecoration(
-              color:
-              iconColor.withOpacity(
-                0.12,
+            boxShadow: [
+              BoxShadow(
+                color:
+                Colors.black.withOpacity(0.035),
+
+                blurRadius: 14,
+
+                offset: const Offset(0, 5),
               ),
-
-              shape:
-              BoxShape.circle,
-            ),
-
-            child: Icon(
-              icon,
-
-              color: iconColor,
-
-              size: width * 0.05,
-            ),
+            ],
           ),
 
-          SizedBox(
-            height: width * 0.02,
-          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: width * 0.03,
+              vertical: width * 0.03,
+            ),
 
-          Text(
-            title,
+            child: Column(
+              crossAxisAlignment:
+              CrossAxisAlignment.start,
 
-            textAlign:
-            TextAlign.center,
+              children: [
+                /// TOP ROW
+                Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween,
 
-            maxLines: 2,
+                  children: [
+                    Container(
+                      padding:
+                      const EdgeInsets.all(10),
 
-            overflow:
-            TextOverflow.ellipsis,
+                      decoration: BoxDecoration(
+                        color:
+                        iconColor.withOpacity(0.12),
 
-            style: TextStyle(
-              fontSize:
-              width * 0.026,
+                        borderRadius:
+                        BorderRadius.circular(14),
+                      ),
 
-              fontWeight:
-              FontWeight.w600,
+                      child: Icon(
+                        icon,
+                        color: iconColor,
+                        size: width * 0.05,
+                      ),
+                    ),
 
-              color:
-              AppColors.black,
+                    Icon(
+                      Icons.arrow_outward_rounded,
+                      size: 16,
+                      color:
+                      AppColors.textSecondary,
+                    ),
+                  ],
+                ),
+
+                const Spacer(),
+
+                /// TITLE
+                Text(
+                  title,
+
+                  maxLines: 1,
+
+                  overflow: TextOverflow.ellipsis,
+
+                  style: TextStyle(
+                    fontSize: width * 0.034,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.black,
+                  ),
+                ),
+
+                const SizedBox(height: 3),
+
+                /// SUBTITLE
+                Text(
+                  subtitle,
+
+                  maxLines: 1,
+
+                  overflow: TextOverflow.ellipsis,
+
+                  style: TextStyle(
+                    fontSize: width * 0.026,
+                    color:
+                    AppColors.textSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
