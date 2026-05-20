@@ -10,7 +10,7 @@ import 'core/constants/AppColors.dart';
 import 'features/Expense/presentation/screens/expense_screen.dart';
 import 'features/Home/presentation/screens/home_screen.dart';
 import 'features/Profile/presentation/view/profile_screen.dart';
-import 'features/Track/tracking_screen.dart';
+import 'features/Track/presentation/screens/tracking_screen.dart';
 
 import 'features/auth/viewmodel/auth_viewmodel.dart';
 

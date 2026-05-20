@@ -1,225 +1,91 @@
-import 'package:flutter/material.dart';
+  import 'package:flutter/material.dart';
+  import 'package:lottie/lottie.dart';
 
-import '../constants/AppColors.dart';
+  import '../constants/AppColors.dart';
 
-class SplashScreen extends StatefulWidget {
+  class SplashScreen extends StatefulWidget {
+    const SplashScreen({super.key});
 
-  const SplashScreen({
-    super.key,
-  });
-
-  @override
-  State<SplashScreen> createState() =>
-      _SplashScreenState();
-}
-
-class _SplashScreenState
-    extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-
-  late AnimationController
-  _controller;
-
-  late Animation<double>
-  _scaleAnimation;
-
-  late Animation<double>
-  _fadeAnimation;
-
-  late Animation<double>
-  _rotationAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(
-        milliseconds: 1800,
-      ),
-    );
-
-    /// ✅ Smooth scale
-    _scaleAnimation =
-        Tween<double>(
-          begin: 0.6,
-          end: 1,
-        ).animate(
-          CurvedAnimation(
-            parent: _controller,
-            curve: Curves.easeOutBack,
-          ),
-        );
-
-    /// ✅ Fade animation
-    _fadeAnimation =
-        Tween<double>(
-          begin: 0,
-          end: 1,
-        ).animate(
-          CurvedAnimation(
-            parent: _controller,
-            curve: Curves.easeIn,
-          ),
-        );
-
-    /// ✅ Slight rotation effect
-    _rotationAnimation =
-        Tween<double>(
-          begin: -0.08,
-          end: 0,
-        ).animate(
-          CurvedAnimation(
-            parent: _controller,
-            curve: Curves.easeOut,
-          ),
-        );
-
-    _controller.forward();
+    @override
+    State<SplashScreen> createState() =>
+        _SplashScreenState();
   }
 
-  @override
-  void dispose() {
+  class _SplashScreenState
+      extends State<SplashScreen> {
 
-    _controller.dispose();
+    @override
+    void initState() {
+      super.initState();
 
-    super.dispose();
-  }
+      goToHome();
+    }
 
-  @override
-  Widget build(BuildContext context) {
+    Future<void> goToHome() async {
 
-    return Scaffold(
-      backgroundColor:
-      AppColors.background,
+      /// Match animation duration
+      await Future.delayed(
+        const Duration(seconds: 2),
+      );
 
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _controller,
+      if (!mounted) return;
 
-          builder: (
-              context,
-              child,
-              ) {
+      Navigator.pushReplacementNamed(
+        context,
+        '/home',
+      );
+    }
 
-            return Opacity(
-              opacity:
-              _fadeAnimation.value,
+    @override
+    Widget build(BuildContext context) {
 
-              child: Transform.rotate(
-                angle:
-                _rotationAnimation
-                    .value,
+      return Scaffold(
 
-                child: Transform.scale(
-                  scale:
-                  _scaleAnimation
-                      .value,
+        backgroundColor:
+        AppColors.splashBackground,
 
-                  child: Column(
-                    mainAxisSize:
-                    MainAxisSize.min,
+        body: Container(
 
-                    children: [
+          width: double.infinity,
+          height: double.infinity,
 
-                      /// ✅ Logo
-                      Container(
-                        padding:
-                        const EdgeInsets.all(
-                          18,
-                        ),
+          decoration: const BoxDecoration(
 
-                        decoration:
-                        BoxDecoration(
-                          shape:
-                          BoxShape.circle,
+            gradient: LinearGradient(
 
-                          boxShadow: [
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
 
-                            BoxShadow(
-                              color: AppColors
-                                  .accent
-                                  .withOpacity(
-                                0.18,
-                              ),
+              colors: [
 
-                              blurRadius:
-                              35,
+                Color(0xFF0F151E),
+                Color(0xFF102530),
+                Color(0xFF0E2E3D),
 
-                              spreadRadius:
-                              8,
-                            ),
-                          ],
-                        ),
+              ],
+            ),
+          ),
 
-                        child: Image.asset(
-                          'assets/logo/logo2.png',
+          child: Center(
 
-                          height: 120,
-                        ),
-                      ),
+            child: SizedBox(
+              width: 300,
+              height: 300,
 
-                      const SizedBox(
-                        height: 22,
-                      ),
+              child: Lottie.asset(
 
-                      /// ✅ App Name
-                      ShaderMask(
-                        shaderCallback:
-                            (bounds) {
+                'assets/animation/splash.json',
 
-                          return LinearGradient(
-                            colors: [
-                              AppColors.accent,
-                              Colors.teal,
-                            ],
-                          ).createShader(
-                            bounds,
-                          );
-                        },
+                fit: BoxFit.contain,
 
-                        child: const Text(
-                          'Kharcha Plus',
+                repeat: false,
 
-                          style: TextStyle(
-                            fontSize: 30,
-
-                            fontWeight:
-                            FontWeight.bold,
-
-                            color: Colors.white,
-
-                            letterSpacing: 1,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(
-                        height: 10,
-                      ),
-
-                      /// ✅ Tagline
-                      Text(
-                        'Track Smart • Save Better',
-
-                        style: TextStyle(
-                          fontSize: 14,
-
-                          color: AppColors
-                              .textSecondary,
-
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                frameRate:
+                FrameRate.max,
               ),
-            );
-          },
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
-}

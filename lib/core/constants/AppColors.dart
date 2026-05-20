@@ -66,5 +66,19 @@ class AppColors {
   static const Color highlight = Color(0xFF00AFA3);
   static const Color border = Color(0xFFE0F2F1);
 
+
+
+
+  static const Color primaryDark =
+  Color(0xFF0F151E);
+
+  static const Color splashBackground =
+  Color(0xFF102530);
+
+  static const Color accentDark =
+  Color(0xFF0E2E3D);
+
+
+
   const AppColors._();
 }

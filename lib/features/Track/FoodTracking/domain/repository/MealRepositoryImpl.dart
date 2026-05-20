@@ -2,14 +2,10 @@ import '../../data/datasource/remote/meal_remote_datasource.dart';
 import '../../domain/entities/MealEntry.dart';
 import 'MealRepository.dart';
 
-
-class MealRepositoryImpl
-    implements MealRepository {
-
+class MealRepositoryImpl implements MealRepository {
   final MealRemoteDataSource remote;
 
   MealRepositoryImpl({
-
     required this.remote,
   });
 
@@ -19,9 +15,8 @@ class MealRepositoryImpl
 
   @override
   Future<void> saveMealEntry(
-      MealEntry entry,
-      ) {
-
+    MealEntry entry,
+  ) {
     return remote.saveMealEntry(
       entry,
     );
@@ -32,11 +27,9 @@ class MealRepositoryImpl
   // =========================
 
   @override
-  Future<List<MealEntry>>
-  getMealEntries(
-      String cycleId,
-      ) {
-
+  Future<List<MealEntry>> getMealEntries(
+    String cycleId,
+  ) {
     return remote.getMealEntries(
       cycleId,
     );
@@ -48,35 +41,21 @@ class MealRepositoryImpl
 
   @override
   Future<MealEntry?> getMealByDate({
-
     required String cycleId,
-
     required DateTime date,
   }) async {
-
-    final meals =
-    await remote.getMealEntries(
+    final meals = await remote.getMealEntries(
       cycleId,
     );
 
     try {
-
       return meals.firstWhere(
-
-            (e) =>
-
-        e.date.year ==
-            date.year &&
-
-            e.date.month ==
-                date.month &&
-
-            e.date.day ==
-                date.day,
+        (e) =>
+            e.date.year == date.year &&
+            e.date.month == date.month &&
+            e.date.day == date.day,
       );
-
     } catch (_) {
-
       return null;
     }
   }
@@ -87,10 +66,9 @@ class MealRepositoryImpl
 
   @override
   Future<void> deleteMealEntry(
-      String cycleId,
-      String entryId,
-      ) async {
-
+    String cycleId,
+    String entryId,
+  ) async {
     await remote.deleteMealEntry(
       cycleId,
       entryId,
@@ -98,14 +76,11 @@ class MealRepositoryImpl
   }
 
   @override
-  Stream<List<MealEntry>>
-  watchMealEntries(
-      String cycleId,
-      ) {
-
+  Stream<List<MealEntry>> watchMealEntries(
+    String cycleId,
+  ) {
     return remote.watchMealEntries(
       cycleId,
     );
   }
-
 }
