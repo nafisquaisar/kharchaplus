@@ -98,13 +98,7 @@ class RecentActivitySection extends ConsumerWidget {
 
           /// 🔥 DYNAMIC RECENT DATA
           recentState.when(
-            loading: () => const Padding(
-              padding: EdgeInsets.all(20),
-              child: Center(
-                child:
-                CircularProgressIndicator(),
-              ),
-            ),
+            loading: () => const SizedBox.shrink(),
 
             error: (e, _) => Padding(
               padding: const EdgeInsets.all(20),

@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
-import '../../data/models/profile_achievement_model.dart';
-import '../../data/repository/profile_achievement_repository.dart';
-import '../../services/achievement_catalog.dart';
+import '../../../Profile/data/models/profile_achievement_model.dart';
+import '../../../Profile/data/repository/profile_achievement_repository.dart';
+import '../../../Profile/services/achievement_catalog.dart';
 
 class ProfileAchievementViewModel extends ChangeNotifier {
   final ProfileAchievementRepository _repository;

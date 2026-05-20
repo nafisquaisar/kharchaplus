@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../Achievements/presentation/widgets/achievement_badge.dart';
 import '../../data/models/profile_achievement_model.dart';
-import 'achievement_badge.dart';
 
 /// Compact medal-only preview used on the Profile page.
 ///

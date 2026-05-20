@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/AppColors.dart';
 
-import '../view/achievement_screen.dart';
-import '../viewmodel/profile_achievement_viewmodel.dart';
+import '../../../Achievements/presentation/view/achievement_screen.dart';
+import '../../../Achievements/presentation/viewmodel/profile_achievement_viewmodel.dart';
 import '../../data/models/profile_achievement_model.dart';
 import 'profile_achievement_preview.dart';
 

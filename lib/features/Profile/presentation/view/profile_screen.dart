@@ -8,6 +8,7 @@ import '../widgets/account_section.dart';
 import '../widgets/expense_overview.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/settings_section.dart';
+import '../widgets/monthly_overview_section.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -37,7 +38,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             DashboardStatsCard(),
 
-            const ExpenseOverview(),
+            // const SizedBox(height: 16),
+            //
+            // /// Monthly Overview Dashboard Section
+            // const MonthlyOverviewSection(
+            //   headerTitle: 'Overview This Month',
+            //   showExpense: true,
+            //   showIncome: true,
+            //   showWater: true,
+            //   showElectricity: true,
+            // ),
+
+            // const SizedBox(height: 16),
+            //
+            // const ExpenseOverview(),
 
             const AchievementSection(),
 

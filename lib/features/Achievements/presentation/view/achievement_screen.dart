@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/Common/CommonAppBar.dart';
 import '../../../../core/constants/AppColors.dart';
 import '../viewmodel/profile_achievement_viewmodel.dart';
-import '../../services/achievement_catalog.dart';
+import '../../../Profile/services/achievement_catalog.dart';
 import '../widgets/achievement_card.dart';
 import '../widgets/achievement_empty_state.dart';
 import '../widgets/achievement_shimmer.dart';
@@ -36,19 +37,29 @@ class _AchievementScreenState extends State<AchievementScreen> {
     final vm = context.watch<ProfileAchievementViewModel>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Achievements'),
-        backgroundColor: AppColors.accent,
-        foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            tooltip: _isGrid ? 'List view' : 'Grid view',
-            onPressed: () => setState(() => _isGrid = !_isGrid),
-            icon: Icon(
-              _isGrid ? Icons.view_list_rounded : Icons.grid_view_rounded,
-            ),
-          ),
-        ],
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: CommonAppBar(
+          title: "Achievements",
+          isHome: false,
+          isDashboard: false,
+
+          onMenuTap: () {
+            Navigator.pop(context);
+          },
+
+          onNotificationTap: () {},
+
+          showMore: true,
+
+          moreIcon: _isGrid
+              ? Icons.view_list_rounded
+              : Icons.grid_view_rounded,
+
+          onMoreTap: () {
+            setState(() => _isGrid = !_isGrid);
+          },
+        ),
       ),
       body: Column(
         children: [

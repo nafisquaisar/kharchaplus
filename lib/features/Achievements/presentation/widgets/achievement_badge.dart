@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'achievement_badge_mapper.dart';
+import '../../../Achievements/presentation/widgets/achievement_badge_mapper.dart';
 import 'achievement_badge_fallback.dart';
 
 /// Reusable achievement badge widget.

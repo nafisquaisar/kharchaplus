@@ -17,6 +17,8 @@ import 'package:timezone/data/latest.dart' as tz;
 
 import 'core/constants/AppColors.dart';
 import 'core/services/isar_service.dart';
+import 'core/theme/app_theme.dart';
+import 'core/theme/theme_controller.dart';
 import 'core/utils/system_ui.dart';
 import 'features/Expense/data/repository/expense_repository.dart';
 import 'features/Expense/presentation/viewmodel/ExpenseFilterViewModel.dart';
@@ -58,7 +60,12 @@ import 'features/Profile/data/datasource/profile_achievement_local_data_source.d
 import 'features/Profile/data/datasource/profile_achievement_remote_data_source.dart';
 import 'features/Profile/data/repository/profile_achievement_repository.dart';
 import 'features/Profile/data/repository/profile_achievement_repository_impl.dart';
-import 'features/Profile/presentation/viewmodel/profile_achievement_viewmodel.dart';
+import 'features/Achievements/presentation/viewmodel/profile_achievement_viewmodel.dart';
+import 'features/Profile/data/datasource/overview_remote_data_source.dart';
+import 'features/Profile/data/datasource/overview_local_data_source.dart';
+import 'features/Profile/data/repository/overview_repository.dart';
+import 'features/Profile/data/repository/overview_repository_impl.dart';
+import 'features/Profile/presentation/viewmodel/overview_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -372,23 +379,66 @@ class ExpenseTrackerApp extends StatelessWidget {
         provider.ChangeNotifierProvider(
           create: (_) => ExpenseFilterViewModel(),
         ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Kharcha Plus',
-        builder: (context, child) {
-          SystemUI.setLight();
 
-          return child!;
-        },
-        theme: ThemeData(
-          useMaterial3: true,
-          colorSchemeSeed: AppColors.primary,
+        // =========================
+        // OVERVIEW / DASHBOARD
+        // =========================
+
+        provider.Provider<OverviewRemoteDataSource>(
+          create: (_) => OverviewRemoteDataSource(),
         ),
-        home: const ProfileStreakLifecycleHandler(
-          child: AuthWrapper(),
+
+        provider.Provider<OverviewLocalDataSource>(
+          create: (_) => OverviewLocalDataSourceImpl(IsarService.isar),
         ),
-      ),
+
+        provider.Provider<OverviewRepository>(
+          create: (context) => OverviewRepositoryImpl(
+            context.read<OverviewLocalDataSource>(),
+            context.read<OverviewRemoteDataSource>(),
+          ),
+        ),
+
+        provider.ChangeNotifierProxyProvider<AuthViewModel, OverviewViewModel>(
+          create: (context) => OverviewViewModel(
+            context.read<OverviewRepository>(),
+          ),
+          update: (
+            _,
+            authVm,
+            overviewVm,
+          ) {
+            return overviewVm!
+              ..bindUser(
+                authVm.currentUser?.uid,
+              );
+          },
+        ),
+      ],
+      child:ValueListenableBuilder<bool>(
+      valueListenable: ThemeController.isDark,
+      builder: (context, isDark, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Kharcha Plus',
+
+          builder: (context, child) {
+            SystemUI.setLight();
+            return child!;
+          },
+
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+
+          themeMode:
+          isDark ? ThemeMode.dark : ThemeMode.light,
+
+          home: const ProfileStreakLifecycleHandler(
+            child: AuthWrapper(),
+          ),
+        );
+      },
+    ),
     );
   }
 }

@@ -1,28 +1,32 @@
 import 'package:expense_tracker/features/Home/presentation/widgets/header/home_header.dart';
+import 'package:expense_tracker/features/Home/presentation/widgets/quick_actions/quick_actions_section.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../../../core/constants/AppColors.dart';
+
 import '../../../Expense/data/model/ExpenseCardModel.dart';
 import '../../../Expense/presentation/viewmodel/ExpenseCardViewModel.dart';
 import '../../../Expense/presentation/viewmodel/expense_viewmodel.dart';
+
 import '../../../Track/WaterTracking/presentation/providers/session/water_session_provider.dart';
 import '../../../Track/WaterTracking/presentation/providers/sync/sync_provider.dart';
+
 import '../providers/water_tracking/water_tracking_home_providers.dart';
 
 import '../widgets/electricity_tracking/electricity_tracking_card.dart';
 import '../widgets/food_tracking/food_tracking_card.dart';
 import '../widgets/monthly_overview/balance_card.dart';
-import '../widgets/quick_actions/quick_actions_section.dart';
 import '../widgets/recent_activity/recent_activity_section.dart';
 import '../widgets/water_tracking/water_tracking_card.dart';
 
-
 class Home extends ConsumerStatefulWidget {
 
-  const Home({super.key});
+  const Home({
+    super.key,
+  });
 
   @override
   ConsumerState<Home> createState() =>
@@ -32,109 +36,305 @@ class Home extends ConsumerStatefulWidget {
 class _HomeState
     extends ConsumerState<Home> {
 
-  ExpenseCardModel? selectedCard;
+  final ValueNotifier<ExpenseCardModel?>
+  selectedCardNotifier =
+  ValueNotifier(null);
 
   @override
   void initState() {
     super.initState();
 
-    ref.read(waterSessionControllerProvider);
-    ref.read(waterSyncNotifierProvider);
-    ref.read(waterTrackingHomeNotifierProvider);
-    debugPrint('[HomeScreen] water home providers initialized');
+    /// ✅ Initialize once
+    ref.read(
+      waterSessionControllerProvider,
+    );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final cardId = selectedCard?.id;
+    ref.read(
+      waterSyncNotifierProvider,
+    );
 
-      if (cardId != null) {
-        context.read<ExpenseViewModel>().listenExpensesByCard(cardId);
-      }
-    });
+    ref.read(
+      waterTrackingHomeNotifierProvider,
+    );
+
+    debugPrint(
+      '[HomeScreen] water home providers initialized',
+    );
+
+    /// ✅ Production-level auto select
+    WidgetsBinding.instance
+        .addPostFrameCallback(
+          (_) {
+
+        final cardVm =
+        context.read<
+            ExpenseCardViewModel>();
+
+        cardVm.addListener(
+          _handleInitialCardSelection,
+        );
+
+        /// ✅ Handle already-loaded state
+        _handleInitialCardSelection();
+      },
+    );
+  }
+
+  /// ✅ Auto select latest card
+  void _handleInitialCardSelection() {
+
+    final cardVm =
+    context.read<
+        ExpenseCardViewModel>();
+
+    if (
+    selectedCardNotifier.value !=
+        null ||
+        cardVm.cards.isEmpty
+    ) {
+      return;
+    }
+
+    final latestCard =
+    [...cardVm.cards]
+      ..sort(
+            (
+            a,
+            b,
+            ) {
+
+          final aDate =
+              a.startDate ??
+                  DateTime(2000);
+
+          final bDate =
+              b.startDate ??
+                  DateTime(2000);
+
+          return bDate.compareTo(
+            aDate,
+          );
+        },
+      );
+
+    selectedCardNotifier.value =
+        latestCard.first;
+
+    context
+        .read<ExpenseViewModel>()
+        .listenExpensesByCard(
+      latestCard.first.id,
+    );
+  }
+
+  @override
+  void dispose() {
+
+    context
+        .read<
+        ExpenseCardViewModel>()
+        .removeListener(
+      _handleInitialCardSelection,
+    );
+
+    selectedCardNotifier.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final cardVm = context.watch<ExpenseCardViewModel>();
-
-    final expenseVm = context.watch<ExpenseViewModel>();
-
-    /// AUTO SELECT FIRST CARD
-    if (selectedCard == null && cardVm.cards.isNotEmpty) {
-      selectedCard = cardVm.cards.first;
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<ExpenseViewModel>().listenExpensesByCard(selectedCard!.id);
-      });
-    }
 
     return SafeArea(
       bottom: false,
 
       child: Container(
         color: AppColors.background,
-        child: cardVm.isInitialLoading
-            ? const Center(child: CircularProgressIndicator())
-            : CustomScrollView(
-                physics: const BouncingScrollPhysics(),
 
-                slivers: [
-                  /// HEADER
-                  SliverToBoxAdapter(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 10),
+        child: CustomScrollView(
 
-                        HomeHeader(
-                          selectedCard: selectedCard,
+          key: const PageStorageKey(
+            'home_scroll',
+          ),
 
-                          onCardSelected: (card) {
-                            if (card == null) {
-                              return;
-                            }
+          physics:
+          const BouncingScrollPhysics(),
 
-                            setState(() {
-                              selectedCard = card;
-                            });
+          slivers: [
 
-                            context.read<ExpenseViewModel>().listenExpensesByCard(
-                              card.id,
-                            );
-                          },
-                        ),
+            /// ✅ Production-Level Lazy Rendering
+            SliverList(
 
-                        /// BALANCE
-                        BalanceCard(
-                          selectedCard: selectedCard,
-                          expenseVm: expenseVm,
-                        ),
+              delegate:
+              SliverChildListDelegate(
 
-                        const SizedBox(height: 10),
-                        const RecentActivitySection(),
+                [
 
+                  const _DashboardSpacing(),
 
-                        const SizedBox(height: 10),
-                        const FoodTrackingCard(),
+                  /// ✅ HEADER
+                  Selector<
+                      ExpenseCardViewModel,
+                      ExpenseCardViewModel>(
+                    selector: (
+                        _,
+                        vm,
+                        ) =>
+                    vm,
 
+                    builder: (
+                        _,
+                        cardVm,
+                        __,
+                        ) {
 
-                        const SizedBox(height: 10),
+                      return ValueListenableBuilder<
+                          ExpenseCardModel?>(
+                        valueListenable:
+                        selectedCardNotifier,
 
-                        const ElectricityTrackingCard(),
+                        builder: (
+                            _,
+                            selectedCard,
+                            __,
+                            ) {
 
-                        const SizedBox(height: 10),
-                        const WaterTrackingCard(),
+                          return HomeHeader(
+                            selectedCard:
+                            selectedCard,
 
-                        // const SizedBox(height: 10),
-                        // const QuickActionsSection(),
+                            onCardSelected: (
+                                card,
+                                ) {
 
-                        const SizedBox(height: 100),
-                      ],
-                    ),
+                              if (card == null) {
+                                return;
+                              }
+
+                              /// ✅ No full rebuild
+                              selectedCardNotifier
+                                  .value = card;
+
+                              context
+                                  .read<
+                                  ExpenseViewModel>()
+                                  .listenExpensesByCard(
+                                card.id,
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
                   ),
 
+                  const _DashboardSpacing(),
 
+                  /// ✅ BALANCE CARD
+                  ValueListenableBuilder<
+                      ExpenseCardModel?>(
+                    valueListenable:
+                    selectedCardNotifier,
+
+                    builder: (
+                        _,
+                        selectedCard,
+                        __,
+                        ) {
+
+                      return Selector<
+                          ExpenseViewModel,
+                          ExpenseViewModel>(
+                        selector: (
+                            _,
+                            vm,
+                            ) =>
+                        vm,
+
+                        builder: (
+                            _,
+                            expenseVm,
+                            __,
+                            ) {
+
+                          return RepaintBoundary(
+                            child: BalanceCard(
+                              selectedCard:
+                              selectedCard,
+
+                              expenseVm:
+                              expenseVm,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+
+                  const _DashboardSpacing(),
+
+                  /// ✅ RECENT ACTIVITY
+                  const RepaintBoundary(
+                    child:
+                    RecentActivitySection(),
+                  ),
+
+                  const _DashboardSpacing(),
+
+                  /// ✅ FOOD TRACKING
+                  const RepaintBoundary(
+                    child:
+                    FoodTrackingCard(),
+                  ),
+
+                  const _DashboardSpacing(),
+
+                  /// ✅ ELECTRICITY TRACKING
+                  const RepaintBoundary(
+                    child:
+                    ElectricityTrackingCard(),
+                  ),
+
+                  const _DashboardSpacing(),
+
+                  /// ✅ WATER TRACKING
+                  const RepaintBoundary(
+                    child:
+                    WaterTrackingCard(),
+                  ),
+
+                  const _DashboardSpacing(),
+
+                  /// ✅ QUICK ACTIONS
+                  const RepaintBoundary(
+                    child:
+                    QuickActionsSection(),
+                  ),
+
+                  const SizedBox(
+                    height: 100,
+                  ),
                 ],
               ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+/// ✅ Reusable spacing widget
+class _DashboardSpacing
+    extends StatelessWidget {
+
+  const _DashboardSpacing();
+
+  @override
+  Widget build(BuildContext context) {
+
+    return const SizedBox(
+      height: 10,
     );
   }
 }

@@ -49,7 +49,7 @@ extension PurchaseTypeX on PurchaseType {
       case PurchaseType.water1L:
         return 'assets/icon/premiumicon/kharcha_plus_1l.png';
       case PurchaseType.other:
-        return 'assets/icon/premiumicon/kharcha_plus_1l.png';
+        return 'assets/icon/premiumicon/default_water_image.png';
     }
   }
 

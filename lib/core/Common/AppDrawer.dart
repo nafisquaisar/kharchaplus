@@ -306,6 +306,18 @@ class AppDrawer extends StatelessWidget {
 
                     _buildItem(context, Icons.settings, "Settings", -1),
 
+                    Divider(color: AppColors.border),
+
+                    const SizedBox(height: 6),
+
+                    _buildItem(context, Icons.settings, "Privacy Policy", -1),
+
+                    Divider(color: AppColors.border),
+
+                    const SizedBox(height: 6),
+
+                    _buildItem(context, Icons.settings, "About", -1),
+
                     _buildLogoutItem(context),
                   ],
                 ),

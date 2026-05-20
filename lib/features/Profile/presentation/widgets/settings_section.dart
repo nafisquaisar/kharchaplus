@@ -1,3 +1,7 @@
+import 'package:expense_tracker/Setting/settings_screen.dart';
+import 'package:expense_tracker/about/about_app_screen.dart';
+import 'package:expense_tracker/help_support/help_support_screen.dart';
+import 'package:expense_tracker/privacypolicy/privacy_policy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/AppColors.dart';
 
@@ -22,42 +26,112 @@ class SettingsSection extends StatelessWidget {
 
       child: Column(
         children: [
-          _settingsTile(
-            title: "Settings & Preferences",
-            subtitle: "Manage app settings",
-            icon: Icons.settings,
-            iconColor: const Color(0xFF0F8B8D),
-            bgColor: const Color(0xFFE6F7F7),
+          InkWell(
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(12),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+            },
+
+            child: _settingsTile(
+              title: "Settings & Preferences",
+              subtitle: "Manage app settings",
+              icon: Icons.settings,
+              iconColor: const Color(0xFF0F8B8D),
+              bgColor: const Color(0xFFE6F7F7),
+            ),
+          ),
+
+          // _divider(),
+          //
+          // InkWell(
+          //   onTap: () {
+          //
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (context)=> const DataBackupScreen())
+          //     )
+          //
+          //   },
+          //
+          //   child: _settingsTile(
+          //     title: "Data & Backup",
+          //     subtitle: "Export, Backup & Restore",
+          //     icon: Icons.cloud_upload_rounded,
+          //     iconColor: const Color(0xFF1D9BF0),
+          //     bgColor: const Color(0xFFEAF4FF),
+          //   ),
+          // ),
+
+          _divider(),
+
+          InkWell(
+            onTap: () {
+
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const HelpSupportScreen()));
+            },
+
+            child: _settingsTile(
+              title: "Help & Support",
+              subtitle: "FAQs, Contact Support",
+              icon: Icons.help_rounded,
+              iconColor: const Color(0xFF22C55E),
+              bgColor: const Color(0xFFEAFBF0),
+            ),
           ),
 
           _divider(),
 
-          _settingsTile(
-            title: "Data & Backup",
-            subtitle: "Export, Backup & Restore",
-            icon: Icons.cloud_upload_rounded,
-            iconColor: const Color(0xFF1D9BF0),
-            bgColor: const Color(0xFFEAF4FF),
+          InkWell(
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(12),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                  const PrivacyPolicyScreen(),
+                ),
+              );
+            },
+
+            child: _settingsTile(
+              title: "Privacy Policy",
+              subtitle: "Learn how we protect your data",
+              icon: Icons.privacy_tip_outlined,
+              iconColor: const Color(0xFF8B5CF6),
+              bgColor: const Color(0xFFF3EEFF),
+            ),
           ),
+
 
           _divider(),
 
-          _settingsTile(
-            title: "Help & Support",
-            subtitle: "FAQs, Contact Support",
-            icon: Icons.help_rounded,
-            iconColor: const Color(0xFF22C55E),
-            bgColor: const Color(0xFFEAFBF0),
-          ),
+          InkWell(
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(12),
+            ),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder:
+                  (context)=> const AboutAppScreen()
+                  )
+              );
+            },
 
-          _divider(),
-
-          _settingsTile(
-            title: "About App",
-            subtitle: "Version 1.0.0",
-            icon: Icons.info_outline_rounded,
-            iconColor: const Color(0xFF8B5CF6),
-            bgColor: const Color(0xFFF3EEFF),
+            child: _settingsTile(
+              title: "About App",
+              subtitle: "Version 1.0.0",
+              icon: Icons.info_outline_rounded,
+              iconColor: const Color(0xFF8B5CF6),
+              bgColor: const Color(0xFFF3EEFF),
+            ),
           ),
         ],
       ),

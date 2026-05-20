@@ -63,6 +63,8 @@ dependencies:
   percent_indicator: ^4.2.5
   flutter_svg: ^2.3.0
   dropdown_button2: ^3.1.0
+  url_launcher: ^6.3.2
+  local_auth: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -89,10 +91,11 @@ flutter:
   assets:
     - assets/images/
     - assets/icon/
+    - assets/logo/
     - assets/icon/premiumicon/
     - assets/achievements/svg_medals/
 
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/logo.png"
+  image_path: "assets/logo/logo1.png"

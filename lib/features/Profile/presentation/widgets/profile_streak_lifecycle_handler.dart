@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodel/profile_streak_viewmodel.dart';
-import '../viewmodel/profile_achievement_viewmodel.dart';
+import '../../../Achievements/presentation/viewmodel/profile_achievement_viewmodel.dart';
 
 class ProfileStreakLifecycleHandler extends StatefulWidget {
   final Widget child;

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../MainScreen.dart';
+import '../../../core/splashscreen/splash_screen.dart';
+import '../../Lock/AppLockWrapper.dart';
 import '../login/LoginScreen.dart';
 import '../viewmodel/auth_viewmodel.dart';
 import '../domain/entities/auth_state.dart';
@@ -18,9 +20,7 @@ class AuthWrapper extends StatelessWidget {
         final state = vm.state;
 
         if (state is AuthInitial || state is AuthLoading) {
-          return const LoadingView(
-            message: "Setting things up...",
-          );
+          return const SplashScreen();
         }
 
         if (state is AuthProfileIncomplete) {
@@ -28,7 +28,9 @@ class AuthWrapper extends StatelessWidget {
         }
 
         if (state is AuthAuthenticated) {
-          return const MainScreen();
+          return const AppLockWrapper(
+            child: MainScreen(),
+          );
         }
 
 

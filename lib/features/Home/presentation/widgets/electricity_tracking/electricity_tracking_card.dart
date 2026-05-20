@@ -38,7 +38,9 @@ class ElectricityTrackingCard extends ConsumerWidget {
         ],
       ),
       child: state.when(
-        loading: () => _LoadingContent(width: width),
+        loading: () => _EmptyContent(
+          width: width,
+        ),
         error: (e, _) => _ErrorContent(width: width, message: e.toString()),
         data: (analytics) {
           if (!analytics.hasData) {
@@ -372,26 +374,6 @@ class _ElectricityTrendChart extends StatelessWidget {
   }
 }
 
-class _LoadingContent extends StatelessWidget {
-  final double width;
-
-  const _LoadingContent({
-    required this.width,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: width * 0.32,
-      child: Center(
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          color: AppColors.accent,
-        ),
-      ),
-    );
-  }
-}
 
 class _ErrorContent extends StatelessWidget {
   final double width;

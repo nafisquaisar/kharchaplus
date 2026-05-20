@@ -110,7 +110,9 @@ class _FoodTrackingCardState extends ConsumerState<FoodTrackingCard> {
           SizedBox(height: width * 0.02),
 
           state.when(
-            loading: () => _LoadingContent(width: width),
+            loading: () => _EmptyContent(
+              width: width,
+            ),
             error: (e, _) => _ErrorContent(width: width, message: e.toString()),
             data: (items) {
               final active = _filterAndSort(items);
@@ -209,37 +211,6 @@ class _IndicatorDot extends StatelessWidget {
   }
 }
 
-class _LoadingContent extends StatelessWidget {
-  final double width;
-
-  const _LoadingContent({
-    required this.width,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return _FoodCycleContent(
-      width: width,
-      cycle: FoodTrackingHomeEntity(
-        id: 'loading',
-        title: 'Loading...',
-        totalTiffin: 0,
-        totalEaten: 0,
-        remainingTiffin: 0,
-        monthlyAmount: 0,
-        mealPrice: 0,
-        status: 'active',
-        createdAt: DateTime(2020),
-        updatedAt: DateTime(2020),
-      ),
-      forceProgress: 0,
-      progressTextOverride: '--',
-      amountOverride: '₹--',
-      totalOverride: ' / ₹--',
-      mealsLeftLabel: 'Loading...',
-    );
-  }
-}
 
 class _ErrorContent extends StatelessWidget {
   final double width;
