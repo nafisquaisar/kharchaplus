@@ -1,14 +1,20 @@
 import '../../repository/RecentActivityRepository.dart';
 
 class SyncRecentActivitiesUseCase {
+
   final RecentActivityRepository repository;
 
   SyncRecentActivitiesUseCase(
-    this.repository,
-  );
+      this.repository,
+      );
 
-  Future<void> call() async {
-    await repository.syncRecentActivities();
+  Future<void> call(
+      String userId,
+      ) async {
+
+    await repository
+        .syncRecentActivities(
+      userId,
+    );
   }
 }
-

@@ -1,185 +1,357 @@
-import '../../domain/entities/RecentActivityEntity.dart';
-import '../../domain/repository/RecentActivityRepository.dart';
-import '../datasource/local/RecentActivityLocalDataSource.dart';
-import '../datasource/remote/recent_activity_remote_datasource.dart';
-import '../models/recent_activity_model.dart';
 import 'package:flutter/foundation.dart';
 
-class RecentActivityRepositoryImpl
-    implements RecentActivityRepository {
-  final RecentActivityLocalDataSource
-  localDataSource;
-  final RecentActivityRemoteDataSource
-  remoteDataSource;
+import '../../domain/entities/RecentActivityEntity.dart';
+import '../../domain/repository/RecentActivityRepository.dart';
+
+import '../datasource/local/RecentActivityLocalDataSource.dart';
+import '../datasource/remote/recent_activity_remote_datasource.dart';
+
+import '../models/recent_activity_model.dart';
+
+class RecentActivityRepositoryImpl implements RecentActivityRepository {
+  final RecentActivityLocalDataSource localDataSource;
+
+  final RecentActivityRemoteDataSource remoteDataSource;
 
   RecentActivityRepositoryImpl(
-      this.localDataSource,
-      this.remoteDataSource,
-      );
+    this.localDataSource,
+    this.remoteDataSource,
+  );
+
+  // =====================================================
+  // ADD ACTIVITY
+  // =====================================================
 
   @override
   Future<void> addActivity(
-      RecentActivityEntity activity,
-      ) async {
-    final existing = await localDataSource.getByReferenceId(
-      activity.referenceId,
-    );
-
-    if (existing != null) {
-      debugPrint(
-        'RecentActivityRepository: add converted to update referenceId=${activity.referenceId} existingId=${existing.id}',
-      );
-      await updateActivity(activity);
-      return;
-    }
-
-    final model =
-    RecentActivityModel.fromEntity(
-      activity,
-    );
-
+    RecentActivityEntity activity,
+  ) async {
     try {
+      final existing = await localDataSource.getByReferenceId(
+        activity.referenceId,
+      );
+
+      // already exists -> update
+      if (existing != null) {
+        debugPrint(
+          'RecentActivityRepository: already exists -> updating',
+        );
+
+        await updateActivity(activity);
+
+        return;
+      }
+
+      final model = RecentActivityModel.fromEntity(
+        activity,
+      );
+
+      // LOCAL SAVE
       await localDataSource.addActivity(
         model,
       );
-    } catch (e) {
-      debugPrint('RecentActivityRepository: local add failed $e');
-      rethrow;
-    }
 
-    try {
-      await remoteDataSource.addActivity(model);
-    } catch (e) {
-      debugPrint('RecentActivityRepository: remote add failed $e');
-    }
-  }
-
-  @override
-  Future<List<RecentActivityEntity>>
-  getRecentActivities() async {
-    try {
-      final local = await localDataSource
-          .getRecentActivities();
-
-      _syncFromRemoteInBackground();
-
-      return local;
-    } catch (e) {
-      debugPrint('RecentActivityRepository: get failed $e');
-      rethrow;
-    }
-  }
-
-  @override
-  Stream<List<RecentActivityEntity>> watchRecentActivities() {
-    return localDataSource.watchRecentActivities();
-  }
-
-  @override
-  Stream<List<RecentActivityEntity>> watchRemoteActivities() async* {
-    await for (final remote in remoteDataSource.watchRecentActivities()) {
+      // REMOTE SAVE
       try {
-        await localDataSource.upsertActivities(remote);
+        await remoteDataSource.addActivity(
+          model.copyWith(
+            isSynced: true,
+          ),
+        );
+
+        // update local sync status
+        await localDataSource.updateActivity(
+          model.copyWith(
+            isSynced: true,
+          ),
+        );
       } catch (e) {
-        debugPrint('RecentActivityRepository: remote cache failed $e');
+        debugPrint(
+          'RecentActivityRepository: remote add failed $e',
+        );
       }
-      yield remote;
-    }
-  }
+    } catch (e, stack) {
+      debugPrint(
+        'RecentActivityRepository: add failed $e',
+      );
 
-  @override
-  Future<void> syncRecentActivities() async {
-    try {
-      final remote = await remoteDataSource.getRecentActivities();
-      await localDataSource.upsertActivities(remote);
-      debugPrint('RecentActivityRepository: sync completed');
-    } catch (e) {
-      debugPrint('RecentActivityRepository: sync failed $e');
-      rethrow;
-    }
-  }
-
-  void _syncFromRemoteInBackground() {
-    syncRecentActivities().catchError((e, stack) {
-      debugPrint('RecentActivityRepository: background sync failed $e');
       debugPrint('$stack');
-    });
-  }
 
-  @override
-  Future<void> updateActivity(
-      RecentActivityEntity activity,
-      ) async {
-    final existing = await localDataSource.getByReferenceId(
-      activity.referenceId,
-    );
-
-    final model = RecentActivityModel.fromEntity(
-      existing != null
-          ? RecentActivityEntity(
-              id: existing.id,
-              type: activity.type,
-              title: activity.title,
-              subtitle: activity.subtitle,
-              amount: activity.amount,
-              createdAt: existing.createdAt,
-              referenceId: activity.referenceId,
-            )
-          : activity,
-    );
-
-    debugPrint(
-      'RecentActivityRepository: update referenceId=${activity.referenceId} existing=${existing != null} activityId=${activity.id} storedId=${model.id}',
-    );
-
-    try {
-      await localDataSource.updateActivity(model);
-    } catch (e) {
-      debugPrint('RecentActivityRepository: local update failed $e');
       rethrow;
     }
+  }
 
+  // =====================================================
+  // GET RECENT ACTIVITIES
+  // =====================================================
+
+  @override
+  Future<List<RecentActivityEntity>> getRecentActivities(
+    String userId,
+  ) async {
     try {
-      await remoteDataSource.updateActivity(model);
-    } catch (e) {
-      debugPrint('RecentActivityRepository: remote update failed $e');
+      final local = await localDataSource.getRecentActivities(
+        userId,
+      );
+
+      _syncFromRemoteInBackground(
+        userId,
+      );
+
+      return local
+          .where(
+            (e) => !e.isDeleted,
+          )
+          .toList();
+    } catch (e, stack) {
+      debugPrint(
+        'RecentActivityRepository: get failed $e',
+      );
+
+      debugPrint('$stack');
+
+      rethrow;
     }
   }
+
+  // =====================================================
+  // WATCH LOCAL
+  // =====================================================
+
+  @override
+  Stream<List<RecentActivityEntity>> watchRecentActivities(
+    String userId,
+  ) {
+    return localDataSource.watchRecentActivities(userId).map(
+          (items) => items
+              .where(
+                (e) => !e.isDeleted,
+              )
+              .toList(),
+        );
+  }
+
+  // =====================================================
+  // WATCH REMOTE
+  // =====================================================
+
+  @override
+  Stream<List<RecentActivityEntity>> watchRemoteActivities(
+    String userId,
+  ) async* {
+    await for (final remote in remoteDataSource.watchRecentActivities(userId)) {
+      try {
+        await localDataSource.upsertActivities(
+          remote,
+        );
+      } catch (e) {
+        debugPrint(
+          'RecentActivityRepository: remote cache failed $e',
+        );
+      }
+
+      yield remote
+          .where(
+            (e) => !e.isDeleted,
+          )
+          .toList();
+    }
+  }
+
+  // =====================================================
+  // SYNC
+  // =====================================================
+
+  @override
+  Future<void> syncRecentActivities(
+    String userId,
+  ) async {
+    try {
+      final remote = await remoteDataSource.getRecentActivities(
+        userId,
+      );
+
+      await localDataSource.upsertActivities(
+        remote,
+      );
+
+      debugPrint(
+        'RecentActivityRepository: sync completed',
+      );
+    } catch (e, stack) {
+      debugPrint(
+        'RecentActivityRepository: sync failed $e',
+      );
+
+      debugPrint('$stack');
+
+      rethrow;
+    }
+  }
+
+  void _syncFromRemoteInBackground(
+    String userId,
+  ) {
+    syncRecentActivities(
+      userId,
+    ).catchError(
+      (e, stack) {
+        debugPrint(
+          'RecentActivityRepository: background sync failed $e',
+        );
+
+        debugPrint('$stack');
+      },
+    );
+  }
+
+  // =====================================================
+  // UPDATE
+  // =====================================================
+
+  @override
+  Future<void> updateActivity(RecentActivityEntity activity,) async {
+    try {
+      final existing = await localDataSource.getByReferenceId(
+        activity.referenceId,
+      );
+
+      final updatedModel = RecentActivityModel.fromEntity(
+        existing != null
+            ? existing.copyWith(
+                type: activity.type,
+                title: activity.title,
+                subtitle: activity.subtitle,
+                amount: activity.amount,
+                updatedAt: DateTime.now(),
+                isEdited: true,
+                version: existing.version + 1,
+                isSynced: false,
+              )
+            : activity,
+      );
+
+      // LOCAL UPDATE
+      await localDataSource.updateActivity(
+        updatedModel,
+      );
+
+      // REMOTE UPDATE
+      try {
+        await remoteDataSource.updateActivity(
+          updatedModel.copyWith(
+            isSynced: true,
+          ),
+        );
+
+        // mark synced locally
+        await localDataSource.updateActivity(
+          updatedModel.copyWith(
+            isSynced: true,
+          ),
+        );
+      } catch (e) {
+        debugPrint(
+          'RecentActivityRepository: remote update failed $e',
+        );
+      }
+    } catch (e, stack) {
+      debugPrint(
+        'RecentActivityRepository: update failed $e',
+      );
+
+      debugPrint('$stack');
+
+      rethrow;
+    }
+  }
+
+  // =====================================================
+  // DELETE
+  // =====================================================
 
   @override
   Future<void> deleteActivity(
       String referenceId,
+      String userId,
       ) async {
     try {
-      await localDataSource.deleteActivity(
+      final existing = await localDataSource.getByReferenceId(
         referenceId,
       );
-    } catch (e) {
-      debugPrint('RecentActivityRepository: local delete failed $e');
-      rethrow;
-    }
 
-    try {
-      await remoteDataSource.deleteActivity(referenceId);
-    } catch (e) {
-      debugPrint('RecentActivityRepository: remote delete failed $e');
+      if (existing == null) {
+        return;
+      }
+
+      // SOFT DELETE
+      final deletedModel = existing.copyWith(
+        isDeleted: true,
+        updatedAt: DateTime.now(),
+        isSynced: false,
+        version: existing.version + 1,
+      );
+
+      // LOCAL
+      await localDataSource.updateActivity(
+        deletedModel,
+      );
+
+      // REMOTE
+      try {
+        await remoteDataSource.updateActivity(
+          deletedModel.copyWith(
+            isSynced: true,
+          ),
+        );
+
+        await localDataSource.updateActivity(
+          deletedModel.copyWith(
+            isSynced: true,
+          ),
+        );
+      } catch (e) {
+        debugPrint(
+          'RecentActivityRepository: remote delete failed $e',
+        );
+      }
+    } catch (e, stack) {
+      debugPrint(
+        'RecentActivityRepository: delete failed $e',
+      );
+
+      debugPrint('$stack');
+
+      rethrow;
     }
   }
 
+  // =====================================================
+  // HARD DELETE
+  // =====================================================
+
+  @override
   Future<void> deleteActivityById(
-      String id,
-      ) async {
+    String id,
+  ) async {
     try {
       await localDataSource.deleteActivityById(id);
-    } catch (e) {
-      debugPrint('RecentActivityRepository: local delete by id failed $e');
-      rethrow;
-    }
 
-    try {
-      await remoteDataSource.deleteActivityById(id);
-    } catch (e) {
-      debugPrint('RecentActivityRepository: remote delete by id failed $e');
+      try {
+        await remoteDataSource.deleteActivityById(id);
+      } catch (e) {
+        debugPrint(
+          'RecentActivityRepository: remote hard delete failed $e',
+        );
+      }
+    } catch (e, stack) {
+      debugPrint(
+        'RecentActivityRepository: hard delete failed $e',
+      );
+
+      debugPrint('$stack');
+
+      rethrow;
     }
   }
 }

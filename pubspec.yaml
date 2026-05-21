@@ -3,7 +3,7 @@ name: expense_tracker
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ">=3.5.0 <4.0.0"
@@ -83,10 +83,10 @@ dev_dependencies:
 
   # Hive Generator
   hive_generator: ^2.0.1
+  flutter_native_splash: ^2.4.6
 
   mocktail: ^1.0.3
   flutter_launcher_icons: ^0.14.4
-  flutter_native_splash: ^2.4.1
 
 flutter:
   uses-material-design: true

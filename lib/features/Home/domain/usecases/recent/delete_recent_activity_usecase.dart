@@ -10,9 +10,11 @@ class DeleteRecentActivityUseCase {
 
   Future<void> call(
       String referenceId,
+      String userId
       ) async {
     await repository.deleteActivity(
       referenceId,
+        userId
     );
   }
 }

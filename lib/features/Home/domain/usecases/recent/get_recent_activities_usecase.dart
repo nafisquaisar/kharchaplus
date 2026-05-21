@@ -1,9 +1,8 @@
-
 import '../../entities/RecentActivityEntity.dart';
 import '../../repository/RecentActivityRepository.dart';
 
-
 class GetRecentActivitiesUseCase {
+
   final RecentActivityRepository repository;
 
   GetRecentActivitiesUseCase(
@@ -11,8 +10,13 @@ class GetRecentActivitiesUseCase {
       );
 
   Future<List<RecentActivityEntity>>
-  call() async {
+  call(
+      String userId,
+      ) async {
+
     return await repository
-        .getRecentActivities();
+        .getRecentActivities(
+      userId,
+    );
   }
 }
