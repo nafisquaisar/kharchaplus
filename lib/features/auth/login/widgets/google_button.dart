@@ -32,7 +32,7 @@ class GoogleButton extends StatelessWidget {
         ),
         child: Center(
           child: vm.isLoading
-              ? const SizedBox(
+              ? SizedBox(
             height: 20,
             width: 20,
             child: CircularProgressIndicator(
@@ -50,7 +50,7 @@ class GoogleButton extends StatelessWidget {
               ),
               const SizedBox(width: 10),
 
-              const Text(
+              Text(
                 "Sign in with Google",
                 style: TextStyle(
                   color: AppColors.textPrimary,

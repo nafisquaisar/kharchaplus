@@ -1,14 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/AchievementSection.dart';
 import '../widgets/DashboardStatsCard.dart';
 import '../widgets/EditProfileScreen.dart';
 import '../widgets/account_section.dart';
-import '../widgets/expense_overview.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/settings_section.dart';
-import '../widgets/monthly_overview_section.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

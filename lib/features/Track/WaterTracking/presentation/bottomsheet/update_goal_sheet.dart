@@ -108,7 +108,7 @@ class _UpdateGoalSheetState extends ConsumerState<UpdateGoalSheet> {
           const SizedBox(height: 18),
           SwitchListTile(
             value: reminderEnabled,
-            activeColor: AppColors.accent,
+            activeThumbColor: AppColors.accent,
             title: const Text(
               'Enable Reminder',
             ),

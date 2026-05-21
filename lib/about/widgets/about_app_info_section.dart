@@ -33,7 +33,7 @@ class AboutAppInfoSection extends StatelessWidget {
         const SizedBox(height: 10),
 
         /// 🔥 APP NAME
-        const Text(
+        Text(
           "Kharcha Plus",
           style: TextStyle(
             fontSize: 30,
@@ -45,7 +45,7 @@ class AboutAppInfoSection extends StatelessWidget {
         const SizedBox(height: 4),
 
         /// 🔥 APP SUBTITLE
-        const Text(
+        Text(
           "Expense And Utility Tracking App",
           style: TextStyle(
             fontSize: 12,
@@ -88,7 +88,7 @@ class AboutAppInfoSection extends StatelessWidget {
 
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children: [
               Text(
                 "Current Version",
                 textAlign: TextAlign.center,
@@ -116,8 +116,8 @@ class AboutAppInfoSection extends StatelessWidget {
         const SizedBox(height: 28),
 
         /// 🔥 DESCRIPTION
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
             "Kharcha Plus is your smart personal finance companion that helps you track daily expenses, monitor spending habits, manage budgets, and stay financially organized with ease.",
             textAlign: TextAlign.center,

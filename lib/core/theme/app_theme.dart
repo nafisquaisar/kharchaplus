@@ -16,7 +16,7 @@ class AppTheme {
       brightness: Brightness.light,
     ),
 
-    appBarTheme: const AppBarTheme(
+    appBarTheme:  AppBarTheme(
       centerTitle: true,
       backgroundColor: AppColors.accent,
       foregroundColor: Colors.white,
@@ -24,7 +24,7 @@ class AppTheme {
     ),
 
     floatingActionButtonTheme:
-    const FloatingActionButtonThemeData(
+     FloatingActionButtonThemeData(
       backgroundColor: AppColors.accent,
       foregroundColor: Colors.white,
     ),
@@ -58,7 +58,7 @@ class AppTheme {
     ),
 
     floatingActionButtonTheme:
-    const FloatingActionButtonThemeData(
+     FloatingActionButtonThemeData(
       backgroundColor: AppColors.primary,
       foregroundColor: Colors.white,
     ),

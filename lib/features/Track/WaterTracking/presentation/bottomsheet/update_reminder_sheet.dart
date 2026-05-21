@@ -87,7 +87,7 @@ class _UpdateReminderSheetState extends ConsumerState<UpdateReminderSheet> {
                 ),
                 child: Text(
                   selectedTime.format(context),
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: AppColors.colorText,
@@ -99,7 +99,7 @@ class _UpdateReminderSheetState extends ConsumerState<UpdateReminderSheet> {
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               value: repeatDaily,
-              activeColor: AppColors.accent,
+              activeThumbColor: AppColors.accent,
               title: const Text('Repeat Daily'),
               onChanged: (value) {
                 setState(() {
@@ -110,7 +110,7 @@ class _UpdateReminderSheetState extends ConsumerState<UpdateReminderSheet> {
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               value: enabled,
-              activeColor: AppColors.accent,
+              activeThumbColor: AppColors.accent,
               title: const Text('Enable Reminder'),
               onChanged: (value) {
                 setState(() {

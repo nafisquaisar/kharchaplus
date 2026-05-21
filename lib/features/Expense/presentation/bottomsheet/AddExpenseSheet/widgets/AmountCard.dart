@@ -1,8 +1,8 @@
 /// 📄 AmountCard.dart
+library;
 
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/AppColors.dart';
 import '../../../../data/model/ExpenseModel.dart';
 import 'AmountCard/AmountField.dart';
 import 'AmountCard/ExpenseTypeSelector.dart';

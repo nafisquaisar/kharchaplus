@@ -6,7 +6,6 @@ import 'package:expense_tracker/features/auth/data/datasources/firebase_auth_dat
 import 'package:expense_tracker/features/auth/data/datasources/firestore_user_data_source.dart';
 import 'package:expense_tracker/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:expense_tracker/features/auth/domain/entities/auth_exception.dart';
-import 'package:expense_tracker/features/auth/domain/entities/otp_session.dart';
 import 'package:expense_tracker/features/auth/data/services/auth_logger.dart';
 
 class MockFirebaseAuthDataSource extends Mock

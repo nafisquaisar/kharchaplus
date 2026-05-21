@@ -41,7 +41,7 @@ class ReminderTile extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+           Text(
             'Reminders',
             style: TextStyle(
               fontSize: 13,
@@ -51,7 +51,7 @@ class ReminderTile extends ConsumerWidget {
           ),
 
           if (reminderState.isLoading)
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(top: 4),
               child: Text(
                 'Loading...',
@@ -63,7 +63,7 @@ class ReminderTile extends ConsumerWidget {
               ),
             )
           else if (reminderState.error != null)
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(top: 4),
               child: Text(
                 'Failed to load reminders',
@@ -162,7 +162,7 @@ class ReminderTile extends ConsumerWidget {
                 vertical: 4,
               ),
               child: Row(
-                children: const [
+                children:  [
                   Icon(
                     Icons.add,
                     size: 16,
@@ -203,12 +203,12 @@ class ReminderTile extends ConsumerWidget {
           color: AppColors.colorText,
         ),
 
-        const SizedBox(width: 10),
+         SizedBox(width: 10),
 
         Expanded(
           child: Text(
             time,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: AppColors.black,
@@ -233,7 +233,7 @@ class ReminderTile extends ConsumerWidget {
             scale: 0.7,
             child: Switch(
               value: value,
-              activeColor: Colors.white,
+              activeThumbColor: Colors.white,
               activeTrackColor: AppColors.colorText,
               inactiveThumbColor: Colors.white,
               inactiveTrackColor: Colors.grey.shade300,

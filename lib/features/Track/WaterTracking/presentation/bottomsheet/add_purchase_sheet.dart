@@ -134,7 +134,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                                 widget.isEdit
                                     ? 'Update Purchase'
                                     : 'Add Purchase',
-                                style: const TextStyle(
+                                style:  TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w800,
                                   color: AppColors.black,
@@ -156,7 +156,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                             widget.isEdit
                                 ? 'Update purchase details and payment status'
                                 : 'Track purchase, price and payment status',
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: AppColors.textSecondary,
@@ -515,7 +515,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
   }) {
     return InputDecoration(
       hintText: hintText,
-      hintStyle: const TextStyle(
+      hintStyle:  TextStyle(
         color: AppColors.textSecondary,
         fontSize: 13,
       ),
@@ -602,7 +602,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                     Text(
                       'Choose Purchase Type',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
@@ -682,7 +682,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                               children: [
                                 Text(
                                   option.label,
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w700,
                                     color: AppColors.black,
@@ -693,7 +693,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                                 ),
                                 Text(
                                   option.subtitle,
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500,
                                     color: AppColors.textSecondary,
@@ -703,7 +703,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                             ),
                           ),
                           if (selectedType == option)
-                            const Icon(
+                             Icon(
                               Icons.check_circle_rounded,
                               color: AppColors.accent,
                               size: 20,
@@ -759,7 +759,7 @@ class _SectionLabel extends StatelessWidget {
         const SizedBox(width: 6),
         Text(
           title,
-          style: const TextStyle(
+          style:  TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
             color: AppColors.textSecondary,
@@ -820,7 +820,7 @@ class _TypeSelectorCard extends StatelessWidget {
                 children: [
                   Text(
                     option.label,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
                       color: AppColors.black,
@@ -829,7 +829,7 @@ class _TypeSelectorCard extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     option.subtitle,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,

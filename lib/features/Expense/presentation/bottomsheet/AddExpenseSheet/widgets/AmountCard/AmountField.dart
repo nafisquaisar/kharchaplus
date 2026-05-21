@@ -75,7 +75,7 @@ class AmountField extends StatelessWidget {
                     color: AppColors.primarybg,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.currency_rupee_rounded,
                     size: 18,
                     color: AppColors.primary,

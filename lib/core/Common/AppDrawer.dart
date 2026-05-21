@@ -60,10 +60,10 @@ class AppDrawer extends StatelessWidget {
                 bottom: 22,
               ),
 
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: AppColors.kharchaGradient,
 
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(30),
 
                   bottomRight: Radius.circular(30),
@@ -486,7 +486,7 @@ class AppDrawer extends StatelessWidget {
                     width: 8,
                     height: 8,
 
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: AppColors.primary,
                       shape: BoxShape.circle,
                     ),

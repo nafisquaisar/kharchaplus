@@ -35,7 +35,7 @@ class SaveCardButton extends StatelessWidget {
         )
             : Text(
           isEdit ? "Update Card" : "Create Card",
-          style: const TextStyle(fontSize: 16 ,color: AppColors.textPrimary),
+          style: TextStyle(fontSize: 16 ,color: AppColors.textPrimary),
         ),
       ),
     );

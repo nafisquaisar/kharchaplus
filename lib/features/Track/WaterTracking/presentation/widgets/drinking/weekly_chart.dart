@@ -62,7 +62,7 @@ class WeeklyChart extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+               Text(
                 'This Week',
                 style: TextStyle(
                   fontSize: 13,
@@ -98,7 +98,7 @@ class WeeklyChart extends ConsumerWidget {
                     ),
                   );
                 },
-                child: const Text(
+                child:  Text(
                   'View History',
                   style: TextStyle(
                     fontSize: 11,
@@ -113,7 +113,7 @@ class WeeklyChart extends ConsumerWidget {
           const SizedBox(height: 14),
 
           if (isLoading)
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(bottom: 6),
               child: Text(
                 'Loading...',
@@ -125,7 +125,7 @@ class WeeklyChart extends ConsumerWidget {
               ),
             )
           else if (error != null)
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(bottom: 6),
               child: Text(
                 'Failed to load weekly data',
@@ -137,7 +137,7 @@ class WeeklyChart extends ConsumerWidget {
               ),
             )
           else if (isEmpty)
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(bottom: 6),
               child: Text(
                 'No intake this week',

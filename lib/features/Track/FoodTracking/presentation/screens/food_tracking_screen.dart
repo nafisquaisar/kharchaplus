@@ -503,7 +503,7 @@ class _FoodTrackingScreenState extends ConsumerState<FoodTrackingScreen> {
             borderRadius: BorderRadius.circular(20),
           ),
 
-          title: const Row(
+          title:  Row(
             children: [
               Icon(Icons.delete_outline, color: Colors.red),
 

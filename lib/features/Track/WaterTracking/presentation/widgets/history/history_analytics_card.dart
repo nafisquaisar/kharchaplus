@@ -54,7 +54,7 @@ class HistoryAnalyticsCard extends StatelessWidget {
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textSecondary,
@@ -66,7 +66,7 @@ class HistoryAnalyticsCard extends StatelessWidget {
           const Spacer(),
           Text(
             value,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
               color: AppColors.black,
@@ -77,7 +77,7 @@ class HistoryAnalyticsCard extends StatelessWidget {
             subtitle,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
               color: AppColors.textSecondary,

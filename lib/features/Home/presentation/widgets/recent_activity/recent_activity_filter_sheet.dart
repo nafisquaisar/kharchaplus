@@ -34,7 +34,7 @@ class RecentActivityFilterSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Filter Activity',
             style: TextStyle(
               fontSize: 18,
@@ -54,8 +54,8 @@ class RecentActivityFilterSheet extends StatelessWidget {
                 ),
               ),
               trailing: isSelected
-                  ? const Icon(Icons.check_circle_rounded, color: AppColors.accent)
-                  : const Icon(Icons.radio_button_unchecked_rounded),
+                  ?  Icon(Icons.check_circle_rounded, color: AppColors.accent)
+                  :  Icon(Icons.radio_button_unchecked_rounded),
               onTap: () {
                 onSelected(option);
               },

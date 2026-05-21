@@ -1,4 +1,5 @@
 /// 📄 ExpenseTypeSelector.dart
+library;
 
 import 'package:flutter/material.dart';
 

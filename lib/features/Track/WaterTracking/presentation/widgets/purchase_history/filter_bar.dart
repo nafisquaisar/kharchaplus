@@ -35,7 +35,7 @@ class PurchaseHistoryFilterBar extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Filters',
             style: TextStyle(
               fontSize: 12,
@@ -136,7 +136,7 @@ class PurchaseHistoryFilterBar extends ConsumerWidget {
     return SizedBox(
       width: 160,
       child: DropdownButtonFormField<T>(
-        value: value,
+        initialValue: value,
         decoration: InputDecoration(
           labelText: label,
           filled: true,

@@ -151,7 +151,7 @@ class _WeekdayHeader extends StatelessWidget {
               child: Center(
                 child: Text(
                   label,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                     color: AppColors.textSecondary,
@@ -218,7 +218,7 @@ class _LegendItem extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           label,
-          style: const TextStyle(
+          style:  TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w600,
             color: AppColors.textSecondary,

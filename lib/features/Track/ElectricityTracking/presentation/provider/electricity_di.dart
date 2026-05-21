@@ -18,8 +18,6 @@ import '../../domain/usecases/update_electricity_usecase.dart';
 import '../../service/FirebaseElectricityService.dart';
 import 'electricity_provider.dart';
 import '../states/electricity_state.dart';
-import '../../../../Home/domain/usecases/recent/delete_recent_activity_usecase.dart';
-import '../../../../Home/domain/usecases/recent/update_recent_activity_usecase.dart';
 
 // =========================
 // FIREBASE CORE

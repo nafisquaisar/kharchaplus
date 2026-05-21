@@ -23,7 +23,7 @@ class ElectricityAppBar extends StatelessWidget
       backgroundColor: Colors.transparent,
 
       flexibleSpace: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: AppColors.kharchaGradient
         ),
       ),

@@ -106,8 +106,8 @@ class FirestoreUserDataSource {
       }
 
       final toSnapshot = await transaction.get(toRef);
-      final fromData = fromSnapshot.data() as Map<String, dynamic>?;
-      final toData = toSnapshot.data() as Map<String, dynamic>?;
+      final fromData = fromSnapshot.data();
+      final toData = toSnapshot.data();
 
       final mergedProviders = <String>{
         ..._readStringList(toData?['providers']),

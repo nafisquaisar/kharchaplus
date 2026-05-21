@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../../../../core/utils/AppFlushbar.dart';
 import '../../domain/entities/FoodCycle.dart';

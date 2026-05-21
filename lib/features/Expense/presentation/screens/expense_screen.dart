@@ -390,7 +390,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
             }
           },
 
-          child: const Icon(Icons.add, color: AppColors.textPrimary),
+          child: Icon(Icons.add, color: AppColors.textPrimary),
         ),
       ),
     );

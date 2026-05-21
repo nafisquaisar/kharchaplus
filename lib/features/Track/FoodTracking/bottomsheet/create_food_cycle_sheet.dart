@@ -207,10 +207,10 @@ class _CreateFoodCycleSheetState extends ConsumerState<CreateFoodCycleSheet> {
 
       builder: (context, scrollController) {
         return Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.background,
 
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           ),
 
           child: Padding(

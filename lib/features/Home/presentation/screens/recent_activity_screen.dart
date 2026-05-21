@@ -261,7 +261,7 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
                   item.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
                     color: AppColors.colorText,
@@ -292,7 +292,7 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
                           children: [
                             TextSpan(
                               text: item.subtitle,
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.textSecondary,
@@ -300,7 +300,7 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
                             ),
                             TextSpan(
                               text: " • ${_formatDate(item.createdAt)}",
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.accent,
@@ -332,7 +332,7 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
                       _formatDate(
                         item.createdAt,
                       ),
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 8,
                         fontWeight: FontWeight.w500,
                         color: AppColors.textSecondary,
@@ -363,7 +363,7 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
             ),
             child: Text(
               "₹${item.amount}",
-              style: const TextStyle(
+              style:  TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: AppColors.accent,
@@ -387,7 +387,7 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
             color: AppColors.accent,
           ),
           const SizedBox(height: 14),
-          const Text(
+           Text(
             "No Recent Activity",
             style: TextStyle(
               fontSize: 18,

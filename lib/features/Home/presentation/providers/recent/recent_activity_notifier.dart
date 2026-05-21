@@ -128,11 +128,9 @@ class RecentActivityNotifier
         updateRecentActivityUseCaseProvider,
       )
           .call(activity);
-    } catch (e, stack) {
+    } catch (e) {
       debugPrint('RecentActivityNotifier: update failed $e');
-      state = previous is AsyncValue<List<RecentActivityEntity>>
-          ? previous
-          : AsyncError(e, stack);
+      state = previous;
     }
   }
 
@@ -156,11 +154,9 @@ class RecentActivityNotifier
         deleteRecentActivityUseCaseProvider,
       )
           .call(referenceId);
-    } catch (e, stack) {
+    } catch (e) {
       debugPrint('RecentActivityNotifier: delete failed $e');
-      state = previous is AsyncValue<List<RecentActivityEntity>>
-          ? previous
-          : AsyncError(e, stack);
+      state = previous;
     }
   }
 

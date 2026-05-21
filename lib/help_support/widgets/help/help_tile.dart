@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/AppColors.dart';
+import '../../../core/constants/AppColors.dart';
 
 class HelpTile extends StatelessWidget {
   final IconData icon;
@@ -8,7 +8,7 @@ class HelpTile extends StatelessWidget {
   final String subtitle;
   final VoidCallback onTap;
 
-  const HelpTile({
+   HelpTile({
     super.key,
     required this.icon,
     required this.title,
@@ -22,7 +22,7 @@ class HelpTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(24),
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
+        padding:  EdgeInsets.symmetric(
           horizontal: 10,
           vertical: 8,
         ),
@@ -43,7 +43,7 @@ class HelpTile extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(width: 18),
+             SizedBox(width: 18),
 
             /// 🔥 TEXT
             Expanded(
@@ -52,18 +52,18 @@ class HelpTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       color: AppColors.black,
                     ),
                   ),
 
-                  const SizedBox(height: 2),
+                   SizedBox(height: 2),
 
                   Text(
                     subtitle,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 12,
                       color: AppColors.textSecondary,
                     ),

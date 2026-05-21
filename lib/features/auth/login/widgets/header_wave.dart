@@ -12,7 +12,7 @@ class HeaderWave extends StatelessWidget {
       child: Container(
         height: 260,
         width: double.infinity,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: AppColors.kharchaGradient,
         ),
         child: Center(

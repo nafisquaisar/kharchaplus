@@ -66,7 +66,7 @@ class AppFlushbar {
                 minHeight: 3,
                 backgroundColor: Colors.white24,
                 valueColor:
-                const AlwaysStoppedAnimation<Color>(AppColors.accent),
+                 AlwaysStoppedAnimation<Color>(AppColors.accent),
               );
             },
           ),
@@ -85,7 +85,7 @@ class AppFlushbar {
           onUndo();
           flush.dismiss();
         },
-        child: const Text(
+        child: Text(
           "UNDO",
           style: TextStyle(
             color: AppColors.accent,

@@ -3,7 +3,6 @@ import 'package:expense_tracker/features/auth/phone/widgets/PhoneHeader.dart';
 import 'package:expense_tracker/features/auth/phone/widgets/SendOtpButton.dart';
 import 'package:expense_tracker/features/auth/phone/widgets/TrustText.dart';
 import 'package:expense_tracker/features/auth/phone/widgets/phone_field.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';

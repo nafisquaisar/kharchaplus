@@ -1,4 +1,5 @@
 /// 📄 PaymentModeDropdown.dart
+library;
 
 import 'package:flutter/material.dart';
 
@@ -31,7 +32,7 @@ class PaymentModeDropdown extends StatelessWidget {
           value: selected,
           isExpanded: true,
           borderRadius: BorderRadius.circular(12),
-          icon: const Icon(
+          icon: Icon(
             Icons.keyboard_arrow_down_rounded,
             color: AppColors.primary,
             size: 18,

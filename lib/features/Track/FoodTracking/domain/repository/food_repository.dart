@@ -1,5 +1,4 @@
 import '../entities/FoodCycle.dart';
-import '../entities/MealEntry.dart';
 
 
 abstract class FoodRepository {

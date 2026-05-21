@@ -8,7 +8,6 @@ import '../login/LoginScreen.dart';
 import '../viewmodel/auth_viewmodel.dart';
 import '../domain/entities/auth_state.dart';
 import '../profile/profile_completion_screen.dart';
-import 'Loading.dart';
 
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});

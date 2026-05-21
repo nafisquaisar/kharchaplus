@@ -251,7 +251,7 @@ class _CardContent extends StatelessWidget {
   }
 
   String _formatUnits(int units) {
-    return '${units} Units';
+    return '$units Units';
   }
 
   String _formatAmount(double amount) {

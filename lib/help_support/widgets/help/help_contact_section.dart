@@ -45,7 +45,7 @@ class HelpContactSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+         Text(
           "Need Help?",
           style: TextStyle(
             fontSize: 18,

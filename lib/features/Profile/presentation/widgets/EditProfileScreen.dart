@@ -149,7 +149,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           onTap: isBusy ? null : _pickImage,
                           child: Container(
                             padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               gradient: AppColors.kharchaGradient,
                             ),

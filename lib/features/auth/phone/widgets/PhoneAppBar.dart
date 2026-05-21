@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -24,7 +23,7 @@ class PhoneAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
 
       flexibleSpace: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: AppColors.kharchaGradient,
         ),
       ),

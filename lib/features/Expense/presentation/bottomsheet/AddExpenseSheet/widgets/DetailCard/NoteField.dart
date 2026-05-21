@@ -1,4 +1,5 @@
 /// 📄 NoteField.dart
+library;
 
 import 'package:flutter/material.dart';
 
@@ -37,8 +38,8 @@ class NoteField extends StatelessWidget {
           borderSide: BorderSide.none,
         ),
 
-        prefixIcon: const Padding(
-          padding: EdgeInsets.only(bottom: 48),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.only(bottom: 48),
           child: Icon(
             Icons.edit_note_rounded,
             color: AppColors.primary,

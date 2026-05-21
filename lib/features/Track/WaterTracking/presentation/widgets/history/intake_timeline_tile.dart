@@ -56,7 +56,7 @@ class IntakeTimelineTile extends StatelessWidget {
                   children: [
                     Text(
                       timeLabel,
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
                         color: AppColors.black,
@@ -65,7 +65,7 @@ class IntakeTimelineTile extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       '• ${intake.amountMl} ml',
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
                         color: AppColors.accent,
@@ -76,7 +76,7 @@ class IntakeTimelineTile extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   source,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textSecondary,

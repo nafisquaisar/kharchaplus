@@ -433,6 +433,7 @@ class ExpenseTrackerApp extends StatelessWidget {
       child:ValueListenableBuilder<bool>(
       valueListenable: ThemeController.isDark,
       builder: (context, isDark, child) {
+        AppColors.isDark = isDark;
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Kharcha Plus',

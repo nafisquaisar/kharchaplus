@@ -60,7 +60,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+               Text(
                 'This Month Expense',
                 style: TextStyle(
                   fontSize: 13,
@@ -75,16 +75,16 @@ class ExpenseSummaryCard extends ConsumerWidget {
                   children: [
                     Text(
                       '$monthLabel ${selectedDate.year}',
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textSecondary,
                       ),
                     ),
 
-                    const SizedBox(width: 2),
+                     SizedBox(width: 2),
 
-                    const Icon(
+                     Icon(
                       Icons.keyboard_arrow_down_rounded,
                       size: 18,
                       color: AppColors.textSecondary,
@@ -96,7 +96,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
           ),
 
           if (isLoading)
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(top: 6),
               child: Text(
                 'Loading...',
@@ -108,7 +108,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
               ),
             )
           else if (error != null)
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(top: 6),
               child: Text(
                 'Failed to load summary',
@@ -147,7 +147,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
                             color: AppColors.primarybg,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Icon(
+                          child:  Icon(
                             Icons.account_balance_wallet_outlined,
                             color: AppColors.colorText,
                             size: 22,
@@ -160,7 +160,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
                           child: Text(
                             '₹${currentTotal.toStringAsFixed(0)}',
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
                               color: AppColors.black,
@@ -176,7 +176,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
                       children: [
                         Text(
                           'vs $prevMonthLabel ${previousMonth.year}',
-                          style: const TextStyle(
+                          style:  TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
                             color: AppColors.textSecondary,
@@ -283,7 +283,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
                 Text(
                   title,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textSecondary,
@@ -295,7 +295,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
                 Text(
                   value,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: AppColors.black,
@@ -464,7 +464,7 @@ class _MonthYearPickerSheetState extends ConsumerState<_MonthYearPickerSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+               Text(
                 'Select Month',
                 style: TextStyle(
                   fontSize: 14,
@@ -509,7 +509,7 @@ class _MonthYearPickerSheetState extends ConsumerState<_MonthYearPickerSheet> {
             }),
           ),
           const SizedBox(height: 16),
-          const Text(
+           Text(
             'Year',
             style: TextStyle(
               fontSize: 12,

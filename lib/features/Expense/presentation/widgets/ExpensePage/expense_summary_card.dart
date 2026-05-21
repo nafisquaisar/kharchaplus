@@ -34,7 +34,7 @@ class ExpenseSummaryCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+               Text(
                 'This Month Expense',
                 style: TextStyle(
                   fontSize: 13,
@@ -44,7 +44,7 @@ class ExpenseSummaryCard extends StatelessWidget {
               ),
 
               Row(
-                children: const [
+                children:  [
                   Text(
                     'May 2024',
                     style: TextStyle(
@@ -66,7 +66,7 @@ class ExpenseSummaryCard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 14),
+           SizedBox(height: 14),
 
           // =========================
           // MAIN CONTENT
@@ -93,7 +93,7 @@ class ExpenseSummaryCard extends StatelessWidget {
                             color: AppColors.primarybg,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Icon(
+                          child:  Icon(
                             Icons.account_balance_wallet_outlined,
                             color: AppColors.colorText,
                             size: 22,
@@ -102,7 +102,7 @@ class ExpenseSummaryCard extends StatelessWidget {
 
                         const SizedBox(width: 10),
 
-                        const Expanded(
+                         Expanded(
                           child: Text(
                             '₹880',
                             overflow: TextOverflow.ellipsis,
@@ -119,7 +119,7 @@ class ExpenseSummaryCard extends StatelessWidget {
                     const SizedBox(height: 10),
 
                     Row(
-                      children: const [
+                      children:  [
                         Text(
                           'vs Apr 2024',
                           style: TextStyle(
@@ -226,7 +226,7 @@ class ExpenseSummaryCard extends StatelessWidget {
                 Text(
                   title,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textSecondary,
@@ -238,7 +238,7 @@ class ExpenseSummaryCard extends StatelessWidget {
                 Text(
                   value,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: AppColors.black,

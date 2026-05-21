@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -22,7 +21,7 @@ class OtpAppBar extends StatelessWidget implements PreferredSizeWidget {
 
       // 🔥 THIS IS IMPORTANT (color yaha aayega)
       flexibleSpace: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: AppColors.kharchaGradient,
         ),
       ),

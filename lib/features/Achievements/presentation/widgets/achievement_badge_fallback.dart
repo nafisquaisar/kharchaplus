@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class AchievementBadgeFallback extends StatelessWidget {
   final double size;
 
-  const AchievementBadgeFallback({Key? key, this.size = 48}) : super(key: key);
+  const AchievementBadgeFallback({super.key, this.size = 48});
 
   @override
   Widget build(BuildContext context) {

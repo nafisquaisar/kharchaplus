@@ -1,4 +1,5 @@
 /// 📄 LocationField.dart
+library;
 
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,7 @@ class LocationField extends StatelessWidget {
       child: Row(
         children: [
 
-          const Icon(
+          Icon(
             Icons.location_on_outlined,
             color: AppColors.primary,
             size: 20,

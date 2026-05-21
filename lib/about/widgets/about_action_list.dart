@@ -71,7 +71,7 @@ class AboutActionList extends StatelessWidget {
                   color: AppColors.accent.withOpacity(.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.rocket_launch_rounded,
                   color: AppColors.accent,
                   size: 34,
@@ -81,7 +81,7 @@ class AboutActionList extends StatelessWidget {
               const SizedBox(height: 20),
 
               /// TITLE
-              const Text(
+              Text(
                 "Coming Soon 🚀",
                 style: TextStyle(
                   fontSize: 22,
@@ -93,7 +93,7 @@ class AboutActionList extends StatelessWidget {
               const SizedBox(height: 12),
 
               /// MESSAGE
-              const Text(
+              Text(
                 "This feature will be available after the production release.",
                 textAlign: TextAlign.center,
                 style: TextStyle(

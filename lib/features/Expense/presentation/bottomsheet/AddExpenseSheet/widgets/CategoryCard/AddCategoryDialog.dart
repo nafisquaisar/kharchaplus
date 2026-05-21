@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -46,7 +45,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                   bottom: MediaQuery.of(context).viewInsets.bottom + 20,
                 ),
 
-                decoration: const BoxDecoration(
+                decoration:  BoxDecoration(
                   color: AppColors.primarybg,
 
                   borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
@@ -55,7 +54,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                 child: SingleChildScrollView(
                   controller: scrollController,
 
-                  physics: const BouncingScrollPhysics(),
+                  physics:  BouncingScrollPhysics(),
 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +77,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                       /// 🔥 Header
                       Row(
                         children: [
-                          const Expanded(
+                           Expanded(
                             child: Text(
                               "Add Category",
                               style: TextStyle(
@@ -173,7 +172,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
 
-                              borderSide: const BorderSide(
+                              borderSide:  BorderSide(
                                 color: AppColors.primary,
                                 width: 1.2,
                               ),
@@ -181,7 +180,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 18),
+                       SizedBox(height: 18),
 
                       /// 🔥 Preview
                       Container(
@@ -239,7 +238,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
 
-                                    style: const TextStyle(
+                                    style:  TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700,
                                       color: AppColors.colorText,
@@ -329,7 +328,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                       const SizedBox(height: 24),
 
                       /// 🔥 Choose Icon
-                      const Text(
+                       Text(
                         "Choose Icon",
 
                         style: TextStyle(

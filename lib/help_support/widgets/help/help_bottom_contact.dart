@@ -22,7 +22,7 @@ class HelpBottomContact extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          const Text(
+           Text(
             "Still need more help?",
             style: TextStyle(
               fontSize: 16,
@@ -37,7 +37,7 @@ class HelpBottomContact extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children:  [
                 Text(
                   "Contact Us",
                   style: TextStyle(

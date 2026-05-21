@@ -11,7 +11,7 @@ class AboutFooterSection extends StatelessWidget {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text(
               "Made with",
               style: TextStyle(
@@ -21,7 +21,7 @@ class AboutFooterSection extends StatelessWidget {
               ),
             ),
 
-            SizedBox(width: 6),
+            const SizedBox(width: 6),
 
             Icon(
               Icons.favorite_rounded,
@@ -33,7 +33,7 @@ class AboutFooterSection extends StatelessWidget {
 
         SizedBox(height: 4),
 
-        const Text(
+        Text(
           "Thank you for using Kharcha Plus",
           textAlign: TextAlign.center,
           style: TextStyle(

@@ -300,11 +300,11 @@ class _CalendarWidgetState
                 vertical: 8,
               ),
 
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
 
                 gradient: AppColors.kharchaGradient,
 
-                borderRadius: BorderRadius.vertical(
+                borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(24),
                 ),
               ),

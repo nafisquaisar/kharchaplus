@@ -2,9 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../core/providers/auth_provider.dart';
 import '../../../../../Home/presentation/providers/recent/recent_activity_providers.dart';
-import '../../../data/datasource/local/isar/water_goal_local_ds.dart';
 import '../../../data/datasource/local/isar/water_goal_local_ds_imple.dart';
-import '../../../data/datasource/local/isar/water_intake_local_ds.dart';
 import '../../../data/datasource/local/isar/water_intake_local_ds_impl.dart';
 import '../../../data/datasource/local/isar/water_purchase_local_ds.dart';
 

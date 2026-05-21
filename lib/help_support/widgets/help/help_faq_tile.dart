@@ -6,7 +6,7 @@ class HelpFaqTile extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const HelpFaqTile({
+   HelpFaqTile({
     super.key,
     required this.title,
     required this.onTap,
@@ -18,7 +18,7 @@ class HelpFaqTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(24),
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
+        padding:  EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 10,
         ),
@@ -27,7 +27,7 @@ class HelpFaqTile extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(
+                style:  TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: AppColors.black,
@@ -35,9 +35,9 @@ class HelpFaqTile extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(width: 10),
+             SizedBox(width: 10),
 
-            const Icon(
+             Icon(
               Icons.arrow_forward_ios_rounded,
               size: 16,
               color: AppColors.primary,

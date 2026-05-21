@@ -57,7 +57,7 @@ class PurchaseList extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+               Text(
                 'Recent Purchases',
                 style: TextStyle(
                   fontSize: 13,
@@ -74,7 +74,7 @@ class PurchaseList extends ConsumerWidget {
                     ),
                   );
                 },
-                child: const Text(
+                child:  Text(
                   'View All',
                   style: TextStyle(
                     fontSize: 11,
@@ -89,7 +89,7 @@ class PurchaseList extends ConsumerWidget {
           const SizedBox(height: 10),
 
           if (isLoading)
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(bottom: 6),
               child: Text(
                 'Loading...',
@@ -101,7 +101,7 @@ class PurchaseList extends ConsumerWidget {
               ),
             )
           else if (error != null)
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(bottom: 6),
               child: Text(
                 'Failed to load purchases',
@@ -172,18 +172,28 @@ class PurchaseList extends ConsumerWidget {
                     Container(
                       height: 50,
                       width: 50,
+
                       decoration: BoxDecoration(
+
                         color: AppColors.primarybg,
-                        borderRadius: BorderRadius.circular(
-                          20,
+
+                        borderRadius:
+                        BorderRadius.circular(20),
+                      ),
+
+                      child: ClipRRect(
+
+                        borderRadius:
+                        BorderRadius.circular(20),
+
+                        child: Image.asset(
+
+                          item.type.iconPath,
+
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      child: Image.asset(
-                        item.type.iconPath,
-                        fit: BoxFit.contain,
-                      ),
                     ),
-
                     const SizedBox(
                       width: 10,
                     ),
@@ -199,7 +209,7 @@ class PurchaseList extends ConsumerWidget {
                           Text(
                             item.displayTypeName,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
                               color: AppColors.black,
@@ -210,7 +220,7 @@ class PurchaseList extends ConsumerWidget {
                           ),
                           Text(
                             "${item.quantity} items",
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
                               color: AppColors.textSecondary,
@@ -221,7 +231,7 @@ class PurchaseList extends ConsumerWidget {
                           ),
                           Text(
                             "${item.date.day}/${item.date.month}/${item.date.year}",
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
                               color: AppColors.textSecondary,
@@ -241,7 +251,7 @@ class PurchaseList extends ConsumerWidget {
 
                     Text(
                       "₹${item.price}",
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: AppColors.black,

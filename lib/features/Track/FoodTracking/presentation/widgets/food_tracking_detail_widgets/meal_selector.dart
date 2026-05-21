@@ -72,7 +72,7 @@ class MealSelector extends StatelessWidget {
 
                 height: 8,
 
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.primary,
 
                   shape: BoxShape.circle,
@@ -106,7 +106,7 @@ class MealSelector extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
 
-                  child: const Text(
+                  child:  Text(
                     "Sunday",
 
                     style: TextStyle(

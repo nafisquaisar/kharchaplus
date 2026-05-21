@@ -89,7 +89,7 @@ class _PurchaseHistoryFilterSheetState extends ConsumerState<PurchaseHistoryFilt
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -289,7 +289,7 @@ class _PurchaseHistoryFilterSheetState extends ConsumerState<PurchaseHistoryFilt
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: const Text(
+                    child:  Text(
                       'Reset',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
@@ -396,11 +396,11 @@ class _PremiumDropdown<T> extends StatelessWidget {
                 color: AppColors.textSecondary,
               ),
 
-              const SizedBox(width: 6),
+               SizedBox(width: 6),
 
               Text(
                 title,
-                style: const TextStyle(
+                style:  TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                   color: AppColors.textSecondary,
@@ -419,7 +419,7 @@ class _PremiumDropdown<T> extends StatelessWidget {
           child: SizedBox(
             width: MediaQuery.of(context).size.width - 40,
             child: DropdownButtonFormField<T>(
-              value: value,
+              initialValue: value,
               isExpanded: false, // 👈 change this
               menuMaxHeight: 280,
 
@@ -439,7 +439,7 @@ class _PremiumDropdown<T> extends StatelessWidget {
 
                 hintText: hint,
 
-                hintStyle: const TextStyle(
+                hintStyle:  TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                   color: AppColors.textSecondary,
@@ -470,7 +470,7 @@ class _PremiumDropdown<T> extends StatelessWidget {
                 ),
               ),
 
-              style: const TextStyle(
+              style:  TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: AppColors.black,
@@ -484,7 +484,7 @@ class _PremiumDropdown<T> extends StatelessWidget {
                       (item.child as Text).data ?? '',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: AppColors.black,
@@ -514,7 +514,7 @@ class _PremiumDropdown<T> extends StatelessWidget {
 
                     child: Text(
                       (item.child as Text).data ?? '',
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: AppColors.black,

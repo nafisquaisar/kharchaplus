@@ -110,7 +110,7 @@ class CycleDurationSection
                 ),
               ),
 
-              child: const Icon(
+              child: Icon(
 
                 Icons.calendar_month,
 

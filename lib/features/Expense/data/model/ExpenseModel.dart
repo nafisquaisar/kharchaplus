@@ -73,7 +73,7 @@ class ExpenseModel {
       currency: currency ?? this.currency,
       categoryId: categoryId ?? this.categoryId,
       categoryName: categoryName ?? this.categoryName,
-      cardId: cardId ?? this.cardId,
+      cardId: cardId ?? cardId,
       note: note ?? this.note,
       type: type ?? this.type,
       paymentMode: paymentMode ?? this.paymentMode,

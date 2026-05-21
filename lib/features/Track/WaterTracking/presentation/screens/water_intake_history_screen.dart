@@ -620,7 +620,7 @@ class _HistoryFilterSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Filter Timeline',

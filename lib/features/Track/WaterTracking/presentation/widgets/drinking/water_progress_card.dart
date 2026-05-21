@@ -56,7 +56,7 @@ class WaterProgressCard extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+               Text(
                 "Today's Progress",
                 style: TextStyle(
                   fontSize: 13,
@@ -80,7 +80,7 @@ class WaterProgressCard extends ConsumerWidget {
           const SizedBox(height: 1),
 
           if (isLoading)
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(top: 4),
               child: Text(
                 'Loading...',
@@ -104,7 +104,7 @@ class WaterProgressCard extends ConsumerWidget {
               ),
             )
           else if (isEmpty)
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(top: 4),
               child: Text(
                 'No intake yet today',
@@ -138,7 +138,7 @@ class WaterProgressCard extends ConsumerWidget {
                     children: [
                       Text(
                         "${totalL}L",
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: AppColors.colorText,
@@ -160,7 +160,7 @@ class WaterProgressCard extends ConsumerWidget {
                       ),
                       Text(
                         "$percent%",
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: AppColors.black,
@@ -223,7 +223,7 @@ class WaterProgressCard extends ConsumerWidget {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children:  [
                 Icon(
                   Icons.water_drop,
                   color: AppColors.primary,
@@ -269,7 +269,7 @@ class WaterProgressCard extends ConsumerWidget {
               Text(
                 title,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style:  TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: AppColors.colorText,
@@ -281,7 +281,7 @@ class WaterProgressCard extends ConsumerWidget {
               Text(
                 subtitle,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style:  TextStyle(
                   fontSize: 9,
                   color: AppColors.textSecondary,
                   fontWeight: FontWeight.w600,

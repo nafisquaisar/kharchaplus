@@ -15,7 +15,7 @@ class PhoneButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
           ),
-          side: const BorderSide(color: AppColors.colorText),
+          side: BorderSide(color: AppColors.colorText),
         ),
         onPressed: () {
           Navigator.push(
@@ -28,7 +28,7 @@ class PhoneButton extends StatelessWidget {
           children: [
             Icon(Icons.phone_android, color: AppColors.colorText, size: 20),
             SizedBox(width: 4),
-            const Text("Login with Phone Number" , style: TextStyle(color: AppColors.colorText),),
+            Text("Login with Phone Number" , style: TextStyle(color: AppColors.colorText),),
           ],
         ),
       ),

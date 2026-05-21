@@ -5,12 +5,7 @@ import '../../../../../core/constants/AppColors.dart';
 import '../../domain/entities/electricity_entity.dart';
 import '../widgets/electricity_summary_card.dart';
 
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-import '../../../../../core/constants/AppColors.dart';
-import '../../domain/entities/electricity_entity.dart';
-import '../widgets/electricity_summary_card.dart';
 
 class ElectricitySheet extends StatefulWidget {
 

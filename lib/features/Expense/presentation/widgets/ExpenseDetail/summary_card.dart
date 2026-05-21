@@ -1,7 +1,5 @@
 import 'package:expense_tracker/features/Expense/presentation/widgets/ExpenseDetail/summary_header.dart';
 import 'package:expense_tracker/features/Expense/presentation/widgets/ExpenseDetail/summary_stats_row.dart';
-import 'package:expense_tracker/features/Expense/presentation/widgets/ExpenseDetail/summary_trend.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SummaryCard extends StatelessWidget {

@@ -38,7 +38,7 @@ class HelpFaqSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+         Text(
           "FAQ",
           style: TextStyle(
             fontSize: 18,
@@ -86,7 +86,7 @@ class HelpFaqSection extends StatelessWidget {
                       collapsedIconColor: AppColors.textSecondary,
                       title: Text(
                         faqs[index]["question"]!,
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
                           color: AppColors.black,
@@ -97,7 +97,7 @@ class HelpFaqSection extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             faqs[index]["answer"]!,
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 14,
                               height: 1.5,
                               color: AppColors.textSecondary,

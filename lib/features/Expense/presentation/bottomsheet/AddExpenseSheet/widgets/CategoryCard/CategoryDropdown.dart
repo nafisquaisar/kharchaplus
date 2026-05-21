@@ -114,7 +114,7 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
                     ),
                   ],
 
-                  const Icon(
+                  Icon(
                     Icons.keyboard_arrow_down_rounded,
                     color: AppColors.primary,
                     size: 20,
@@ -208,7 +208,7 @@ class _CategoryBottomSheetState
                   color: Colors.grey.shade500,
                   fontSize: 14,
                 ),
-                prefixIcon: const Icon(
+                prefixIcon:  Icon(
                   Icons.search_rounded,
                   color: AppColors.primary,
                 ),

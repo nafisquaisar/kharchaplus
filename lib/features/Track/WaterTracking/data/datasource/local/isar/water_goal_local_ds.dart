@@ -1,4 +1,3 @@
-import 'package:isar/isar.dart';
 
 import '../../../models/water_goal_model.dart';
 

@@ -101,9 +101,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         right: 20,
         top: 14,
       ),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.primarybg,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
       ),
 
       child: SingleChildScrollView(

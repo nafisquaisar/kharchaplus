@@ -28,8 +28,12 @@ class _OtpInputFieldState extends State<OtpInputField>
   @override
   void dispose() {
     cancel();
-    for (var c in controllers) c.dispose();
-    for (var f in focusNodes) f.dispose();
+    for (var c in controllers) {
+      c.dispose();
+    }
+    for (var f in focusNodes) {
+      f.dispose();
+    }
     super.dispose();
   }
 

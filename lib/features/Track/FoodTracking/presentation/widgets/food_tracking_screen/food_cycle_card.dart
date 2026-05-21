@@ -292,7 +292,7 @@ class FoodCycleCard extends StatelessWidget {
 
                 backgroundColor: Colors.grey.shade200,
 
-                valueColor: const AlwaysStoppedAnimation(AppColors.primary),
+                valueColor:  AlwaysStoppedAnimation(AppColors.primary),
               ),
             ),
 

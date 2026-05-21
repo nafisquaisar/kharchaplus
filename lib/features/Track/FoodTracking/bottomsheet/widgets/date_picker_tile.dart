@@ -53,7 +53,7 @@ class DatePickerTile extends StatelessWidget {
                 BorderRadius.circular(12),
               ),
 
-              child: const Icon(
+              child: Icon(
                 Icons.calendar_month,
                 color: AppColors.primary,
               ),
@@ -74,7 +74,7 @@ class DatePickerTile extends StatelessWidget {
 
                     title,
 
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       color:
                       AppColors.textSecondary,
@@ -99,7 +99,7 @@ class DatePickerTile extends StatelessWidget {
               ),
             ),
 
-            const Icon(
+            Icon(
               Icons.chevron_right,
               color: AppColors.textSecondary,
             ),

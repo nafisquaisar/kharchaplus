@@ -91,14 +91,45 @@ class PurchaseHistoryCard extends StatelessWidget {
                 /// IMAGE
                 SizedBox(
                   width: 72,
+
                   child: Center(
-                    child: Image.asset(
-                      purchase.type.iconPath,
-                      height: _imageHeight(purchase.type),
-                      fit: BoxFit.contain,
+
+                    child: Container(
+
+                      decoration: BoxDecoration(
+
+                        color:
+                        AppColors.primarybg,
+
+                        borderRadius:
+                        BorderRadius.circular(18),
+                      ),
+
+                      child: ClipRRect(
+
+                        borderRadius:
+                        BorderRadius.circular(14),
+
+                        child: Image.asset(
+
+                          purchase.type.iconPath,
+
+                          height:
+                          _imageHeight(
+                            purchase.type,
+                          ),
+
+                          width: 60,
+
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     ),
                   ),
                 ),
+
+
+
                 const SizedBox(
                   width: 12,
                 ),
@@ -116,7 +147,7 @@ class PurchaseHistoryCard extends StatelessWidget {
                               purchase.displayTypeName,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w800,
                                 color: AppColors.accent,
@@ -345,7 +376,7 @@ class PurchaseHistoryCard extends StatelessWidget {
             text,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
               color: AppColors.textSecondary,

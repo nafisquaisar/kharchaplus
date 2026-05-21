@@ -57,7 +57,7 @@ class ProfileHeader extends StatelessWidget {
                         ),
                         child: Container(
                           padding: const EdgeInsets.all(3),
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             gradient: AppColors.kharchaGradient,
                           ),

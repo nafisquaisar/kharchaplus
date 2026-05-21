@@ -35,7 +35,7 @@ class MonthlyProgressCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+           Text(
             'Monthly Goal Progress',
             style: TextStyle(
               fontSize: 14,
@@ -76,7 +76,7 @@ class MonthlyProgressCard extends StatelessWidget {
                   minHeight: 10,
                   value: value,
                   backgroundColor: AppColors.primarybg,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
+                  valueColor:  AlwaysStoppedAnimation<Color>(
                     AppColors.accent,
                   ),
                 ),
@@ -113,7 +113,7 @@ class _MetricChip extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
               color: AppColors.textSecondary,
@@ -122,7 +122,7 @@ class _MetricChip extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             value,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w800,
               color: AppColors.black,

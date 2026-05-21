@@ -21,6 +21,8 @@ class Footer extends StatelessWidget {
     ),
   ];
 
+   Footer({super.key});
+
 
   @override
   Widget build(BuildContext context) {

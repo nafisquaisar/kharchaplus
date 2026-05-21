@@ -19,7 +19,7 @@ class PurchaseHistoryEmptyState extends StatelessWidget {
             color: Colors.grey.shade400,
           ),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             'No purchases found',
             style: TextStyle(
               fontSize: 14,
@@ -28,7 +28,7 @@ class PurchaseHistoryEmptyState extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-          const Text(
+          Text(
             'Try changing your filters',
             style: TextStyle(
               fontSize: 11,

@@ -32,7 +32,7 @@ class QuickAddCard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+           Text(
             'Quick Add',
             style: TextStyle(
               fontSize: 13,
@@ -111,7 +111,7 @@ class QuickAddCard extends ConsumerWidget {
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children:  [
                         Icon(
                           Icons.add,
                           size: 20,
@@ -162,18 +162,18 @@ class QuickAddCard extends ConsumerWidget {
               iconPath,
               height: 18,
               width: 18,
-              colorFilter: const ColorFilter.mode(
+              colorFilter:  ColorFilter.mode(
                 AppColors.colorText,
                 BlendMode.srcIn,
               ),
             ),
-            const SizedBox(height: 6),
+             SizedBox(height: 6),
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
                 label,
                 maxLines: 1,
-                style: const TextStyle(
+                style:  TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   color: AppColors.black,

@@ -17,12 +17,12 @@ class AchievementBadge extends StatefulWidget {
   final VoidCallback? onTap;
 
   const AchievementBadge({
-    Key? key,
+    super.key,
     required this.achievementId,
     this.unlocked = false,
     this.size = 48,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   State<AchievementBadge> createState() => _AchievementBadgeState();

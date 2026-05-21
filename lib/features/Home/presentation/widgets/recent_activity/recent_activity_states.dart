@@ -18,7 +18,7 @@ class RecentActivityEmptyState extends StatelessWidget {
         child: Text(
           message,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.textSecondary,
             fontWeight: FontWeight.w600,
           ),
@@ -44,7 +44,7 @@ class RecentActivityErrorState extends StatelessWidget {
         child: Text(
           message,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.textSecondary,
             fontWeight: FontWeight.w600,
           ),

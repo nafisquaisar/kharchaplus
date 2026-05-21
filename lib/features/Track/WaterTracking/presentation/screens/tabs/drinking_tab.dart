@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../widgets/drinking/GoalStreakCards.dart';
 import '../../widgets/drinking/quick_add_card.dart';
-import '../../widgets/drinking/reminder_tile.dart';
 import '../../widgets/drinking/water_progress_card.dart';
 import '../../widgets/drinking/weekly_chart.dart';
 import '../../providers/intake/intake_provider.dart';

@@ -1,6 +1,6 @@
   /// 📁 settings_screen.dart
+library;
 
-  import 'package:expense_tracker/Setting/widgets/logout_button.dart';
   import 'package:expense_tracker/Setting/widgets/settings_group_card.dart';
   import 'package:expense_tracker/Setting/widgets/settings_section_title.dart';
   import 'package:expense_tracker/Setting/widgets/settings_tile.dart';

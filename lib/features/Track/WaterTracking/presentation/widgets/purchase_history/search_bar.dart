@@ -106,7 +106,7 @@ class _PurchaseHistorySearchBarState
           textInputAction: TextInputAction.search,
           textAlignVertical: TextAlignVertical.center,
           cursorColor: AppColors.accent,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: AppColors.black,
@@ -134,7 +134,7 @@ class _PurchaseHistorySearchBarState
                   color: AppColors.primarybg,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.search_rounded,
                   color: AppColors.accent,
                   size: 20,
@@ -156,7 +156,7 @@ class _PurchaseHistorySearchBarState
                         context,
                       ).unfocus();
                     },
-                    child: const Icon(
+                    child: Icon(
                       Icons.close_rounded,
                       size: 18,
                       color: AppColors.textSecondary,

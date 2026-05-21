@@ -1,4 +1,5 @@
   /// 📁 privacy_policy_screen.dart
+library;
 
   import 'package:flutter/material.dart';
 

@@ -5,7 +5,6 @@ import '../../../../Track/ElectricityTracking/service/FirebaseElectricityService
 import '../../../data/datasource/local/electricity_tracking_local_datasource.dart';
 import '../../../data/datasource/remote/electricity_tracking_remote_datasource.dart';
 import '../../../data/repository/electricity_tracking_home_repository_impl.dart';
-import '../../../domain/entities/electricity_tracking_entity.dart';
 import '../../../domain/repository/electricity_tracking_home_repository.dart';
 import '../../../domain/usecases/electricity_tracking/get_electricity_tracking_home_usecase.dart';
 import '../../../domain/usecases/electricity_tracking/watch_electricity_tracking_home_usecase.dart';

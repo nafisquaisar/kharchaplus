@@ -4,8 +4,6 @@ import 'footer.dart';
 import 'header_wave.dart' hide GoogleButton;
 import 'google_button.dart';
 import 'phone_button.dart';
-import 'social_footer.dart';
-import 'email_button.dart';
 
 class LoginCard extends StatelessWidget {
   const LoginCard({super.key});

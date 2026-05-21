@@ -85,27 +85,27 @@ class _GoalCard extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.04),
                 blurRadius: 8,
-                offset: const Offset(0, 3),
+                offset:  Offset(0, 3),
               ),
             ],
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Icon(
+               Icon(
                 Icons.track_changes_outlined,
                 size: 18,
                 color: AppColors.colorText,
               ),
 
-              const SizedBox(width: 8),
+               SizedBox(width: 8),
 
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text(
+                     Text(
                       'Daily Goal',
                       style: TextStyle(
                         fontSize: 10,
@@ -118,7 +118,7 @@ class _GoalCard extends StatelessWidget {
 
                     Text(
                       isLoading ? '...' : goalText,
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: AppColors.black,
@@ -128,7 +128,7 @@ class _GoalCard extends StatelessWidget {
                     const SizedBox(height: 2),
 
                     Row(
-                      children: const [
+                      children:  [
                         Text(
                           'Edit Goal',
                           style: TextStyle(
@@ -194,7 +194,7 @@ class _StreakCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
+                 Text(
                   'Streak',
                   style: TextStyle(
                     fontSize: 10,
@@ -207,7 +207,7 @@ class _StreakCard extends StatelessWidget {
 
                 Text(
                   streakText,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: AppColors.black,
@@ -218,7 +218,7 @@ class _StreakCard extends StatelessWidget {
 
                 Text(
                   'Best: $bestStreak Days',
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textSecondary,

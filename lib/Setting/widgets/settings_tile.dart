@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/AppColors.dart';
+import '../../core/constants/AppColors.dart';
 
 class SettingsTile extends StatelessWidget {
   final IconData icon;
@@ -12,7 +12,7 @@ class SettingsTile extends StatelessWidget {
   final bool? switchValue;
   final ValueChanged<bool>? onSwitchChanged;
 
-  const SettingsTile({
+   SettingsTile({
     super.key,
     required this.icon,
     required this.title,
@@ -30,7 +30,7 @@ class SettingsTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(14),
       onTap: hasSwitch ? null : onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
+        padding:  EdgeInsets.symmetric(
           horizontal: 10,
           vertical: 4,
         ),
@@ -51,13 +51,13 @@ class SettingsTile extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(width: 14),
+             SizedBox(width: 14),
 
             /// 🔥 TITLE
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(
+                style:  TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: AppColors.black,
@@ -71,11 +71,11 @@ class SettingsTile extends StatelessWidget {
               scale: .9,
               child: CupertinoSwitch(
                 value: switchValue!,
-                activeColor: AppColors.primary,
+                activeTrackColor: AppColors.primary,
                 onChanged: onSwitchChanged,
               ),
             )
-                : const Icon(
+                :  Icon(
               Icons.arrow_forward_ios_rounded,
               size: 14,
               color: AppColors.textSecondary,

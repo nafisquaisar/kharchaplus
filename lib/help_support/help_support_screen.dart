@@ -1,4 +1,5 @@
 /// 📁 help_support_screen.dart
+library;
 
 import 'package:expense_tracker/help_support/widgets/help/help_banner_card.dart';
 import 'package:expense_tracker/help_support/widgets/help/help_bottom_contact.dart';

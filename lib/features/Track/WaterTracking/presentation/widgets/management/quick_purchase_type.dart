@@ -35,7 +35,7 @@ class QuickPurchaseType extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Quick Add',
             style: TextStyle(
               fontSize: 13,
@@ -141,7 +141,7 @@ class QuickPurchaseType extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style:  TextStyle(
                   fontSize: 10,
                   height: 1.2,
                   fontWeight: FontWeight.w600,
@@ -183,14 +183,14 @@ class QuickPurchaseType extends StatelessWidget {
                   color: AppColors.primarybg,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child:  Icon(
                   Icons.add_circle_outline,
                   size: 26,
                   color: AppColors.colorText,
                 ),
               ),
               const SizedBox(height: 10),
-              const Text(
+               Text(
                 'Other',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
