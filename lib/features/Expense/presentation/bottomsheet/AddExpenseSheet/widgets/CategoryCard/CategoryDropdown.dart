@@ -16,10 +16,47 @@ class CategoryDropdown extends StatefulWidget {
   });
 
   @override
-  State<CategoryDropdown> createState() => _CategoryDropdownState();
+  State<CategoryDropdown> createState() =>
+      _CategoryDropdownState();
 }
 
-class _CategoryDropdownState extends State<CategoryDropdown> {
+class _CategoryDropdownState
+    extends State<CategoryDropdown> {
+
+  IconData getCategoryIcon(String iconName) {
+    switch (iconName.toLowerCase()) {
+      case "food":
+        return Icons.fastfood;
+
+      case "travel":
+        return Icons.directions_car;
+
+      case "shopping":
+        return Icons.shopping_bag;
+
+      case "health":
+        return Icons.health_and_safety;
+
+      case "salary":
+        return Icons.account_balance_wallet;
+
+      case "home":
+        return Icons.home;
+
+      case "education":
+        return Icons.school;
+
+      case "entertainment":
+        return Icons.movie;
+
+      case "bills":
+        return Icons.receipt_long;
+
+      default:
+        return Icons.category;
+    }
+  }
+
   void _openCategorySheet() {
     showModalBottomSheet(
       context: context,
@@ -64,7 +101,8 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
             ),
             padding: const EdgeInsets.all(1),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding:
+              const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(9),
@@ -76,14 +114,13 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
                       height: 30,
                       width: 30,
                       decoration: BoxDecoration(
-                        color: Color(cat.color).withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(9),
+                        color:
+                        Color(cat.color).withOpacity(0.12),
+                        borderRadius:
+                        BorderRadius.circular(9),
                       ),
                       child: Icon(
-                        IconData(
-                          int.parse(cat.icon),
-                          fontFamily: 'MaterialIcons',
-                        ),
+                        getCategoryIcon(cat.icon),
                         size: 17,
                         color: Color(cat.color),
                       ),
@@ -147,10 +184,45 @@ class _CategoryBottomSheet extends StatefulWidget {
 
 class _CategoryBottomSheetState
     extends State<_CategoryBottomSheet> {
+
   final TextEditingController searchController =
   TextEditingController();
 
   List<CategoryModel> filtered = [];
+
+  IconData getCategoryIcon(String iconName) {
+    switch (iconName.toLowerCase()) {
+      case "food":
+        return Icons.fastfood;
+
+      case "travel":
+        return Icons.directions_car;
+
+      case "shopping":
+        return Icons.shopping_bag;
+
+      case "health":
+        return Icons.health_and_safety;
+
+      case "salary":
+        return Icons.account_balance_wallet;
+
+      case "home":
+        return Icons.home;
+
+      case "education":
+        return Icons.school;
+
+      case "entertainment":
+        return Icons.movie;
+
+      case "bills":
+        return Icons.receipt_long;
+
+      default:
+        return Icons.category;
+    }
+  }
 
   @override
   void initState() {
@@ -181,6 +253,7 @@ class _CategoryBottomSheetState
       ),
       child: Column(
         children: [
+
           Container(
             height: 4,
             width: 50,
@@ -191,7 +264,6 @@ class _CategoryBottomSheetState
             ),
           ),
 
-          // 🔥 Search
           Container(
             height: 48,
             decoration: BoxDecoration(
@@ -208,7 +280,7 @@ class _CategoryBottomSheetState
                   color: Colors.grey.shade500,
                   fontSize: 14,
                 ),
-                prefixIcon:  Icon(
+                prefixIcon: Icon(
                   Icons.search_rounded,
                   color: AppColors.primary,
                 ),
@@ -224,6 +296,7 @@ class _CategoryBottomSheetState
               separatorBuilder: (_, __) =>
               const SizedBox(height: 10),
               itemBuilder: (_, index) {
+
                 final cat = filtered[index];
 
                 return InkWell(
@@ -233,37 +306,41 @@ class _CategoryBottomSheetState
                     Navigator.pop(context);
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
+                    padding:
+                    const EdgeInsets.symmetric(
                       horizontal: 14,
                       vertical: 12,
                     ),
                     decoration: BoxDecoration(
-                      color: widget.selected?.id == cat.id
-                          ? Color(cat.color).withOpacity(.08)
+                      color:
+                      widget.selected?.id == cat.id
+                          ? Color(cat.color)
+                          .withOpacity(.08)
                           : Colors.white,
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius:
+                      BorderRadius.circular(14),
                       border: Border.all(
-                        color: widget.selected?.id == cat.id
+                        color:
+                        widget.selected?.id ==
+                            cat.id
                             ? Color(cat.color)
                             : Colors.grey.shade200,
                       ),
                     ),
                     child: Row(
                       children: [
+
                         Container(
                           height: 42,
                           width: 42,
                           decoration: BoxDecoration(
-                            color:
-                            Color(cat.color).withOpacity(.12),
+                            color: Color(cat.color)
+                                .withOpacity(.12),
                             borderRadius:
                             BorderRadius.circular(12),
                           ),
                           child: Icon(
-                            IconData(
-                              int.parse(cat.icon),
-                              fontFamily: 'MaterialIcons',
-                            ),
+                            getCategoryIcon(cat.icon),
                             color: Color(cat.color),
                             size: 20,
                           ),
@@ -276,12 +353,14 @@ class _CategoryBottomSheetState
                             cat.name,
                             style: const TextStyle(
                               fontSize: 15,
-                              fontWeight: FontWeight.w600,
+                              fontWeight:
+                              FontWeight.w600,
                             ),
                           ),
                         ),
 
-                        if (widget.selected?.id == cat.id)
+                        if (widget.selected?.id ==
+                            cat.id)
                           Icon(
                             Icons.check_circle_rounded,
                             color: Color(cat.color),

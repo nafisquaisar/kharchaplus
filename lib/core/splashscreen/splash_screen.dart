@@ -131,92 +131,122 @@ class _SplashScreenState
                   const Spacer(),
 
                   /// ANIMATION CONTAINER
-                  Container(
+                  TweenAnimationBuilder<double>(
 
-                    width: size.width * 0.72,
-                    height: size.width * 0.72,
+                    tween: Tween(
+                      begin: 0.96,
+                      end: 1,
+                    ),
 
-                    padding:
-                    const EdgeInsets.all(12),
+                    duration: const Duration(
+                      milliseconds: 1800,
+                    ),
 
-                    decoration: BoxDecoration(
+                    curve: Curves.easeInOut,
 
-                      shape: BoxShape.circle,
+                    builder: (
+                        context,
+                        value,
+                        child,
+                        ) {
 
-                      gradient: RadialGradient(
+                      return Transform.scale(
+                        scale: value,
+                        child: child,
+                      );
+                    },
 
-                        colors: [
+                    child: Container(
 
-                          Colors.white,
-                          AppColors.primary
-                              .withOpacity(0.04),
+                      width: size.width * 0.72,
+                      height: size.width * 0.72,
 
+                      padding:
+                      const EdgeInsets.all(18),
+
+                      decoration: BoxDecoration(
+
+                        borderRadius:
+                        BorderRadius.circular(10),
+
+                        gradient: RadialGradient(
+
+                          colors: [
+
+                            Colors.white,
+
+                            AppColors.primary
+                                .withOpacity(0.05),
+
+                          ],
+                        ),
+
+                        border: Border.all(
+
+                          color:
+                          Colors.white.withOpacity(0.7),
+
+                          width: 1.5,
+                        ),
+
+                        boxShadow: [
+
+                          BoxShadow(
+
+                            color:
+                            AppColors.primary
+                                .withOpacity(0.12),
+
+                            blurRadius: 35,
+                            spreadRadius: 2,
+
+                            offset:
+                            const Offset(0, 10),
+                          ),
                         ],
                       ),
 
-                      boxShadow: [
+                      child: ClipRRect(
 
-                        BoxShadow(
+                        borderRadius:
+                        BorderRadius.circular(10),
 
-                          color: AppColors.primary
-                              .withOpacity(0.12),
+                        child: Lottie.asset(
 
-                          blurRadius: 40,
-                          spreadRadius: 2,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
+                          'assets/animation/splash4.json',
 
-                    child: Lottie.asset(
+                          controller:
+                          _controller,
 
-                      'assets/animation/splash4.json',
+                          fit: BoxFit.cover,
 
-                      controller:
-                      _controller,
+                          repeat: false,
 
-                      fit: BoxFit.contain,
+                          renderCache:
+                          RenderCache.raster,
 
-                      repeat: false,
+                          onLoaded: (
+                              composition,
+                              ) {
 
-                      renderCache:
-                      RenderCache.raster,
+                            _controller.duration =
+                                composition.duration;
 
-                      onLoaded: (
-                          composition,
-                          ) {
+                            _controller.forward();
 
-                        _controller.duration =
-                            composition.duration;
+                            _controller.addStatusListener(
+                                  (status) {
 
-                        _controller.forward();
+                                if (status ==
+                                    AnimationStatus.completed) {
 
-                        _controller
-                            .addStatusListener(
-                              (status) {
-
-                            if (status ==
-                                AnimationStatus.completed) {
-
-                              goToHome();
-                            }
+                                  goToHome();
+                                }
+                              },
+                            );
                           },
-                        );
-                      },
-
-                      errorBuilder: (
-                          context,
-                          error,
-                          stackTrace,
-                          ) {
-
-                        return const Center(
-
-                          child: Text(
-                            "Animation Failed",
-                          ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
 
