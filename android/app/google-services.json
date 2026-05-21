@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "526853902976-qd0s7ljqv2hkq54u71qoo3224b6gib63.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nafis.nf.kharchaplus",
+            "certificate_hash": "9b849e7a9673906cfc818da9d8617582ceb18ae2"
+          }
+        },
+        {
           "client_id": "526853902976-nm029f7g8acefqef8g4n1pig1i2kc0kh.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -38,6 +46,13 @@
             {
               "client_id": "526853902976-nm029f7g8acefqef8g4n1pig1i2kc0kh.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "526853902976-fnbt4idpld3nlk8o2dppkljfd0uinvjn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.nafis.nf.kharchaplus"
+              }
             }
           ]
         }

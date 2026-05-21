@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/AppColors.dart';
+import 'package:provider/provider.dart';
+
+import '../../../auth/viewmodel/auth_viewmodel.dart';
 
 class AccountSection extends StatelessWidget {
   const AccountSection({super.key});
@@ -114,7 +117,10 @@ class AccountSection extends StatelessWidget {
           "Logout",
           Icons.logout,
           isDanger: true,
-          onTap: () {},
+          onTap: () async {
+            final vm =context.read<AuthViewModel>();
+            await vm.logout();
+          },
         ),
       ],
     );

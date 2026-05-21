@@ -1,10 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import '../../features/Expense/data/model/ExpenseCardModel.dart';
 import '../../features/Expense/data/model/ExpenseModel.dart';
-
 import '../../features/Home/domain/entities/RecentActivityEntity.dart';
 import '../../features/Home/domain/repository/RecentActivityRepository.dart';
 
@@ -12,35 +10,24 @@ class RecentActivityService {
 
   final RecentActivityRepository repository;
 
-  final FirebaseAuth auth;
+  RecentActivityService(this.repository);
 
-  RecentActivityService(
-      this.repository,
-      this.auth,
-      );
-
-  String? get _userId =>
-      auth.currentUser?.uid;
-
-  // =====================================================
-  // EXPENSE CYCLE CREATE
-  // =====================================================
+  // =========================
+  // EXPENSE CYCLE
+  // =========================
 
   Future<void> addExpenseCycleCreated(
       ExpenseCardModel card,
       ) async {
 
-    final activity =
-    _buildExpenseCycleActivity(
+    final activity = _buildExpenseCycleActivity(
       card,
       title: 'Expense Cycle Created',
     );
 
     try {
 
-      await repository.addActivity(
-        activity,
-      );
+      await repository.addActivity(activity);
 
       debugPrint(
         '[RecentActivityService] expense cycle created added ${card.id}',
@@ -58,25 +45,18 @@ class RecentActivityService {
     }
   }
 
-  // =====================================================
-  // EXPENSE CYCLE UPDATE
-  // =====================================================
-
   Future<void> updateExpenseCycle(
       ExpenseCardModel card,
       ) async {
 
-    final activity =
-    _buildExpenseCycleActivity(
+    final activity = _buildExpenseCycleActivity(
       card,
       title: 'Expense Cycle Updated',
     );
 
     try {
 
-      await repository.updateActivity(
-        activity,
-      );
+      await repository.updateActivity(activity);
 
       debugPrint(
         '[RecentActivityService] expense cycle updated ${card.id}',
@@ -94,26 +74,13 @@ class RecentActivityService {
     }
   }
 
-  // =====================================================
-  // EXPENSE CYCLE DELETE
-  // =====================================================
-
   Future<void> deleteExpenseCycle(
       String cardId,
       ) async {
 
-    final userId = _userId;
-
-    if (userId == null) {
-      return;
-    }
-
     try {
 
-      await repository.deleteActivity(
-        cardId,
-        userId,
-      );
+      await repository.deleteActivity(cardId);
 
       debugPrint(
         '[RecentActivityService] expense cycle deleted $cardId',
@@ -131,25 +98,22 @@ class RecentActivityService {
     }
   }
 
-  // =====================================================
-  // EXPENSE ITEM CREATE
-  // =====================================================
+  // =========================
+  // EXPENSE ITEM
+  // =========================
 
   Future<void> addExpenseItemCreated(
       ExpenseModel expense,
       ) async {
 
-    final activity =
-    _buildExpenseItemActivity(
+    final activity = _buildExpenseItemActivity(
       expense,
       title: 'Expense Added',
     );
 
     try {
 
-      await repository.addActivity(
-        activity,
-      );
+      await repository.addActivity(activity);
 
       debugPrint(
         '[RecentActivityService] expense item added ${expense.id}',
@@ -167,25 +131,18 @@ class RecentActivityService {
     }
   }
 
-  // =====================================================
-  // EXPENSE ITEM UPDATE
-  // =====================================================
-
   Future<void> updateExpenseItem(
       ExpenseModel expense,
       ) async {
 
-    final activity =
-    _buildExpenseItemActivity(
+    final activity = _buildExpenseItemActivity(
       expense,
       title: 'Expense Updated',
     );
 
     try {
 
-      await repository.updateActivity(
-        activity,
-      );
+      await repository.updateActivity(activity);
 
       debugPrint(
         '[RecentActivityService] expense item updated ${expense.id}',
@@ -203,26 +160,13 @@ class RecentActivityService {
     }
   }
 
-  // =====================================================
-  // EXPENSE ITEM DELETE
-  // =====================================================
-
   Future<void> deleteExpenseItem(
       String expenseId,
       ) async {
 
-    final userId = _userId;
-
-    if (userId == null) {
-      return;
-    }
-
     try {
 
-      await repository.deleteActivity(
-        expenseId,
-        userId,
-      );
+      await repository.deleteActivity(expenseId);
 
       debugPrint(
         '[RecentActivityService] expense item deleted $expenseId',
@@ -240,24 +184,21 @@ class RecentActivityService {
     }
   }
 
-  // =====================================================
+  // =========================
   // BUILD EXPENSE CYCLE
-  // =====================================================
+  // =========================
 
-  RecentActivityEntity
-  _buildExpenseCycleActivity(
+  RecentActivityEntity _buildExpenseCycleActivity(
       ExpenseCardModel card, {
-
         required String title,
       }) {
 
-    final userId = _userId ?? '';
+    final now = DateTime.now();
 
     return RecentActivityEntity(
-
       id: card.id,
 
-      userId: userId,
+      userId: card.userId,
 
       type: 'expense_cycle',
 
@@ -267,25 +208,59 @@ class RecentActivityService {
 
       amount: card.totalBudget,
 
-      createdAt: DateTime.now(),
-
-      updatedAt: DateTime.now(),
+      createdAt: now,
+      updatedAt: now,
 
       referenceId: card.id,
 
       isSynced: false,
-
       isDeleted: false,
-
       isEdited: false,
 
       version: 1,
     );
   }
 
-  // =====================================================
-  // FORMAT SUBTITLE
-  // =====================================================
+  // =========================
+  // BUILD EXPENSE ITEM
+  // =========================
+
+  RecentActivityEntity _buildExpenseItemActivity(
+      ExpenseModel expense, {
+        required String title,
+      }) {
+
+    final now = DateTime.now();
+
+    return RecentActivityEntity(
+      id: expense.id,
+
+      userId: expense.userId,
+
+      type: 'expense_item',
+
+      title: title,
+
+      subtitle: _formatExpenseSubtitle(expense),
+
+      amount: expense.amount,
+
+      createdAt: now,
+      updatedAt: now,
+
+      referenceId: expense.id,
+
+      isSynced: false,
+      isDeleted: false,
+      isEdited: false,
+
+      version: 1,
+    );
+  }
+
+  // =========================
+  // FORMATTERS
+  // =========================
 
   String _formatSubtitle(
       ExpenseCardModel card,
@@ -293,71 +268,18 @@ class RecentActivityService {
 
     final month = DateFormat(
       'MMM yyyy',
-    ).format(
-      card.startDate,
-    );
+    ).format(card.startDate);
 
     return '${card.title} - $month';
   }
-
-  // =====================================================
-  // BUILD EXPENSE ITEM
-  // =====================================================
-
-  RecentActivityEntity
-  _buildExpenseItemActivity(
-      ExpenseModel expense, {
-
-        required String title,
-      }) {
-
-    final userId = _userId ?? '';
-
-    return RecentActivityEntity(
-
-      id: expense.id,
-
-      userId: userId,
-
-      type: 'expense_item',
-
-      title: title,
-
-      subtitle: _formatExpenseSubtitle(
-        expense,
-      ),
-
-      amount: expense.amount,
-
-      createdAt: DateTime.now(),
-
-      updatedAt: DateTime.now(),
-
-      referenceId: expense.id,
-
-      isSynced: false,
-
-      isDeleted: false,
-
-      isEdited: false,
-
-      version: 1,
-    );
-  }
-
-  // =====================================================
-  // FORMAT EXPENSE SUBTITLE
-  // =====================================================
 
   String _formatExpenseSubtitle(
       ExpenseModel expense,
       ) {
 
-    final note =
-    (expense.note ?? '').trim();
+    final note = (expense.note ?? '').trim();
 
     if (note.isNotEmpty) {
-
       return '$note - ${expense.categoryName}';
     }
 

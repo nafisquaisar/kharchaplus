@@ -97,16 +97,31 @@ class ElectricityRepositoryImpl implements ElectricityRepository {
       );
 
       await addRecentActivityUseCase.call(
-        RecentActivityEntity(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          type: 'electricity',
-          title: 'Electricity Bill',
-          subtitle: model.title ?? 'Electricity Added',
-          amount:
-              ((model.currentUnit - model.prevUnit) * model.rate).toDouble(),
-          createdAt: DateTime.now(),
-          referenceId: model.id,
-        ),
+          RecentActivityEntity(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+
+            userId: model.userId,
+
+            type: 'electricity',
+
+            title: 'Electricity Bill',
+
+            subtitle: model.title ?? 'Electricity Added',
+
+            amount:
+            ((model.currentUnit - model.prevUnit) * model.rate).toDouble(),
+
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+
+            referenceId: model.id,
+
+            isSynced: false,
+            isDeleted: false,
+            isEdited: false,
+
+            version: 1,
+          )
       );
       await _syncElectricityTrackingModule();
     } catch (e) {
@@ -148,16 +163,31 @@ class ElectricityRepositoryImpl implements ElectricityRepository {
 
       debugPrint('[Repository] [RECENT UPDATE] referenceId=${model.id}');
       await updateRecentActivityUseCase.call(
-        RecentActivityEntity(
-          id: model.id,
-          type: 'electricity',
-          title: 'Electricity Bill',
-          subtitle: model.title ?? 'Electricity Updated',
-          amount:
-              ((model.currentUnit - model.prevUnit) * model.rate).toDouble(),
-          createdAt: DateTime.now(),
-          referenceId: model.id,
-        ),
+          RecentActivityEntity(
+            id: model.id,
+
+            userId: model.userId,
+
+            type: 'electricity',
+
+            title: 'Electricity Bill',
+
+            subtitle: model.title ?? 'Electricity Updated',
+
+            amount:
+            ((model.currentUnit - model.prevUnit) * model.rate).toDouble(),
+
+            createdAt: model.createdAt,
+            updatedAt: DateTime.now(),
+
+            referenceId: model.id,
+
+            isSynced: false,
+            isDeleted: false,
+            isEdited: true,
+
+            version: model.version + 1,
+          )
       );
       await _syncElectricityTrackingModule();
     } catch (e) {

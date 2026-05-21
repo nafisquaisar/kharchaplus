@@ -1,4 +1,5 @@
 class RecentActivityEntity {
+
   final String id;
   final String userId;
 
@@ -22,16 +23,22 @@ class RecentActivityEntity {
   const RecentActivityEntity({
     required this.id,
     required this.userId,
+
     required this.type,
     required this.title,
     required this.subtitle,
+
     required this.amount,
+
     required this.createdAt,
     required this.updatedAt,
+
     required this.referenceId,
+
     required this.isSynced,
     required this.isDeleted,
     required this.isEdited,
+
     required this.version,
   });
 }

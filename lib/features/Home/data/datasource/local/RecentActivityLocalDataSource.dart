@@ -4,54 +4,65 @@ import 'package:flutter/foundation.dart';
 import '../../models/recent_activity_model.dart';
 
 abstract class RecentActivityLocalDataSource {
+
   Future<void> addActivity(
-    RecentActivityModel activity,
-  );
+      RecentActivityModel activity,
+      );
 
   Future<List<RecentActivityModel>> getRecentActivities(
-    String userId,
-  );
+      String userId,
+      );
 
   Stream<List<RecentActivityModel>> watchRecentActivities(
-    String userId,
-  );
+      String userId,
+      );
 
   Future<void> upsertActivities(
-    List<RecentActivityModel> activities,
-  );
+      List<RecentActivityModel> activities,
+      );
 
   Future<void> updateActivity(
-    RecentActivityModel activity,
-  );
+      RecentActivityModel activity,
+      );
 
   Future<void> deleteActivity(
-    String referenceId,
       String userId,
-  );
+      String referenceId,
+      );
 
   Future<void> deleteActivityById(
-    String id,
-  );
+      String userId,
+      String id,
+      );
 
   Future<RecentActivityModel?> getByReferenceId(
-    String referenceId,
-  );
+      String userId,
+      String referenceId,
+      );
 }
 
 class RecentActivityLocalDataSourceImpl
     implements RecentActivityLocalDataSource {
+
   final Isar isar;
 
   RecentActivityLocalDataSourceImpl(
-    this.isar,
-  );
+      this.isar,
+      );
+
+  // =========================
+  // ADD
+  // =========================
 
   @override
   Future<void> addActivity(
-    RecentActivityModel activity,
-  ) async {
+      RecentActivityModel activity,
+      ) async {
+
     try {
+
       await isar.writeTxn(() async {
+
         await isar.recentActivityModels.put(
           activity,
         );
@@ -60,7 +71,9 @@ class RecentActivityLocalDataSourceImpl
       debugPrint(
         'RecentActivityLocalDataSource: added ${activity.id}',
       );
+
     } catch (e, stack) {
+
       debugPrint(
         'RecentActivityLocalDataSource: add failed $e',
       );
@@ -71,14 +84,20 @@ class RecentActivityLocalDataSourceImpl
     }
   }
 
+  // =========================
+  // FETCH
+  // =========================
+
   @override
   Future<List<RecentActivityModel>> getRecentActivities(
-    String userId,
-  ) async {
+      String userId,
+      ) async {
+
     try {
+
       final result = await isar.recentActivityModels
           .filter()
-          .userIdEqualTo(userId)
+          .indexedUserIdEqualTo(userId)
           .sortByCreatedAtDesc()
           .findAll();
 
@@ -87,7 +106,9 @@ class RecentActivityLocalDataSourceImpl
       );
 
       return result;
+
     } catch (e, stack) {
+
       debugPrint(
         'RecentActivityLocalDataSource: fetch failed $e',
       );
@@ -98,36 +119,53 @@ class RecentActivityLocalDataSourceImpl
     }
   }
 
+  // =========================
+  // WATCH
+  // =========================
+
   @override
   Stream<List<RecentActivityModel>> watchRecentActivities(
-    String userId,
-  ) {
+      String userId,
+      ) {
+
     return isar.recentActivityModels
         .filter()
-        .userIdEqualTo(userId)
+        .indexedUserIdEqualTo(userId)
         .sortByCreatedAtDesc()
         .watch(
-          fireImmediately: true,
-        );
+      fireImmediately: true,
+    );
   }
+
+  // =========================
+  // UPSERT
+  // =========================
 
   @override
   Future<void> upsertActivities(
-    List<RecentActivityModel> activities,
-  ) async {
+      List<RecentActivityModel> activities,
+      ) async {
+
     if (activities.isEmpty) {
       return;
     }
 
     try {
-      final existing = await isar.recentActivityModels.where().findAll();
+
+      final existing = await isar.recentActivityModels
+          .where()
+          .findAll();
 
       final existingMap = {
-        for (final item in existing) item.referenceId: item.isarId,
+        for (final item in existing)
+          '${item.userId}_${item.referenceId}': item.isarId,
       };
 
       for (final activity in activities) {
-        final existingId = existingMap[activity.referenceId];
+
+        final existingId = existingMap[
+        '${activity.userId}_${activity.referenceId}'
+        ];
 
         if (existingId != null) {
           activity.isarId = existingId;
@@ -135,6 +173,7 @@ class RecentActivityLocalDataSourceImpl
       }
 
       await isar.writeTxn(() async {
+
         await isar.recentActivityModels.putAll(
           activities,
         );
@@ -143,7 +182,9 @@ class RecentActivityLocalDataSourceImpl
       debugPrint(
         'RecentActivityLocalDataSource: upserted ${activities.length} items',
       );
+
     } catch (e, stack) {
+
       debugPrint(
         'RecentActivityLocalDataSource: upsert failed $e',
       );
@@ -154,25 +195,30 @@ class RecentActivityLocalDataSourceImpl
     }
   }
 
+  // =========================
+  // UPDATE
+  // =========================
+
   @override
   Future<void> updateActivity(
-    RecentActivityModel activity,
-  ) async {
+      RecentActivityModel activity,
+      ) async {
+
     try {
+
       final matches = await isar.recentActivityModels
           .filter()
-          .referenceIdEqualTo(
-            activity.referenceId,
-          )
+          .indexedUserIdEqualTo(activity.userId)
+          .and()
+          .referenceIdEqualTo(activity.referenceId)
           .findAll();
 
       RecentActivityModel? keep;
 
       if (matches.isNotEmpty) {
+
         keep = matches.reduce(
-          (a, b) => a.createdAt.isAfter(
-            b.createdAt,
-          )
+              (a, b) => a.createdAt.isAfter(b.createdAt)
               ? a
               : b,
         );
@@ -181,18 +227,20 @@ class RecentActivityLocalDataSourceImpl
       }
 
       await isar.writeTxn(() async {
+
         await isar.recentActivityModels.put(
           activity,
         );
 
         if (matches.length > 1) {
+
           final duplicateIds = matches
               .where(
                 (item) => item.isarId != activity.isarId,
-              )
+          )
               .map(
                 (item) => item.isarId,
-              )
+          )
               .toList();
 
           await isar.recentActivityModels.deleteAll(
@@ -208,7 +256,9 @@ class RecentActivityLocalDataSourceImpl
       debugPrint(
         'RecentActivityLocalDataSource: updated ${activity.id}',
       );
+
     } catch (e, stack) {
+
       debugPrint(
         'RecentActivityLocalDataSource: update failed $e',
       );
@@ -219,21 +269,29 @@ class RecentActivityLocalDataSourceImpl
     }
   }
 
+  // =========================
+  // DELETE
+  // =========================
+
   @override
   Future<void> deleteActivity(
-    String referenceId,
-      String userId
-  ) async {
+      String userId,
+      String referenceId,
+      ) async {
+
     try {
+
       final activity = await isar.recentActivityModels
           .filter()
-          .referenceIdEqualTo(referenceId)
+          .indexedUserIdEqualTo(userId)
           .and()
-          .userIdEqualTo(userId)
+          .referenceIdEqualTo(referenceId)
           .findFirst();
 
       if (activity != null) {
+
         await isar.writeTxn(() async {
+
           await isar.recentActivityModels.delete(
             activity.isarId,
           );
@@ -249,7 +307,9 @@ class RecentActivityLocalDataSourceImpl
       debugPrint(
         'RecentActivityLocalDataSource: delete skipped, not found $referenceId',
       );
+
     } catch (e, stack) {
+
       debugPrint(
         'RecentActivityLocalDataSource: delete failed $e',
       );
@@ -260,16 +320,29 @@ class RecentActivityLocalDataSourceImpl
     }
   }
 
+  // =========================
+  // DELETE BY ID
+  // =========================
+
   @override
   Future<void> deleteActivityById(
-    String id,
-  ) async {
+      String userId,
+      String id,
+      ) async {
+
     try {
-      final activity =
-          await isar.recentActivityModels.filter().idEqualTo(id).findFirst();
+
+      final activity = await isar.recentActivityModels
+          .filter()
+          .indexedUserIdEqualTo(userId)
+          .and()
+          .idEqualTo(id)
+          .findFirst();
 
       if (activity != null) {
+
         await isar.writeTxn(() async {
+
           await isar.recentActivityModels.delete(
             activity.isarId,
           );
@@ -279,7 +352,9 @@ class RecentActivityLocalDataSourceImpl
           'RecentActivityLocalDataSource: deleted id $id',
         );
       }
+
     } catch (e, stack) {
+
       debugPrint(
         'RecentActivityLocalDataSource: delete by id failed $e',
       );
@@ -290,16 +365,27 @@ class RecentActivityLocalDataSourceImpl
     }
   }
 
+  // =========================
+  // GET BY REFERENCE ID
+  // =========================
+
   @override
   Future<RecentActivityModel?> getByReferenceId(
-    String referenceId,
-  ) async {
+      String userId,
+      String referenceId,
+      ) async {
+
     try {
+
       return await isar.recentActivityModels
           .filter()
+          .indexedUserIdEqualTo(userId)
+          .and()
           .referenceIdEqualTo(referenceId)
           .findFirst();
+
     } catch (e, stack) {
+
       debugPrint(
         'RecentActivityLocalDataSource: getByReferenceId failed $e',
       );

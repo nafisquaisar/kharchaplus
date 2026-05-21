@@ -220,7 +220,7 @@ class _SplashScreenState
 
                           fit: BoxFit.cover,
 
-                          repeat: false,
+                          repeat: true,
 
                           renderCache:
                           RenderCache.raster,
@@ -232,7 +232,7 @@ class _SplashScreenState
                             _controller.duration =
                                 composition.duration;
 
-                            _controller.forward();
+                            _controller.repeat();
 
                             _controller.addStatusListener(
                                   (status) {

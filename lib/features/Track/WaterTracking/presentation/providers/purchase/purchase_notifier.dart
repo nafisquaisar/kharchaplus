@@ -12,7 +12,6 @@ import '../../../domain/entities/water_purchase_entity.dart';
 import '../../../domain/enum/payment_status.dart';
 import '../../../domain/enum/purchase_type.dart';
 
-
 import '../../../domain/usecases/purchase/add_purchase.dart';
 import '../../../domain/usecases/purchase/get_purchases.dart';
 import '../../../domain/usecases/purchase/soft_delete_purchase.dart';
@@ -243,24 +242,39 @@ class PurchaseNotifier extends StateNotifier<PurchaseState> {
     required WaterPurchaseEntity purchase,
     required bool isUpdate,
   }) async {
-    final dateLabel = AppFormatters.date(purchase.date);
+    final dateLabel = AppFormatters.date(
+      purchase.date,
+    );
+
     final subtitle = '${purchase.quantity}L • $dateLabel';
 
     final recent = RecentActivityEntity(
       id: purchase.id,
+      userId: purchase.userId,
       type: 'water_management',
       title: 'Water Tanker',
       subtitle: subtitle,
       amount: purchase.price,
-      createdAt: purchase.updatedAt,
+      createdAt: purchase.createdAt,
+      updatedAt: purchase.updatedAt,
       referenceId: purchase.id,
+      isSynced: false,
+      isDeleted: false,
+      isEdited: isUpdate,
+      version: purchase.version,
     );
 
     if (isUpdate) {
-      debugPrint('[Water] recent activity updated referenceId=${purchase.id}');
+      debugPrint(
+        '[Water] recent activity updated referenceId=${purchase.id}',
+      );
+
       await updateRecentActivityUseCase.call(recent);
     } else {
-      debugPrint('[Water] recent activity added referenceId=${purchase.id}');
+      debugPrint(
+        '[Water] recent activity added referenceId=${purchase.id}',
+      );
+
       await addRecentActivityUseCase.call(recent);
     }
   }

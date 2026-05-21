@@ -502,49 +502,49 @@ class AppDrawer extends StatelessWidget {
   /// =========================
   /// LOGOUT
   /// =========================
-  Widget _buildLogoutItem(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 4),
+    Widget _buildLogoutItem(BuildContext context) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 4),
 
-      child: Material(
-        color: Colors.transparent,
+        child: Material(
+          color: Colors.transparent,
 
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
 
-          onTap: () async {
-            Navigator.pop(context);
+            onTap: () async {
+              Navigator.pop(context);
 
-            final vm = context.read<AuthViewModel>();
+              final vm = context.read<AuthViewModel>();
 
-            await vm.logout();
-          },
+              await vm.logout();
+            },
 
-          child: Ink(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            child: Ink(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
 
-            child: Row(
-              children: [
-                Icon(Icons.logout_rounded, color: AppColors.deleteBackground),
+              child: Row(
+                children: [
+                  Icon(Icons.logout_rounded, color: AppColors.deleteBackground),
 
-                const SizedBox(width: 14),
+                  const SizedBox(width: 14),
 
-                Text(
-                  "Logout",
+                  Text(
+                    "Logout",
 
-                  style: TextStyle(
-                    fontSize: 15,
+                    style: TextStyle(
+                      fontSize: 15,
 
-                    fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w600,
 
-                    color: AppColors.deleteBackground,
+                      color: AppColors.deleteBackground,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
 }

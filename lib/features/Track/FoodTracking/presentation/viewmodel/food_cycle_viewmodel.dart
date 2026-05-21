@@ -318,9 +318,11 @@ class FoodCycleViewModel extends ChangeNotifier {
     required FoodCycle cycle,
     required bool isUpdate,
   }) async {
+
     final cycleTitle = (cycle.title ?? '').trim().isEmpty
         ? 'Food Cycle'
         : cycle.title!.trim();
+
     final dateRange =
         '${AppFormatters.date(cycle.startDate)} - ${AppFormatters.date(cycle.endDate)}';
 
@@ -328,19 +330,40 @@ class FoodCycleViewModel extends ChangeNotifier {
       '[FoodCycle] recent activity sync referenceId=${cycle.id} isUpdate=$isUpdate',
     );
 
+
     final recent = RecentActivityEntity(
       id: cycle.id,
+
+      userId: cycle.createdBy,
+
       type: 'food',
-      title: isUpdate ? 'Food Cycle Updated' : 'Food Cycle Added',
+
+      title: isUpdate
+          ? 'Food Cycle Updated'
+          : 'Food Cycle Added',
+
       subtitle: '$cycleTitle • $dateRange',
+
       amount: cycle.monthlyAmount,
-      createdAt: cycle.updatedAt,
+
+      createdAt: cycle.createdAt,
+      updatedAt: cycle.updatedAt,
+
       referenceId: cycle.id,
+
+      isSynced: false,
+      isDeleted: false,
+      isEdited: isUpdate,
+
+      version: cycle.version,
     );
 
     if (isUpdate) {
+
       await updateRecentActivityUseCase.call(recent);
+
     } else {
+
       await addRecentActivityUseCase.call(recent);
     }
   }

@@ -7,21 +7,28 @@ part 'recent_activity_model.g.dart';
 
 @collection
 class RecentActivityModel extends RecentActivityEntity {
+
   Id isarId = Isar.autoIncrement;
 
   RecentActivityModel({
     required super.id,
     required super.userId,
+
     required super.type,
     required super.title,
     required super.subtitle,
+
     required super.amount,
+
     required super.createdAt,
     required super.updatedAt,
+
     required super.referenceId,
+
     required super.isSynced,
     required super.isDeleted,
     required super.isEdited,
+
     required super.version,
   });
 
@@ -51,22 +58,28 @@ class RecentActivityModel extends RecentActivityEntity {
     return RecentActivityModel(
       id: entity.id,
       userId: entity.userId,
+
       type: entity.type,
       title: entity.title,
       subtitle: entity.subtitle,
+
       amount: entity.amount,
+
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
+
       referenceId: entity.referenceId,
+
       isSynced: entity.isSynced,
       isDeleted: entity.isDeleted,
       isEdited: entity.isEdited,
+
       version: entity.version,
     );
   }
 
   // =========================
-  // FIRESTORE JSON
+  // MODEL TO JSON
   // =========================
 
   Map<String, dynamic> toJson() {
@@ -139,31 +152,43 @@ class RecentActivityModel extends RecentActivityEntity {
   RecentActivityModel copyWith({
     String? id,
     String? userId,
+
     String? type,
     String? title,
     String? subtitle,
+
     double? amount,
+
     DateTime? createdAt,
     DateTime? updatedAt,
+
     String? referenceId,
+
     bool? isSynced,
     bool? isDeleted,
     bool? isEdited,
+
     int? version,
   }) {
     return RecentActivityModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+
       type: type ?? this.type,
       title: title ?? this.title,
       subtitle: subtitle ?? this.subtitle,
+
       amount: amount ?? this.amount,
+
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+
       referenceId: referenceId ?? this.referenceId,
+
       isSynced: isSynced ?? this.isSynced,
       isDeleted: isDeleted ?? this.isDeleted,
       isEdited: isEdited ?? this.isEdited,
+
       version: version ?? this.version,
     )..isarId = isarId;
   }

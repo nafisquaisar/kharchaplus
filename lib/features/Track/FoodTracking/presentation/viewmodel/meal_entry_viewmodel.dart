@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/utils/AppFlushbar.dart';
@@ -470,31 +471,65 @@ class MealEntryViewModel extends ChangeNotifier {
     required MealEntry entry,
     required bool isUpdate,
   }) async {
-    final cycleTitle = _cycle?.title ?? 'Food Cycle';
-    final dateLabel = AppFormatters.date(entry.date);
 
-    final mealCount = (entry.breakfast ? 1 : 0) +
-        (entry.lunch ? 1 : 0) +
-        (entry.dinner ? 1 : 0);
+    final cycleTitle = _cycle?.title ?? 'Food Cycle';
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final dateLabel = AppFormatters.date(
+      entry.date,
+    );
+
+    final mealCount =
+        (entry.breakfast ? 1 : 0) +
+            (entry.lunch ? 1 : 0) +
+            (entry.dinner ? 1 : 0);
 
     final mealPrice = _cycle?.mealPrice ?? 0;
-    final amount = (mealPrice * mealCount) + entry.extraCharge;
+
+    final amount =
+        (mealPrice * mealCount) +
+            entry.extraCharge;
 
     final recent = RecentActivityEntity(
       id: entry.id,
+
+      userId: userId,
+
       type: 'food',
-      title: isUpdate ? 'Food Cycle Updated' : 'Food Cycle Added',
+
+      title: isUpdate
+          ? 'Food Cycle Updated'
+          : 'Food Cycle Added',
+
       subtitle: '$cycleTitle • $dateLabel',
+
       amount: amount,
-      createdAt: entry.updatedAt,
+
+      createdAt: entry.createdAt,
+      updatedAt: entry.updatedAt,
+
       referenceId: entry.id,
+
+      isSynced: false,
+      isDeleted: false,
+      isEdited: isUpdate,
+
+      version: entry.version,
     );
 
     if (isUpdate) {
-      debugPrint('[Food] recent activity updated referenceId=${entry.id}');
+
+      debugPrint(
+        '[Food] recent activity updated referenceId=${entry.id}',
+      );
+
       await updateRecentActivityUseCase.call(recent);
+
     } else {
-      debugPrint('[Food] recent activity added referenceId=${entry.id}');
+
+      debugPrint(
+        '[Food] recent activity added referenceId=${entry.id}',
+      );
+
       await addRecentActivityUseCase.call(recent);
     }
   }

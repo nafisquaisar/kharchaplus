@@ -1,29 +1,18 @@
 import '../entities/RecentActivityEntity.dart';
 
 abstract class RecentActivityRepository {
-
   Future<void> addActivity(
       RecentActivityEntity activity,
       );
 
   Future<List<RecentActivityEntity>>
-  getRecentActivities(
-      String userId,
-      );
+  getRecentActivities();
 
-  Stream<List<RecentActivityEntity>>
-  watchRecentActivities(
-      String userId,
-      );
+  Stream<List<RecentActivityEntity>> watchRecentActivities();
 
-  Stream<List<RecentActivityEntity>>
-  watchRemoteActivities(
-      String userId,
-      );
+  Stream<List<RecentActivityEntity>> watchRemoteActivities();
 
-  Future<void> syncRecentActivities(
-      String userId,
-      );
+  Future<void> syncRecentActivities();
 
   Future<void> updateActivity(
       RecentActivityEntity activity,
@@ -31,10 +20,5 @@ abstract class RecentActivityRepository {
 
   Future<void> deleteActivity(
       String referenceId,
-      String userId,
-      );
-
-  Future<void> deleteActivityById(
-      String id,
       );
 }
