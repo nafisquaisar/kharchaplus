@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../Home/domain/entities/RecentActivityEntity.dart';
 import '../../../../Home/domain/usecases/recent/add_recent_activity_usecase.dart';
 import '../../../../Home/domain/usecases/recent/delete_recent_activity_usecase.dart';
 import '../../../../Home/domain/usecases/recent/update_recent_activity_usecase.dart';
+import '../../../data/datasource/remote/tracking_updater.dart';
 import '../datasource/local/electricity_local_datasource.dart';
 import '../datasource/remote/electricity_remote_datasource.dart';
 import '../mapper/electricity_mapper.dart';
@@ -11,8 +14,7 @@ import '../models/electricity_model.dart';
 import '../../domain/entities/electricity_entity.dart';
 import '../../domain/repository/electricity_repository.dart';
 
-class ElectricityRepositoryImpl
-    implements ElectricityRepository {
+class ElectricityRepositoryImpl implements ElectricityRepository {
   final ElectricityRemoteDataSource remoteDataSource;
   final ElectricityLocalDataSource localDataSource;
   final AddRecentActivityUseCase addRecentActivityUseCase;
@@ -96,28 +98,17 @@ class ElectricityRepositoryImpl
 
       await addRecentActivityUseCase.call(
         RecentActivityEntity(
-          id: DateTime.now()
-              .millisecondsSinceEpoch
-              .toString(),
-
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
           type: 'electricity',
-
           title: 'Electricity Bill',
-
-          subtitle:
-          model.title ?? 'Electricity Added',
-
+          subtitle: model.title ?? 'Electricity Added',
           amount:
-          ((model.currentUnit - model.prevUnit) *
-              model.rate)
-              .toDouble(),
-
+              ((model.currentUnit - model.prevUnit) * model.rate).toDouble(),
           createdAt: DateTime.now(),
-
           referenceId: model.id,
         ),
       );
-
+      await _syncElectricityTrackingModule();
     } catch (e) {
       debugPrint('[Repository] [ERROR] Remote add failed: $e');
       await localDataSource.upsertElectricity(
@@ -162,11 +153,13 @@ class ElectricityRepositoryImpl
           type: 'electricity',
           title: 'Electricity Bill',
           subtitle: model.title ?? 'Electricity Updated',
-          amount: ((model.currentUnit - model.prevUnit) * model.rate).toDouble(),
+          amount:
+              ((model.currentUnit - model.prevUnit) * model.rate).toDouble(),
           createdAt: DateTime.now(),
           referenceId: model.id,
         ),
       );
+      await _syncElectricityTrackingModule();
     } catch (e) {
       debugPrint('[Repository] [ERROR] Remote update failed: $e');
       await localDataSource.upsertElectricity(
@@ -210,6 +203,7 @@ class ElectricityRepositoryImpl
 
       debugPrint('[Repository] [RECENT DELETE] referenceId=$id');
       await deleteRecentActivityUseCase.call(id);
+      await _syncElectricityTrackingModule();
     } catch (e) {
       debugPrint('[Repository] [ERROR] Remote delete failed: $e');
       if (cached != null) {
@@ -284,6 +278,8 @@ class ElectricityRepositoryImpl
       }
     }
 
+    await _syncElectricityTrackingModule();
+
     debugPrint('[Repository] [SYNC SUCCESS]');
   }
 
@@ -342,5 +338,59 @@ class ElectricityRepositoryImpl
       userId: model.userId,
       serverId: model.serverId,
     );
+  }
+
+  Future<void> _syncElectricityTrackingModule() async {
+    try {
+      final remote = await remoteDataSource.getElectricityList();
+      final now = DateTime.now();
+
+      double totalAmount = 0;
+      double todayAmount = 0;
+      double monthlyAmount = 0;
+      int totalRecords = 0;
+
+      for (final bill in remote) {
+        if (bill.isDeleted) {
+          continue;
+        }
+
+        final units = bill.currentUnit - bill.prevUnit;
+        final amount = units <= 0 ? 0 : (units * bill.rate).toDouble();
+
+        totalAmount += amount;
+        totalRecords += 1;
+
+        if (_isSameDay(bill.endDate, now)) {
+          todayAmount += amount;
+        }
+
+        if (bill.endDate.year == now.year && bill.endDate.month == now.month) {
+          monthlyAmount += amount;
+        }
+      }
+
+      final updater = TrackingUpdater(
+        firestore: FirebaseFirestore.instance,
+        auth: FirebaseAuth.instance,
+      );
+
+      await updater.ensureTrackingModules();
+      await updater.upsertTrackingSnapshot(
+        type: 'electricity',
+        totalAmount: totalAmount,
+        todayAmount: todayAmount,
+        monthlyAmount: monthlyAmount,
+        activeCycles: totalRecords,
+        totalRecords: totalRecords,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('[Repository] [TRACKING SYNC ERROR] $error');
+      debugPrint('$stackTrace');
+    }
+  }
+
+  bool _isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 }

@@ -7,6 +7,22 @@ service cloud.firestore {
       allow update: if isSignedIn(userId) && isValidUpdate(userId);
       allow delete: if false;
 
+      match /tracking/{docId} {
+        allow read, write: if isSignedIn(userId);
+      }
+
+      match /food_cycles/{cycleId} {
+        allow read, write: if isSignedIn(userId);
+
+        match /meal_entries/{entryId} {
+          allow read, write: if isSignedIn(userId);
+        }
+      }
+
+      match /electricity_cycles/{docId} {
+        allow read, write: if isSignedIn(userId);
+      }
+
       match /water_intake/{docId} {
         allow read, write: if isSignedIn(userId);
       }

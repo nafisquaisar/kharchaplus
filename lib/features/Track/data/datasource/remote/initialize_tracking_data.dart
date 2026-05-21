@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+
+import '../../models/tracking_model.dart';
 
 class InitializeTrackingData {
-
   final FirebaseFirestore firestore;
 
   final FirebaseAuth auth;
@@ -18,7 +20,6 @@ class InitializeTrackingData {
   /// ==========================================
 
   Future<void> initialize() async {
-
     final currentUser = auth.currentUser;
 
     if (currentUser == null) {
@@ -30,122 +31,33 @@ class InitializeTrackingData {
         .doc(currentUser.uid)
         .collection('tracking');
 
-    final snapshot =
-    await trackingRef.get();
+    final snapshot = await trackingRef.get();
+    final existingIds =
+        snapshot.docs.map((doc) => doc.id.toLowerCase()).toSet();
 
-    /// ==========================================
-    /// ALREADY EXISTS
-    /// ==========================================
+    final missingTypes = TrackingModel.supportedTypes
+        .where((type) => !existingIds.contains(type))
+        .toList(growable: false);
 
-    if (snapshot.docs.isNotEmpty) {
+    if (missingTypes.isEmpty) {
       return;
     }
 
-    /// ==========================================
-    /// DEFAULT MODULES
-    /// ==========================================
-
-    final now =
-    DateTime.now().toIso8601String();
-
-    final defaultModules = {
-
-      "food": {
-
-        "totalAmount": 0,
-
-        "todayAmount": 0,
-
-        "monthlyAmount": 0,
-
-        "activeCycles": 0,
-
-        "totalRecords": 0,
-
-        "isActive": true,
-
-        "progressPercent": 0.0,
-
-        "status": "Active",
-
-        "iconType": "food",
-
-        "categoryColor": "#4CAF50",
-
-        "createdAt": now,
-
-        "updatedAt": now,
-      },
-
-      "water": {
-
-        "totalAmount": 0,
-
-        "todayAmount": 0,
-
-        "monthlyAmount": 0,
-
-        "activeCycles": 0,
-
-        "totalRecords": 0,
-
-        "isActive": true,
-
-        "progressPercent": 0.0,
-
-        "status": "Active",
-
-        "iconType": "water",
-
-        "categoryColor": "#2196F3",
-
-        "createdAt": now,
-
-        "updatedAt": now,
-      },
-
-      "electricity": {
-
-        "totalAmount": 0,
-
-        "todayAmount": 0,
-
-        "monthlyAmount": 0,
-
-        "activeCycles": 0,
-
-        "totalRecords": 0,
-
-        "isActive": true,
-
-        "progressPercent": 0.0,
-
-        "status": "Active",
-
-        "iconType": "electricity",
-
-        "categoryColor": "#FFC107",
-
-        "createdAt": now,
-
-        "updatedAt": now,
-      },
-    };
-
-    /// ==========================================
-    /// SAVE ALL MODULES
-    /// ==========================================
-
     final batch = firestore.batch();
+    final now = DateTime.now();
 
-    defaultModules.forEach((docId, data) {
-
-      final docRef =
-      trackingRef.doc(docId);
-
-      batch.set(docRef, data);
-    });
+    for (final type in missingTypes) {
+      batch.set(
+        trackingRef.doc(type),
+        TrackingModel.zero(type, now: now).toMap(),
+        SetOptions(merge: true),
+      );
+    }
 
     await batch.commit();
+
+    debugPrint(
+      '[TrackingInit] initialized missing modules for ${currentUser.uid}: $missingTypes',
+    );
   }
 }

@@ -111,7 +111,7 @@ class CommonAppBar extends StatelessWidget {
 
               // 🔔 NOTIFICATION
               /// 🔥 RIGHT ACTION
-              if (isDashboard)
+              if (false)
                 _buildNotification(width)
               else if (showMore)
                 _buildMoreButton(width)

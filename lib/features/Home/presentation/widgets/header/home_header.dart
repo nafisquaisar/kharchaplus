@@ -47,14 +47,15 @@ class _HomeHeaderState extends State<HomeHeader> {
         children: [
 
           /// TITLE
-          Text(
-            "Overview",
+         Text(
+              "Overview",
 
-            style: TextStyle(
-              fontSize: width * 0.052,
-              fontWeight: FontWeight.w700,
-              color: AppColors.accent,
-            ),
+              style: TextStyle(
+                fontSize: width * 0.052,
+                fontWeight: FontWeight.w700,
+                color: AppColors.accent,
+              ),
+
           ),
 
           /// DROPDOWN

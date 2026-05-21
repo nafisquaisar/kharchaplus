@@ -68,39 +68,54 @@ import 'features/Profile/data/repository/overview_repository_impl.dart';
 import 'features/Profile/presentation/viewmodel/overview_viewmodel.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
 
-  tz.initializeTimeZones();
-
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options:
+    DefaultFirebaseOptions.currentPlatform,
   );
 
-  await AuthDebugDiagnostics.logStartup();
-
-  await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.debug,
-  );
-
+  /// KEEP THIS HERE
   await IsarService.init();
-
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.dark,
-    ),
-  );
-
-  FirebaseFirestore.instance.settings = const Settings(
-    persistenceEnabled: true,
-  );
 
   runApp(
     const ProviderScope(
       child: ExpenseTrackerApp(),
     ),
   );
+
+  /// background tasks
+  Future.microtask(() async {
+
+    tz.initializeTimeZones();
+
+    await FirebaseAppCheck.instance.activate(
+      androidProvider:
+      AndroidProvider.debug,
+    );
+
+    await AuthDebugDiagnostics.logStartup();
+
+    FirebaseFirestore.instance.settings =
+    const Settings(
+      persistenceEnabled: true,
+    );
+
+    SystemChrome.setSystemUIOverlayStyle(
+
+      const SystemUiOverlayStyle(
+        statusBarColor:
+        Colors.transparent,
+
+        statusBarIconBrightness:
+        Brightness.light,
+
+        statusBarBrightness:
+        Brightness.dark,
+      ),
+    );
+  });
 }
 
 class ExpenseTrackerApp extends StatelessWidget {

@@ -172,11 +172,10 @@ class PurchaseList extends ConsumerWidget {
                     Container(
                       height: 50,
                       width: 50,
-                      padding: const EdgeInsets.all(1),
                       decoration: BoxDecoration(
                         color: AppColors.primarybg,
                         borderRadius: BorderRadius.circular(
-                          10,
+                          20,
                         ),
                       ),
                       child: Image.asset(

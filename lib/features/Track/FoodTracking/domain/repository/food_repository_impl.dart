@@ -1,139 +1,87 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+
 import '../../services/FirebaseFoodService.dart';
+import '../../services/food_sync_service.dart';
 import '../entities/FoodCycle.dart';
-import '../entities/MealEntry.dart';
 import 'food_repository.dart';
 
 class FoodRepositoryImpl implements FoodRepository {
   final FirebaseFoodService firebaseService;
+  final FoodSyncService foodSyncService;
 
-  FoodRepositoryImpl({required this.firebaseService});
-
-  // =========================
-  // CREATE CYCLE
-  // =========================
+  FoodRepositoryImpl({
+    required this.firebaseService,
+    FoodSyncService? foodSyncService,
+  }) : foodSyncService = foodSyncService ??
+            FoodSyncService(
+              service: firebaseService,
+            );
 
   @override
   Future<void> createCycle(FoodCycle cycle) async {
-    try {
-      await firebaseService.foodCyclesRef.doc(cycle.id).set(cycle.toMap());
-    } catch (e) {
-      rethrow;
-    }
+    await firebaseService.foodCyclesRef.doc(cycle.id).set(cycle.toMap());
+    await foodSyncService.syncTrackingModule();
   }
-
-  // =========================
-  // GET ALL CYCLES
-  // =========================
 
   @override
   Future<List<FoodCycle>> getAllCycles() async {
-    try {
-      final snapshot = await firebaseService.foodCyclesRef
-          .where("isDeleted", isEqualTo: false)
-          .orderBy("createdAt", descending: true)
-          .get();
+    final snapshot = await firebaseService.foodCyclesRef
+        .where('isDeleted', isEqualTo: false)
+        .orderBy('createdAt', descending: true)
+        .get();
 
-      if (snapshot.docs.isEmpty) {
-        return [];
-      }
-
-      // =========================
-      // PARSE DATA
-      // =========================
-
-      final List<FoodCycle> cycles = [];
-
-      for (final doc in snapshot.docs) {
-        try {
-          final data = doc.data() as Map<String, dynamic>;
-          final cycle = FoodCycle.fromMap(data);
-
-          cycles.add(cycle);
-        } catch (parseError, stackTrace) {
-          print("❌ PARSE ERROR");
-        }
-      }
-
-      return cycles;
-    } catch (e, stackTrace) {
-      print("");
-      print("❌ GET ALL CYCLES ERROR ❌");
-      print(e);
-      print(stackTrace);
-
-      rethrow;
+    if (snapshot.docs.isEmpty) {
+      return <FoodCycle>[];
     }
-  }
 
-  // =========================
-  // UPDATE CYCLE
-  // =========================
+    final cycles = <FoodCycle>[];
+
+    for (final doc in snapshot.docs) {
+      try {
+        cycles.add(FoodCycle.fromMap(doc.data() as Map<String, dynamic>));
+      } catch (error, stackTrace) {
+        debugPrint(
+            '[FoodRepository] cycle parse failed doc=${doc.id} error=$error');
+        debugPrint('$stackTrace');
+      }
+    }
+
+    return cycles;
+  }
 
   @override
   Future<void> updateCycle(FoodCycle cycle) async {
-    try {
-      await firebaseService.foodCyclesRef.doc(cycle.id).update({
-        // BASIC
-        "title": cycle.title,
+    await firebaseService.foodCyclesRef.doc(cycle.id).update({
+      'title': cycle.title,
+      'note': cycle.note,
+      'startDate': Timestamp.fromDate(cycle.startDate),
+      'endDate': Timestamp.fromDate(cycle.endDate),
+      'mealPrice': cycle.mealPrice,
+      'monthlyAmount': cycle.monthlyAmount,
+      'monthlyFee': cycle.monthlyFee,
+      'totalTiffin': cycle.totalTiffin,
+      'totalEaten': cycle.totalEaten,
+      'remainingTiffin': cycle.remainingTiffin,
+      'includeSunday': cycle.includeSunday,
+      'sundayRule': cycle.sundayRule.name,
+      'status': cycle.status.name,
+      'updatedAt': Timestamp.now(),
+      'version': cycle.version + 1,
+    });
 
-        "note": cycle.note,
-
-        // DATE
-        "startDate": cycle.startDate,
-
-        "endDate": cycle.endDate,
-
-        // PRICE
-        "mealPrice": cycle.mealPrice,
-
-        "monthlyAmount": cycle.monthlyAmount,
-
-        "monthlyFee": cycle.monthlyFee,
-
-        // TIFFIN
-        "totalTiffin": cycle.totalTiffin,
-
-        "totalEaten": cycle.totalEaten,
-
-        "remainingTiffin": cycle.remainingTiffin,
-
-        // RULES
-        "includeSunday": cycle.includeSunday,
-
-        "sundayRule": cycle.sundayRule.name,
-
-        // STATUS
-        "status": cycle.status.name,
-
-        // META
-        "updatedAt": DateTime.now(),
-
-        "version": cycle.version + 1,
-      });
-    } catch (e) {
-      rethrow;
-    }
+    await foodSyncService.syncTrackingModule();
   }
-
-  // =========================
-  // DELETE CYCLE
-  // =========================
 
   @override
   Future<void> deleteCycle(String cycleId) async {
-    try {
-      await firebaseService.foodCyclesRef.doc(cycleId).update({
-        "isDeleted": true,
+    await firebaseService.foodCyclesRef.doc(cycleId).update({
+      'isDeleted': true,
+      'updatedAt': Timestamp.now(),
+    });
 
-        "updatedAt": DateTime.now(),
-      });
-    } catch (e) {
-      rethrow;
-    }
+    await foodSyncService.syncTrackingModule();
   }
-
-
 
   @override
   Future<FoodCycle?> getCycleById(String cycleId) async {

@@ -1,23 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../../data/datasource/remote/tracking_updater.dart';
 import '../../../domain/entities/FoodCycle.dart';
 import '../../../domain/entities/MealEntry.dart';
 import '../../../domain/enum/cycle_status.dart';
 import '../../../services/FirebaseFoodService.dart';
 import '../../../services/food_cycle_status_service.dart';
+import '../../../services/food_sync_service.dart';
 import 'meal_remote_datasource.dart';
-
-
-import 'package:firebase_auth/firebase_auth.dart';
-
 
 class MealRemoteDataSourceImpl implements MealRemoteDataSource {
   final FirebaseFoodService service;
+  final FoodSyncService foodSyncService;
 
   MealRemoteDataSourceImpl({
     required this.service,
-  });
+    FoodSyncService? foodSyncService,
+  }) : foodSyncService = foodSyncService ??
+            FoodSyncService(
+              service: service,
+            );
 
   // =========================
   // CREATE CYCLE
@@ -114,34 +115,7 @@ class MealRemoteDataSourceImpl implements MealRemoteDataSource {
       entry.cycleId,
     );
 
-    // ======================================
-// UPDATE TRACKING MODULE
-// ======================================
-
-    final cycleDoc = await service
-        .foodCyclesRef
-        .doc(entry.cycleId)
-        .get();
-
-    if (cycleDoc.exists) {
-
-      final cycle = FoodCycle.fromMap(
-        cycleDoc.data() as Map<String, dynamic>,
-      );
-
-      await TrackingUpdater(
-
-        firestore: FirebaseFirestore.instance,
-
-        auth: FirebaseAuth.instance,
-
-      ).updateTracking(
-
-        type: "food",
-
-        amount: cycle.mealPrice,
-      );
-    }
+    await foodSyncService.syncTrackingModule();
   }
 
   // =========================
@@ -166,6 +140,8 @@ class MealRemoteDataSourceImpl implements MealRemoteDataSource {
     await updateCycleStats(
       cycleId,
     );
+
+    await foodSyncService.syncTrackingModule();
   }
 
   // =========================

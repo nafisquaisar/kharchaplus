@@ -141,7 +141,7 @@ class _WaterIntakeHistoryScreenState
                   ),
                   child: Text(
                     '$monthLabel \u25be',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: AppColors.accent,
@@ -430,7 +430,7 @@ class _TimelineHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text(
+        Text(
           'Intake Timeline',
           style: TextStyle(
             fontSize: 15,
@@ -565,14 +565,14 @@ class _HistoryEmptyState extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: const Column(
+      child: Column(
         children: [
           Icon(
             Icons.water_drop_outlined,
             color: AppColors.accent,
             size: 36,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'No intake history found \ud83d\udca7',
             style: TextStyle(

@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../../core/base/base_entity.dart';
 import '../../../../../core/services/auth_service.dart';
+import '../../../data/datasource/remote/tracking_updater.dart';
 
 import '../../domain/entities/water_goal_entity.dart';
 import '../../domain/entities/water_intake_entity.dart';
@@ -156,6 +159,7 @@ class WaterRepositoryImpl implements WaterRepository {
     );
 
     await purchaseLocalDataSource.addPurchase(model);
+    await _syncWaterTrackingModule();
   }
 
   @override
@@ -167,6 +171,7 @@ class WaterRepositoryImpl implements WaterRepository {
     );
 
     await purchaseLocalDataSource.updatePurchase(model);
+    await _syncWaterTrackingModule();
   }
 
   @override
@@ -174,6 +179,7 @@ class WaterRepositoryImpl implements WaterRepository {
     String id,
   ) async {
     await purchaseLocalDataSource.softDeletePurchase(id);
+    await _syncWaterTrackingModule();
   }
 
   @override
@@ -256,5 +262,50 @@ class WaterRepositoryImpl implements WaterRepository {
     String id,
   ) async {
     // Firebase sync phase
+  }
+
+  Future<void> _syncWaterTrackingModule() async {
+    final userId = await authService.getCurrentUserId();
+    final purchases = await purchaseLocalDataSource.getPurchases(userId);
+    final now = DateTime.now();
+
+    double totalAmount = 0;
+    double todayAmount = 0;
+    double monthlyAmount = 0;
+    int totalRecords = 0;
+
+    for (final purchase in purchases) {
+      final amount = purchase.price;
+
+      totalAmount += amount;
+      totalRecords += 1;
+
+      if (_isSameDay(purchase.date, now)) {
+        todayAmount += amount;
+      }
+
+      if (purchase.date.year == now.year && purchase.date.month == now.month) {
+        monthlyAmount += amount;
+      }
+    }
+
+    final updater = TrackingUpdater(
+      firestore: FirebaseFirestore.instance,
+      auth: FirebaseAuth.instance,
+    );
+
+    await updater.ensureTrackingModules();
+    await updater.upsertTrackingSnapshot(
+      type: 'water',
+      totalAmount: totalAmount,
+      todayAmount: todayAmount,
+      monthlyAmount: monthlyAmount,
+      activeCycles: totalRecords,
+      totalRecords: totalRecords,
+    );
+  }
+
+  bool _isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 }
