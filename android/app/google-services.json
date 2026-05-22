@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "526853902976-k7p4al9nsa3vaevata0k529keb9uonh9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nafis.nf.kharchaplus",
+            "certificate_hash": "4b4ddbd1a1e04b7d450a37377aee396ecb6e4459"
+          }
+        },
+        {
           "client_id": "526853902976-pa51rjq3gjnp7gl3otgerr601m7n1pd9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
