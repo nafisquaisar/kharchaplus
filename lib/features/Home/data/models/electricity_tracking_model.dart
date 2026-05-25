@@ -9,7 +9,15 @@ part 'electricity_tracking_model.g.dart';
 class ElectricityTrackingHomeModel extends ElectricityTrackingHomeEntity {
   Id isarId = Isar.autoIncrement;
 
+  // User id to scope local cache per authenticated user
+  String userId = '';
+
+  // soft-delete flag mirrored from remote so we can filter locally
+  bool isDeleted = false;
+
   ElectricityTrackingHomeModel({
+    required this.userId,
+    required this.isDeleted,
     required super.id,
     required super.title,
     required super.startDate,
@@ -26,6 +34,8 @@ class ElectricityTrackingHomeModel extends ElectricityTrackingHomeEntity {
     ElectricityTrackingHomeEntity entity,
   ) {
     return ElectricityTrackingHomeModel(
+      userId: '',
+      isDeleted: false,
       id: entity.id,
       title: entity.title,
       startDate: entity.startDate,
@@ -49,6 +59,8 @@ class ElectricityTrackingHomeModel extends ElectricityTrackingHomeEntity {
       'currentUnit': currentUnit,
       'rate': rate,
       'isActive': isActive,
+      'isDeleted': isDeleted,
+      'userId': userId,
       'createdAt': firestore.Timestamp.fromDate(createdAt),
       'updatedAt': firestore.Timestamp.fromDate(updatedAt),
     };
@@ -57,8 +69,11 @@ class ElectricityTrackingHomeModel extends ElectricityTrackingHomeEntity {
   factory ElectricityTrackingHomeModel.fromJson(
     Map<String, dynamic> json, {
     String? documentId,
+    String? userId,
   }) {
     return ElectricityTrackingHomeModel(
+      userId: userId ?? (json['userId'] as String?) ?? '',
+      isDeleted: (json['isDeleted'] as bool?) ?? false,
       id: (json['id'] as String?) ?? documentId ?? '',
       title: (json['title'] as String?) ?? 'Electricity Bill',
       startDate: _parseDate(json['startDate']),

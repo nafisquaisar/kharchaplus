@@ -70,6 +70,7 @@ class WaterTrackingHomeAnalyticsService {
 
     return WaterTrackingHomeModel(
       id: userId,
+      userId: userId,
       todayIntakeMl: intakeAnalytics.todayMl,
       dailyGoalMl: dailyGoalMl,
       intakePercent: intakeAnalytics.intakePercent,

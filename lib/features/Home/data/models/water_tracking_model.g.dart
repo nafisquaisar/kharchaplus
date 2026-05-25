@@ -77,6 +77,11 @@ const WaterTrackingHomeModelSchema = CollectionSchema(
       id: 11,
       name: r'updatedAt',
       type: IsarType.dateTime,
+    ),
+    r'userId': PropertySchema(
+      id: 12,
+      name: r'userId',
+      type: IsarType.string,
     )
   },
   estimateSize: _waterTrackingHomeModelEstimateSize,
@@ -101,6 +106,7 @@ int _waterTrackingHomeModelEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.expenseTrend.length * 3;
   bytesCount += 3 + object.id.length * 3;
+  bytesCount += 3 + object.userId.length * 3;
   return bytesCount;
 }
 
@@ -122,6 +128,7 @@ void _waterTrackingHomeModelSerialize(
   writer.writeDouble(offsets[9], object.previousMonthExpense);
   writer.writeLong(offsets[10], object.todayIntakeMl);
   writer.writeDateTime(offsets[11], object.updatedAt);
+  writer.writeString(offsets[12], object.userId);
 }
 
 WaterTrackingHomeModel _waterTrackingHomeModelDeserialize(
@@ -140,6 +147,7 @@ WaterTrackingHomeModel _waterTrackingHomeModelDeserialize(
     previousMonthExpense: reader.readDouble(offsets[9]),
     todayIntakeMl: reader.readLong(offsets[10]),
     updatedAt: reader.readDateTime(offsets[11]),
+    userId: reader.readString(offsets[12]),
   );
   object.isarId = id;
   return object;
@@ -176,6 +184,8 @@ P _waterTrackingHomeModelDeserializeProp<P>(
       return (reader.readLong(offset)) as P;
     case 11:
       return (reader.readDateTime(offset)) as P;
+    case 12:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -1071,6 +1081,144 @@ extension WaterTrackingHomeModelQueryFilter on QueryBuilder<
       ));
     });
   }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel,
+      QAfterFilterCondition> userIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel,
+      QAfterFilterCondition> userIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel,
+      QAfterFilterCondition> userIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel,
+      QAfterFilterCondition> userIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'userId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel,
+      QAfterFilterCondition> userIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel,
+      QAfterFilterCondition> userIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel,
+          QAfterFilterCondition>
+      userIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel,
+          QAfterFilterCondition>
+      userIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'userId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel,
+      QAfterFilterCondition> userIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel,
+      QAfterFilterCondition> userIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'userId',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension WaterTrackingHomeModelQueryObject on QueryBuilder<
@@ -1246,6 +1394,20 @@ extension WaterTrackingHomeModelQuerySortBy
       sortByUpdatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel, QAfterSortBy>
+      sortByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel, QAfterSortBy>
+      sortByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.desc);
     });
   }
 }
@@ -1433,6 +1595,20 @@ extension WaterTrackingHomeModelQuerySortThenBy on QueryBuilder<
       return query.addSortBy(r'updatedAt', Sort.desc);
     });
   }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel, QAfterSortBy>
+      thenByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel, QAfterSortBy>
+      thenByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.desc);
+    });
+  }
 }
 
 extension WaterTrackingHomeModelQueryWhereDistinct
@@ -1518,6 +1694,13 @@ extension WaterTrackingHomeModelQueryWhereDistinct
       distinctByUpdatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'updatedAt');
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, WaterTrackingHomeModel, QDistinct>
+      distinctByUserId({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'userId', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1610,6 +1793,13 @@ extension WaterTrackingHomeModelQueryProperty on QueryBuilder<
       updatedAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'updatedAt');
+    });
+  }
+
+  QueryBuilder<WaterTrackingHomeModel, String, QQueryOperations>
+      userIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'userId');
     });
   }
 }

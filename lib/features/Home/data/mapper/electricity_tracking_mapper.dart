@@ -18,9 +18,12 @@ class ElectricityTrackingHomeMapper {
   }
 
   static ElectricityTrackingHomeModel fromElectricityModel(
-    ElectricityModel model,
-  ) {
+    ElectricityModel model, {
+    String userId = '',
+  }) {
     return ElectricityTrackingHomeModel(
+      userId: userId,
+      isDeleted: model.isDeleted,
       id: model.id,
       title: model.title ?? 'Electricity Bill',
       startDate: model.startDate,

@@ -8,8 +8,12 @@ part 'water_tracking_model.g.dart';
 class WaterTrackingHomeModel extends WaterTrackingHomeEntity {
   Id isarId = Isar.autoIncrement;
 
+  // User id explicitly stored for clarity and user-scoping consistency
+  String userId = '';
+
   WaterTrackingHomeModel({
     required super.id,
+    required this.userId,
     required super.todayIntakeMl,
     required super.dailyGoalMl,
     required super.intakePercent,
@@ -25,6 +29,7 @@ class WaterTrackingHomeModel extends WaterTrackingHomeEntity {
   ) {
     return WaterTrackingHomeModel(
       id: entity.id,
+      userId: entity.id, // Use id as userId since water is a single snapshot per user
       todayIntakeMl: entity.todayIntakeMl,
       dailyGoalMl: entity.dailyGoalMl,
       intakePercent: entity.intakePercent,

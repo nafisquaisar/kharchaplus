@@ -53,30 +53,40 @@ const ElectricityTrackingHomeModelSchema = CollectionSchema(
       name: r'isActive',
       type: IsarType.bool,
     ),
-    r'prevUnit': PropertySchema(
+    r'isDeleted': PropertySchema(
       id: 7,
+      name: r'isDeleted',
+      type: IsarType.bool,
+    ),
+    r'prevUnit': PropertySchema(
+      id: 8,
       name: r'prevUnit',
       type: IsarType.long,
     ),
     r'rate': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'rate',
       type: IsarType.double,
     ),
     r'startDate': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'startDate',
       type: IsarType.dateTime,
     ),
     r'title': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'title',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'updatedAt',
       type: IsarType.dateTime,
+    ),
+    r'userId': PropertySchema(
+      id: 13,
+      name: r'userId',
+      type: IsarType.string,
     )
   },
   estimateSize: _electricityTrackingHomeModelEstimateSize,
@@ -101,6 +111,7 @@ int _electricityTrackingHomeModelEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.id.length * 3;
   bytesCount += 3 + object.title.length * 3;
+  bytesCount += 3 + object.userId.length * 3;
   return bytesCount;
 }
 
@@ -117,11 +128,13 @@ void _electricityTrackingHomeModelSerialize(
   writer.writeDateTime(offsets[4], object.endDate);
   writer.writeString(offsets[5], object.id);
   writer.writeBool(offsets[6], object.isActive);
-  writer.writeLong(offsets[7], object.prevUnit);
-  writer.writeDouble(offsets[8], object.rate);
-  writer.writeDateTime(offsets[9], object.startDate);
-  writer.writeString(offsets[10], object.title);
-  writer.writeDateTime(offsets[11], object.updatedAt);
+  writer.writeBool(offsets[7], object.isDeleted);
+  writer.writeLong(offsets[8], object.prevUnit);
+  writer.writeDouble(offsets[9], object.rate);
+  writer.writeDateTime(offsets[10], object.startDate);
+  writer.writeString(offsets[11], object.title);
+  writer.writeDateTime(offsets[12], object.updatedAt);
+  writer.writeString(offsets[13], object.userId);
 }
 
 ElectricityTrackingHomeModel _electricityTrackingHomeModelDeserialize(
@@ -136,11 +149,13 @@ ElectricityTrackingHomeModel _electricityTrackingHomeModelDeserialize(
     endDate: reader.readDateTime(offsets[4]),
     id: reader.readString(offsets[5]),
     isActive: reader.readBool(offsets[6]),
-    prevUnit: reader.readLong(offsets[7]),
-    rate: reader.readDouble(offsets[8]),
-    startDate: reader.readDateTime(offsets[9]),
-    title: reader.readString(offsets[10]),
-    updatedAt: reader.readDateTime(offsets[11]),
+    isDeleted: reader.readBool(offsets[7]),
+    prevUnit: reader.readLong(offsets[8]),
+    rate: reader.readDouble(offsets[9]),
+    startDate: reader.readDateTime(offsets[10]),
+    title: reader.readString(offsets[11]),
+    updatedAt: reader.readDateTime(offsets[12]),
+    userId: reader.readString(offsets[13]),
   );
   object.isarId = id;
   return object;
@@ -168,15 +183,19 @@ P _electricityTrackingHomeModelDeserializeProp<P>(
     case 6:
       return (reader.readBool(offset)) as P;
     case 7:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 8:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 9:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 10:
-      return (reader.readString(offset)) as P;
-    case 11:
       return (reader.readDateTime(offset)) as P;
+    case 11:
+      return (reader.readString(offset)) as P;
+    case 12:
+      return (reader.readDateTime(offset)) as P;
+    case 13:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -720,6 +739,16 @@ extension ElectricityTrackingHomeModelQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterFilterCondition> isDeletedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isDeleted',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
       QAfterFilterCondition> isarIdEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1146,6 +1175,144 @@ extension ElectricityTrackingHomeModelQueryFilter on QueryBuilder<
       ));
     });
   }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterFilterCondition> userIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterFilterCondition> userIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterFilterCondition> userIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterFilterCondition> userIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'userId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterFilterCondition> userIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterFilterCondition> userIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+          QAfterFilterCondition>
+      userIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+          QAfterFilterCondition>
+      userIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'userId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterFilterCondition> userIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterFilterCondition> userIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'userId',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension ElectricityTrackingHomeModelQueryObject on QueryBuilder<
@@ -1259,6 +1426,20 @@ extension ElectricityTrackingHomeModelQuerySortBy on QueryBuilder<
   }
 
   QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterSortBy> sortByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterSortBy> sortByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
       QAfterSortBy> sortByPrevUnit() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'prevUnit', Sort.asc);
@@ -1325,6 +1506,20 @@ extension ElectricityTrackingHomeModelQuerySortBy on QueryBuilder<
       QAfterSortBy> sortByUpdatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterSortBy> sortByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterSortBy> sortByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.desc);
     });
   }
 }
@@ -1430,6 +1625,20 @@ extension ElectricityTrackingHomeModelQuerySortThenBy on QueryBuilder<
   }
 
   QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterSortBy> thenByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterSortBy> thenByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
       QAfterSortBy> thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
@@ -1512,6 +1721,20 @@ extension ElectricityTrackingHomeModelQuerySortThenBy on QueryBuilder<
       return query.addSortBy(r'updatedAt', Sort.desc);
     });
   }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterSortBy> thenByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QAfterSortBy> thenByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.desc);
+    });
+  }
 }
 
 extension ElectricityTrackingHomeModelQueryWhereDistinct on QueryBuilder<
@@ -1566,6 +1789,13 @@ extension ElectricityTrackingHomeModelQueryWhereDistinct on QueryBuilder<
   }
 
   QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QDistinct> distinctByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isDeleted');
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
       QDistinct> distinctByPrevUnit() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'prevUnit');
@@ -1597,6 +1827,13 @@ extension ElectricityTrackingHomeModelQueryWhereDistinct on QueryBuilder<
       QDistinct> distinctByUpdatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'updatedAt');
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, ElectricityTrackingHomeModel,
+      QDistinct> distinctByUserId({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'userId', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1661,6 +1898,13 @@ extension ElectricityTrackingHomeModelQueryProperty on QueryBuilder<
     });
   }
 
+  QueryBuilder<ElectricityTrackingHomeModel, bool, QQueryOperations>
+      isDeletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isDeleted');
+    });
+  }
+
   QueryBuilder<ElectricityTrackingHomeModel, int, QQueryOperations>
       prevUnitProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -1693,6 +1937,13 @@ extension ElectricityTrackingHomeModelQueryProperty on QueryBuilder<
       updatedAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'updatedAt');
+    });
+  }
+
+  QueryBuilder<ElectricityTrackingHomeModel, String, QQueryOperations>
+      userIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'userId');
     });
   }
 }
