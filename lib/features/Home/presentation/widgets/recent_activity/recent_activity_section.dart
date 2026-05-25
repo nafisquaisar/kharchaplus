@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/AppColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,6 +17,8 @@ class RecentActivitySection extends ConsumerWidget {
       WidgetRef ref,
       ) {
     final width = MediaQuery.of(context).size.width;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     const navHandler = RecentActivityNavigationHandler();
 
     final recentState = ref.watch(
@@ -33,11 +34,11 @@ class RecentActivitySection extends ConsumerWidget {
         width * 0.03,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.035),
+            color: colorScheme.shadow.withOpacity(0.035),
             blurRadius: 14,
             offset: const Offset(0, 5),
           ),
@@ -54,10 +55,10 @@ class RecentActivitySection extends ConsumerWidget {
             children: [
               Text(
                 "Recent Activity",
-                style: TextStyle(
+                style: textTheme.titleMedium?.copyWith(
                   fontSize: width * 0.04,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.black,
+                  color: colorScheme.onSurface,
                 ),
               ),
 
@@ -77,14 +78,14 @@ class RecentActivitySection extends ConsumerWidget {
                     vertical: width * 0.01,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F7FA),
+                    color: colorScheme.surfaceContainerHighest,
                     borderRadius:
                     BorderRadius.circular(30),
                   ),
                   child: Text(
                     "View All",
-                    style: TextStyle(
-                      color: const Color(0xFF475467),
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w600,
                       fontSize: width * 0.03,
                     ),
@@ -105,17 +106,23 @@ class RecentActivitySection extends ConsumerWidget {
               child: Center(
                 child: Text(
                   'Error loading recent activities',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
             ),
 
             data: (activities) {
               if (activities.isEmpty) {
-                return const Padding(
-                  padding: EdgeInsets.all(20),
+                return Padding(
+                  padding: const EdgeInsets.all(20),
                   child: Center(
                     child: Text(
                       'No Recent Activity',
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 );

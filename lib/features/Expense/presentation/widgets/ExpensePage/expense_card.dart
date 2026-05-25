@@ -41,6 +41,8 @@ class _ExpenseCardState extends State<ExpenseCard> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -59,16 +61,16 @@ class _ExpenseCardState extends State<ExpenseCard> {
             vertical: width * 0.02,
           ),
           decoration: BoxDecoration(
-            color: AppColors.card,
+            color: colorScheme.surface,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: widget.isHighlighted
                   ? AppColors.primary.withOpacity(0.3)
-                  : Colors.black.withOpacity(0.04),
+                  : colorScheme.outlineVariant,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.09),
+                color: colorScheme.shadow.withOpacity(0.09),
                 blurRadius: 8,
                 offset: const Offset(0, 3),
               ),
@@ -85,19 +87,19 @@ class _ExpenseCardState extends State<ExpenseCard> {
                       widget.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: textTheme.bodyMedium?.copyWith(
                         fontSize: width * 0.04,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.colorText,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ),
                   if (widget.items.isNotEmpty)
                     Text(
                       widget.items,
-                      style: TextStyle(
+                      style: textTheme.bodySmall?.copyWith(
                         fontSize: width * 0.032,
-                        color: AppColors.textSecondary,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                 ],
@@ -108,9 +110,9 @@ class _ExpenseCardState extends State<ExpenseCard> {
                 children: [
                   Text(
                     widget.subtitle,
-                    style: TextStyle(
+                    style: textTheme.bodySmall?.copyWith(
                       fontSize: width * 0.032,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                   Container(
@@ -121,17 +123,17 @@ class _ExpenseCardState extends State<ExpenseCard> {
                     decoration: BoxDecoration(
                       color: widget.status == "Active"
                           ? Colors.green.withOpacity(0.12)
-                          : AppColors.background,
+                          : colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       widget.status,
-                      style: TextStyle(
+                      style: textTheme.bodySmall?.copyWith(
                         fontSize: width * 0.03,
                         fontWeight: FontWeight.w500,
                         color: widget.status == "Active"
                             ? Colors.green.shade700
-                            : AppColors.textSecondary,
+                            : colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),
@@ -140,19 +142,29 @@ class _ExpenseCardState extends State<ExpenseCard> {
 
               const SizedBox(height: 6),
 
-              const Text("Total Expense"),
+              Text(
+                "Total Expense",
+                style: textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
 
               Text(
                 "₹${widget.amount}",
-                style: TextStyle(
+                style: textTheme.titleMedium?.copyWith(
                   fontSize: width * 0.05,
                   fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
                 ),
               ),
 
               const SizedBox(height: 6),
 
-              LinearProgressIndicator(value: widget.progress),
+              LinearProgressIndicator(
+                value: widget.progress,
+                backgroundColor: colorScheme.outlineVariant,
+                valueColor: AlwaysStoppedAnimation(AppColors.accent),
+              ),
             ],
           ),
         ),

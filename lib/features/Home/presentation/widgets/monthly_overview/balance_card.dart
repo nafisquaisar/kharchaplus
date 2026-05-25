@@ -27,6 +27,8 @@ class _BalanceCardState extends State<BalanceCard> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     final cardDate = widget.selectedCard?.startDate;
 
@@ -50,7 +52,7 @@ class _BalanceCardState extends State<BalanceCard> {
 
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.10),
+            color: colorScheme.shadow.withOpacity(0.10),
             blurRadius: 18,
             spreadRadius: 2,
             offset: const Offset(0, 8),
@@ -81,8 +83,8 @@ class _BalanceCardState extends State<BalanceCard> {
             children: [
               Text(
                 "Current Balance",
-                style: TextStyle(
-                  color: AppColors.textSecondary,
+                style: textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                   fontSize: width * 0.03,
                 ),
               ),
@@ -97,7 +99,7 @@ class _BalanceCardState extends State<BalanceCard> {
                 child: Icon(
                   isHidden ? Icons.visibility_off : Icons.visibility,
                   size: width * 0.07,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -112,10 +114,10 @@ class _BalanceCardState extends State<BalanceCard> {
             isHidden
                 ? "₹ ******"
                 : "₹ ${widget.expenseVm.balance.toStringAsFixed(0)}",
-            style: TextStyle(
+            style: textTheme.titleLarge?.copyWith(
               fontSize: width * 0.07,
               fontWeight: FontWeight.bold,
-              color: AppColors.colorText,
+              color: colorScheme.onSurface,
             ),
           ),
 
@@ -134,6 +136,7 @@ class _BalanceCardState extends State<BalanceCard> {
 
               /// INCOME
               _incomeExpense(
+                context: context,
                 icon: Icons.arrow_upward,
                 title: "Income",
                 amount: isHidden
@@ -145,6 +148,7 @@ class _BalanceCardState extends State<BalanceCard> {
 
               /// EXPENSE
               _incomeExpense(
+                context: context,
                 icon: Icons.arrow_downward,
                 title: "Expense",
                 amount: isHidden
@@ -168,6 +172,7 @@ class _BalanceCardState extends State<BalanceCard> {
               Row(
                 children: [
                   _infoBlock(
+                    context,
                     "Day",
                     day,
                     width,
@@ -176,6 +181,7 @@ class _BalanceCardState extends State<BalanceCard> {
                     width: width * 0.06,
                   ),
                   _infoBlock(
+                    context,
                     "Month",
                     month,
                     width,
@@ -184,6 +190,7 @@ class _BalanceCardState extends State<BalanceCard> {
                     width: width * 0.06,
                   ),
                   _infoBlock(
+                    context,
                     "Year",
                     year,
                     width,
@@ -194,8 +201,8 @@ class _BalanceCardState extends State<BalanceCard> {
               /// TXN COUNT
               Text(
                 "${widget.expenseVm.expenses.length} Txn",
-                style: TextStyle(
-                  color: AppColors.black,
+                style: textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurface,
                   fontSize: width * 0.03,
                   fontWeight: FontWeight.w600,
                 ),
@@ -208,26 +215,29 @@ class _BalanceCardState extends State<BalanceCard> {
   }
 
   Widget _infoBlock(
+    BuildContext context,
     String title,
     String value,
     double width,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: TextStyle(
-            color: AppColors.textSecondary,
+          style: textTheme.bodySmall?.copyWith(
+            color: colorScheme.onSurfaceVariant,
             fontSize: width * 0.028,
           ),
         ),
         Text(
           value,
-          style: TextStyle(
+          style: textTheme.bodyMedium?.copyWith(
             fontSize: width * 0.038,
             fontWeight: FontWeight.bold,
-            color: AppColors.colorText,
+            color: colorScheme.onSurface,
           ),
         ),
       ],
@@ -235,12 +245,15 @@ class _BalanceCardState extends State<BalanceCard> {
   }
 
   Widget _incomeExpense({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required String amount,
     required Color color,
     required double width,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Row(
       children: [
         Icon(
@@ -263,9 +276,10 @@ class _BalanceCardState extends State<BalanceCard> {
             ),
             Text(
               amount,
-              style: TextStyle(
+              style: textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: width * 0.035,
+                color: colorScheme.onSurface,
               ),
             ),
           ],

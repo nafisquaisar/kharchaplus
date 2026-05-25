@@ -26,20 +26,26 @@ class Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Column(
       children: [
         SizedBox(height: 10),
 
         Row(
           children: [
-            Expanded(child: Divider(color: Colors.grey, thickness: 2)),
+            Expanded(child: Divider(color: colorScheme.outline, thickness: 2)),
             SizedBox(width: 10),
             Text(
               "Why Kharcha Plus ?",
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+              style: textTheme.bodySmall?.copyWith(
+                fontSize: 12,
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
             SizedBox(width: 10),
-            Expanded(child: Divider(color: Colors.grey, thickness: 2)),
+            Expanded(child: Divider(color: colorScheme.outline, thickness: 2)),
           ],
         ),
 
@@ -54,10 +60,10 @@ class Footer extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.teal.withOpacity(0.1),
+                      color: colorScheme.primary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(item.icon, color: Colors.teal, size: 20),
+                    child: Icon(item.icon, color: colorScheme.primary, size: 20),
                   ),
                   SizedBox(width: 12),
                   Expanded(
@@ -65,10 +71,16 @@ class Footer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(item.title,
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                            style: textTheme.bodyMedium?.copyWith(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            )),
                         SizedBox(height: 4),
                         Text(item.subtitle,
-                            style: TextStyle(fontSize: 12, color: Colors.grey)),
+                            style: textTheme.bodySmall?.copyWith(
+                              fontSize: 12,
+                              color: colorScheme.onSurfaceVariant,
+                            )),
                       ],
                     ),
                   ),

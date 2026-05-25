@@ -8,6 +8,8 @@ class PhoneHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -15,7 +17,7 @@ class PhoneHeader extends StatelessWidget {
         gradient: AppColors.kharchaGradient,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -23,13 +25,13 @@ class PhoneHeader extends StatelessWidget {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: colorScheme.onPrimary,
             ),
           ),
-          SizedBox(height: 6),
+          const SizedBox(height: 6),
           Text(
             "We will send you an OTP to verify",
-            style: TextStyle(color: Colors.white70),
+            style: TextStyle(color: colorScheme.onPrimary.withOpacity(0.7)),
           ),
         ],
       ),

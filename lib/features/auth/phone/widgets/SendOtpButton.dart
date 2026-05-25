@@ -14,6 +14,8 @@ class SendOtpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: isLoading ? null : onTap,
@@ -25,11 +27,11 @@ class SendOtpButton extends StatelessWidget {
         ),
         child: Center(
           child: isLoading
-              ? const CircularProgressIndicator(color: Colors.white)
-              : const Text(
+              ? CircularProgressIndicator(color: colorScheme.onPrimary)
+              : Text(
             "Send OTP",
             style: TextStyle(
-              color: Colors.white,
+              color: colorScheme.onPrimary,
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),

@@ -16,6 +16,7 @@ class ElectricityTrackingCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
+    final colorScheme = Theme.of(context).colorScheme;
     final state = ref.watch(electricityTrackingHomeNotifierProvider);
 
     return Container(
@@ -27,11 +28,11 @@ class ElectricityTrackingCard extends ConsumerWidget {
         width * 0.03,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.035),
+            color: colorScheme.shadow.withOpacity(0.035),
             blurRadius: 14,
             offset: const Offset(0, 5),
           ),
@@ -67,13 +68,15 @@ class _CardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     final current = analytics.current;
     final currentUnits = current?.consumedUnits ?? 0;
     final billAmount = current?.billAmount ?? 0;
     final percent = analytics.percentChange.abs();
     final trend = analytics.trend;
     final trendIcon = _trendIcon(trend);
-    final trendColor = _trendColor(trend);
+    final trendColor = _trendColor(trend, colorScheme.onSurfaceVariant);
     final badgeLabel = (current?.isActive ?? true) ? 'Pending' : 'Paid';
     final previousLabel = analytics.previousLabel.isEmpty
         ? 'vs --'
@@ -118,10 +121,10 @@ class _CardContent extends StatelessWidget {
                         "Electricity Tracking",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: textTheme.titleMedium?.copyWith(
                           fontSize: width * 0.04,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.black,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ),
@@ -130,7 +133,7 @@ class _CardContent extends StatelessWidget {
               ),
               Icon(
                 Icons.chevron_right_rounded,
-                color: AppColors.textSecondary,
+                color: colorScheme.onSurfaceVariant,
                 size: width * 0.065,
               ),
             ],
@@ -147,8 +150,8 @@ class _CardContent extends StatelessWidget {
                 children: [
                   Text(
                     "This Month",
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
                       fontSize: width * 0.033,
                       fontWeight: FontWeight.w500,
                     ),
@@ -156,10 +159,10 @@ class _CardContent extends StatelessWidget {
                   SizedBox(height: width * 0.003),
                   Text(
                     _formatUnits(currentUnits),
-                    style: TextStyle(
+                    style: textTheme.titleLarge?.copyWith(
                       fontSize: width * 0.06,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.black,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                   SizedBox(height: width * 0.012),
@@ -169,13 +172,13 @@ class _CardContent extends StatelessWidget {
                       vertical: width * 0.008,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF5F7FA),
+                      color: colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Text(
                       badgeLabel,
-                      style: TextStyle(
-                        color: const Color(0xFF475467),
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                         fontSize: width * 0.03,
                       ),
@@ -187,16 +190,16 @@ class _CardContent extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: _formatAmount(billAmount),
-                          style: TextStyle(
-                            color: AppColors.black,
+                          style: textTheme.titleLarge?.copyWith(
+                            color: colorScheme.onSurface,
                             fontWeight: FontWeight.w700,
                             fontSize: width * 0.055,
                           ),
                         ),
                         TextSpan(
                           text: " Bill",
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
                             fontWeight: FontWeight.w600,
                             fontSize: width * 0.04,
                           ),
@@ -218,7 +221,7 @@ class _CardContent extends StatelessWidget {
                     ),
                     Text(
                       _formatPercent(percent),
-                      style: TextStyle(
+                      style: textTheme.bodyMedium?.copyWith(
                         color: trendColor,
                         fontWeight: FontWeight.w700,
                         fontSize: width * 0.04,
@@ -229,8 +232,8 @@ class _CardContent extends StatelessWidget {
                 SizedBox(height: width * 0.002),
                 Text(
                   previousLabel,
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
                     fontSize: width * 0.03,
                     fontWeight: FontWeight.w500,
                   ),
@@ -278,14 +281,14 @@ class _CardContent extends StatelessWidget {
     }
   }
 
-  Color _trendColor(ElectricityTrendDirection trend) {
+  Color _trendColor(ElectricityTrendDirection trend, Color neutralColor) {
     switch (trend) {
       case ElectricityTrendDirection.up:
         return const Color(0xFF2D8C82);
       case ElectricityTrendDirection.down:
         return const Color(0xFFE54848);
       case ElectricityTrendDirection.flat:
-        return AppColors.textSecondary;
+        return neutralColor;
     }
   }
 }
@@ -299,12 +302,14 @@ class _ElectricityTrendChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     if (points.isEmpty) {
       return Center(
         child: Text(
           'No data',
-          style: TextStyle(
-            color: AppColors.textSecondary,
+          style: textTheme.bodySmall?.copyWith(
+            color: colorScheme.onSurfaceVariant,
             fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
@@ -386,13 +391,15 @@ class _ErrorContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return SizedBox(
       height: width * 0.32,
       child: Center(
         child: Text(
           'Failed to load',
-          style: TextStyle(
-            color: AppColors.textSecondary,
+          style: textTheme.bodySmall?.copyWith(
+            color: colorScheme.onSurfaceVariant,
             fontSize: width * 0.032,
             fontWeight: FontWeight.w600,
           ),
@@ -411,13 +418,15 @@ class _EmptyContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return SizedBox(
       height: width * 0.32,
       child: Center(
         child: Text(
           'No electricity data',
-          style: TextStyle(
-            color: AppColors.textSecondary,
+          style: textTheme.bodySmall?.copyWith(
+            color: colorScheme.onSurfaceVariant,
             fontSize: width * 0.032,
             fontWeight: FontWeight.w600,
           ),

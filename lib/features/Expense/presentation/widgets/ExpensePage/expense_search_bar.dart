@@ -12,15 +12,17 @@ class ExpenseSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
 
         /// 🔥 SHADOW (PRO LEVEL)
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: colorScheme.shadow.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -30,14 +32,20 @@ class ExpenseSearchBar extends StatelessWidget {
       child: TextField(
         controller: controller,
         onChanged: onChanged,
-
+        style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
         decoration: InputDecoration(
           hintText: "Search expenses...",
-          prefixIcon: const Icon(Icons.search),
+          hintStyle: textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
+          prefixIcon: Icon(
+            Icons.search,
+            color: colorScheme.onSurfaceVariant,
+          ),
 
           suffixIcon: controller.text.isNotEmpty
               ? IconButton(
-            icon: const Icon(Icons.close),
+            icon: Icon(Icons.close, color: colorScheme.onSurfaceVariant),
             onPressed: () {
               controller.clear();
               onChanged("");

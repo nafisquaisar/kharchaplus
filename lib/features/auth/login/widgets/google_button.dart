@@ -9,6 +9,7 @@ class GoogleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AuthViewModel>();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return InkWell(
       borderRadius: BorderRadius.circular(25),
@@ -37,7 +38,7 @@ class GoogleButton extends StatelessWidget {
             width: 20,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: AppColors.textPrimary,
+              color: colorScheme.onPrimary,
             ),
           )
               : Row(
@@ -53,7 +54,7 @@ class GoogleButton extends StatelessWidget {
               Text(
                 "Sign in with Google",
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: colorScheme.onPrimary,
                   fontWeight: FontWeight.w600,
                 ),
               ),

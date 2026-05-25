@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../core/constants/AppColors.dart';
 import '../../../../Track/FoodTracking/presentation/screens/food_tracking_screen.dart';
 import '../../../domain/entities/food_tracking_entity.dart';
 import '../../providers/food_tracking/food_tracking_home_providers.dart';
@@ -34,6 +33,7 @@ class _FoodTrackingCardState extends ConsumerState<FoodTrackingCard> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final colorScheme = Theme.of(context).colorScheme;
     final state = ref.watch(foodTrackingHomeNotifierProvider);
 
     return Container(
@@ -45,11 +45,11 @@ class _FoodTrackingCardState extends ConsumerState<FoodTrackingCard> {
         width * 0.03,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.035),
+            color: colorScheme.shadow.withOpacity(0.035),
             blurRadius: 14,
             offset: const Offset(0, 5),
           ),
@@ -75,10 +75,8 @@ class _FoodTrackingCardState extends ConsumerState<FoodTrackingCard> {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(6),
-                      decoration: const BoxDecoration(
-                        color: Color(
-                          0xFFFFF4E8,
-                        ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE58A00).withOpacity(0.12),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -93,14 +91,14 @@ class _FoodTrackingCardState extends ConsumerState<FoodTrackingCard> {
                       style: TextStyle(
                         fontSize: width * 0.04,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.black,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ],
                 ),
                 Icon(
                   Icons.chevron_right_rounded,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   size: width * 0.065,
                 ),
               ],
@@ -198,13 +196,14 @@ class _IndicatorDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       margin: const EdgeInsets.symmetric(horizontal: 3),
       width: isActive ? 8 : 5,
       height: 5,
       decoration: BoxDecoration(
-        color: isActive ? const Color(0xFFE58A00) : const Color(0xFFE5E7EB),
+        color: isActive ? const Color(0xFFE58A00) : colorScheme.outlineVariant,
         borderRadius: BorderRadius.circular(10),
       ),
     );
@@ -299,6 +298,8 @@ class _FoodCycleContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     final progressValue = forceProgress ?? cycle.progress;
     final progressText = progressTextOverride ?? '${cycle.progressPercent}%';
     final spentAmount = (cycle.totalEaten * cycle.mealPrice)
@@ -328,8 +329,8 @@ class _FoodCycleContent extends StatelessWidget {
                   children: [
                     Text(
                       "Active Mess",
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
                         fontSize: width * 0.033,
                         fontWeight: FontWeight.w500,
                       ),
@@ -339,10 +340,10 @@ class _FoodCycleContent extends StatelessWidget {
                       cycle.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: textTheme.titleLarge?.copyWith(
                         fontSize: width * 0.06,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.black,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     SizedBox(height: width * 0.003),
@@ -352,9 +353,7 @@ class _FoodCycleContent extends StatelessWidget {
                         vertical: width * 0.007,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(
-                          0xFFFFF4E8,
-                        ),
+                        color: const Color(0xFFE58A00).withOpacity(0.12),
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Text(
@@ -384,9 +383,7 @@ class _FoodCycleContent extends StatelessWidget {
                       child: CircularProgressIndicator(
                         value: progressValue,
                         strokeWidth: 4,
-                        backgroundColor: const Color(
-                          0xFFF3F4F6,
-                        ),
+                        backgroundColor: colorScheme.outlineVariant,
                         valueColor: const AlwaysStoppedAnimation(
                           Color(0xFFE58A00),
                         ),
@@ -397,16 +394,16 @@ class _FoodCycleContent extends StatelessWidget {
                       children: [
                         Text(
                           progressText,
-                          style: TextStyle(
-                            color: AppColors.black,
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurface,
                             fontWeight: FontWeight.w700,
                             fontSize: width * 0.038,
                           ),
                         ),
                         Text(
                           "Completed",
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
                             fontSize: width * 0.019,
                             fontWeight: FontWeight.w500,
                           ),
@@ -426,16 +423,16 @@ class _FoodCycleContent extends StatelessWidget {
               children: [
                 TextSpan(
                   text: amountText,
-                  style: TextStyle(
-                    color: AppColors.black,
+                  style: textTheme.titleLarge?.copyWith(
+                    color: colorScheme.onSurface,
                     fontWeight: FontWeight.w700,
                     fontSize: width * 0.055,
                   ),
                 ),
                 TextSpan(
                   text: totalText,
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w600,
                     fontSize: width * 0.04,
                   ),
@@ -451,7 +448,7 @@ class _FoodCycleContent extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progressValue,
               minHeight: 4,
-              backgroundColor: const Color(0xFFF1F3F5),
+              backgroundColor: colorScheme.outlineVariant,
               valueColor: const AlwaysStoppedAnimation(
                 Color(0xFFE58A00),
               ),

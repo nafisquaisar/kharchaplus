@@ -27,6 +27,7 @@ class _HomeHeaderState extends State<HomeHeader> {
 
     final width =
         MediaQuery.of(context).size.width;
+    final colorScheme = Theme.of(context).colorScheme;
 
     final cardVm =
     context.watch<ExpenseCardViewModel>();
@@ -67,13 +68,13 @@ class _HomeHeaderState extends State<HomeHeader> {
             ),
 
             decoration: BoxDecoration(
-              color: AppColors.card,
+              color: colorScheme.surface,
 
               borderRadius:
               BorderRadius.circular(12),
 
               border: Border.all(
-                color: AppColors.border,
+                color: colorScheme.outlineVariant,
               ),
 
               boxShadow: [
@@ -104,7 +105,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                 BorderRadius.circular(14),
 
                 dropdownColor:
-                AppColors.card,
+                colorScheme.surface,
 
                 icon: Icon(
                   Icons
@@ -117,8 +118,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                   "Select Card",
 
                   style: TextStyle(
-                    color:
-                    AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
 
                     fontSize: width * 0.032,
                   ),

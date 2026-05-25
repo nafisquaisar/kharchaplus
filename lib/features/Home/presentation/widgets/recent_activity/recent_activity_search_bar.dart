@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/constants/AppColors.dart';
 
 class RecentActivitySearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -14,15 +13,24 @@ class RecentActivitySearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return TextField(
       controller: controller,
       onChanged: onChanged,
       textInputAction: TextInputAction.search,
+      style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
       decoration: InputDecoration(
         hintText: 'Search recent activity',
-        prefixIcon: const Icon(Icons.search_rounded),
+        hintStyle: textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onSurfaceVariant,
+        ),
+        prefixIcon: Icon(
+          Icons.search_rounded,
+          color: colorScheme.onSurfaceVariant,
+        ),
         filled: true,
-        fillColor: AppColors.primarybg,
+        fillColor: colorScheme.surfaceContainerHighest,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,

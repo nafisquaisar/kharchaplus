@@ -61,6 +61,8 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     final cardVM = context.watch<ExpenseCardViewModel>();
 
     ExpenseCardModel? selectedCard;
@@ -74,7 +76,7 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -127,7 +129,7 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
 
             color: AppColors.accent,
 
-            backgroundColor: Colors.white,
+            backgroundColor: colorScheme.surface,
 
             onRefresh: () {
               return ExpenseDetailHelper.refreshExpenses(
@@ -230,6 +232,8 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     final error = context.watch<ExpenseViewModel>().error;
 
     return Center(
@@ -238,12 +242,12 @@ class _ErrorView extends StatelessWidget {
 
         child: Column(
           children: [
-            const Icon(
+            Icon(
               Icons.error_outline_rounded,
 
               size: 64,
 
-              color: Colors.redAccent,
+              color: colorScheme.error,
             ),
 
             const SizedBox(height: 14),
@@ -251,7 +255,11 @@ class _ErrorView extends StatelessWidget {
             Text(
               error ?? "Something went wrong",
 
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: textTheme.bodyMedium?.copyWith(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: colorScheme.onSurface,
+              ),
 
               textAlign: TextAlign.center,
             ),
@@ -277,28 +285,41 @@ class _EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Center(
       child: Padding(
-        padding: EdgeInsets.only(top: 90),
+        padding: const EdgeInsets.only(top: 90),
 
         child: Column(
           children: [
-            Icon(Icons.receipt_long_rounded, size: 70, color: Colors.grey),
+            Icon(
+              Icons.receipt_long_rounded,
+              size: 70,
+              color: colorScheme.onSurfaceVariant,
+            ),
 
-            SizedBox(height: 14),
+            const SizedBox(height: 14),
 
             Text(
               "No Transactions Yet",
 
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              style: textTheme.titleMedium?.copyWith(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: colorScheme.onSurface,
+              ),
             ),
 
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
             Text(
               "Add your first expense to start tracking",
 
-              style: TextStyle(color: Colors.grey),
+              style: textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
 
               textAlign: TextAlign.center,
             ),

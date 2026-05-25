@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/constants/AppColors.dart';
 import '../viewmodel/auth_viewmodel.dart';
 import 'OtpScreen/otp_screen.dart';
 
@@ -28,16 +27,18 @@ class _PhoneScreenState extends State<PhoneScreen> {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AuthViewModel>();
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
 
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
+        value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light, // Android
-          statusBarBrightness: Brightness.dark, // iOS
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
         ),
         child: Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: const PhoneAppBar(),
 
       body: SingleChildScrollView(

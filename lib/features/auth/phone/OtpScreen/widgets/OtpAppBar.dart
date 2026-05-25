@@ -8,11 +8,13 @@ class OtpAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppBar(
       title: const Text("Verify OTP"),
       elevation: 0,
       backgroundColor: Colors.transparent,
-      foregroundColor: AppColors.textPrimary,
+      foregroundColor: colorScheme.onPrimary,
       // 🔥 Status bar icons white
       systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,

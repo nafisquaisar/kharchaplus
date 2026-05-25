@@ -7,6 +7,8 @@ class HeaderWave extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return ClipPath(
       clipper: WaveClipper(),
       child: Container(
@@ -25,10 +27,10 @@ class HeaderWave extends StatelessWidget {
                 height: 100,
               ),
               const SizedBox(height: 5),
-              const Text(
+              Text(
                 "Kharcha Plus",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: colorScheme.onPrimary,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),

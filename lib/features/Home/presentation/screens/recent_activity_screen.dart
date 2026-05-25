@@ -50,7 +50,7 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
     );
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(65),
         child: CommonAppBar(
@@ -146,19 +146,19 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
 
   /// SEARCH BAR
   Widget _buildSearchBar() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       height: 50,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.border,
+          color: colorScheme.outlineVariant,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(
-              0.03,
-            ),
+            color: colorScheme.shadow.withOpacity(0.03),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -169,13 +169,14 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
         onChanged: (_) {
           setState(() {});
         },
-        style: const TextStyle(
+        style: textTheme.bodyMedium?.copyWith(
           fontSize: 14,
+          color: colorScheme.onSurface,
         ),
         decoration: InputDecoration(
           hintText: "Search recent activity",
           hintStyle: TextStyle(
-            color: AppColors.textSecondary,
+            color: colorScheme.onSurfaceVariant,
             fontSize: 13,
           ),
           prefixIcon: Icon(
@@ -195,6 +196,8 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
   Widget _buildActivityCard(
     RecentActivityEntity item,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       margin: const EdgeInsets.only(
         bottom: 12,
@@ -203,18 +206,16 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
         4,
       ),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(
           10,
         ),
         border: Border.all(
-          color: AppColors.border,
+          color: colorScheme.outlineVariant,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(
-              0.025,
-            ),
+            color: colorScheme.shadow.withOpacity(0.025),
             blurRadius: 10,
             offset: const Offset(
               0,
@@ -233,7 +234,7 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
               12,
             ),
             decoration: BoxDecoration(
-              color: AppColors.primarybg,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(
                 10,
               ),
@@ -261,10 +262,10 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
                   item.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style:  TextStyle(
+                  style: textTheme.bodyMedium?.copyWith(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.colorText,
+                    color: colorScheme.onSurface,
                   ),
                 ),
 
@@ -279,7 +280,7 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
                     Icon(
                       Icons.inventory_2_outlined,
                       size: 10,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(
                       width: 4,
@@ -292,15 +293,15 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
                           children: [
                             TextSpan(
                               text: item.subtitle,
-                              style:  TextStyle(
+                              style: textTheme.bodySmall?.copyWith(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
-                                color: AppColors.textSecondary,
+                                color: colorScheme.onSurfaceVariant,
                               ),
                             ),
                             TextSpan(
                               text: " • ${_formatDate(item.createdAt)}",
-                              style:  TextStyle(
+                              style: textTheme.bodySmall?.copyWith(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.accent,
@@ -323,7 +324,7 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
                     Icon(
                       Icons.calendar_today_rounded,
                       size: 10,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(
                       width: 4,
@@ -332,10 +333,10 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
                       _formatDate(
                         item.createdAt,
                       ),
-                      style:  TextStyle(
+                      style: textTheme.bodySmall?.copyWith(
                         fontSize: 8,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.textSecondary,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -357,13 +358,13 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
             decoration: BoxDecoration(
               border: Border(
                 left: BorderSide(
-                  color: AppColors.border,
+                  color: colorScheme.outlineVariant,
                 ),
               ),
             ),
             child: Text(
               "₹${item.amount}",
-              style:  TextStyle(
+              style: textTheme.titleMedium?.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: AppColors.accent,
@@ -377,6 +378,8 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
 
   /// EMPTY
   Widget _buildEmptyState() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -389,18 +392,18 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
           const SizedBox(height: 14),
            Text(
             "No Recent Activity",
-            style: TextStyle(
+            style: textTheme.titleMedium?.copyWith(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColors.colorText,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
           Text(
             "Recent transactions appear here",
-            style: TextStyle(
+            style: textTheme.bodySmall?.copyWith(
               fontSize: 13,
-              color: AppColors.textSecondary,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -410,28 +413,31 @@ class _RecentActivityScreenState extends ConsumerState<RecentActivityScreen> {
 
   /// ERROR
   Widget _buildErrorState() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
+          Icon(
             Icons.error_outline_rounded,
             size: 65,
-            color: Colors.redAccent,
+            color: colorScheme.error,
           ),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             "Something went wrong",
-            style: TextStyle(
+            style: textTheme.titleMedium?.copyWith(
               fontSize: 18,
               fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
           Text(
             "Please try again",
-            style: TextStyle(
-              color: AppColors.textSecondary,
+            style: textTheme.bodySmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ],

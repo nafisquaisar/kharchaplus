@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/constants/AppColors.dart';
 
 import '../../../Expense/data/model/ExpenseCardModel.dart';
 import '../../../Expense/presentation/viewmodel/ExpenseCardViewModel.dart';
@@ -148,7 +147,7 @@ class _HomeState
       bottom: false,
 
       child: Container(
-        color: AppColors.background,
+        color: Theme.of(context).scaffoldBackgroundColor,
 
         child: CustomScrollView(
 

@@ -5,9 +5,11 @@ class SocialFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
-      children: const [
-        Row(
+      children: [
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.facebook, size: 20),
@@ -15,10 +17,10 @@ class SocialFooter extends StatelessWidget {
             Icon(Icons.g_mobiledata, size: 24),
           ],
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Text(
           "Sign in with another account",
-          style: TextStyle(fontSize: 12, color: Colors.grey),
+          style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant),
         ),
       ],
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/AppColors.dart';
 
 class PhoneInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -16,15 +15,18 @@ class PhoneInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: colorScheme.shadow.withOpacity(0.1),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
@@ -36,21 +38,21 @@ class PhoneInputField extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             decoration: BoxDecoration(
-              color: AppColors.background,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(10),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: selectedCode,
-                icon: const Icon(
+                icon: Icon(
                   Icons.keyboard_arrow_down_rounded,
                   size: 20,
-                  color: Colors.grey,
+                  color: colorScheme.onSurfaceVariant,
                 ),
-                style: const TextStyle(
+                style: textTheme.bodyMedium?.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black,
+                  color: colorScheme.onSurface,
                 ),
                 items: const [
                   DropdownMenuItem(
@@ -79,7 +81,7 @@ class PhoneInputField extends StatelessWidget {
           Container(
             height: 28,
             width: 1,
-            color: Colors.grey.shade300,
+            color: colorScheme.outlineVariant,
           ),
 
           const SizedBox(width: 10),
@@ -89,13 +91,16 @@ class PhoneInputField extends StatelessWidget {
             child: TextField(
               controller: controller,
               keyboardType: TextInputType.phone,
-              style: const TextStyle(
+              style: textTheme.bodyMedium?.copyWith(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
+                color: colorScheme.onSurface,
               ),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: "Enter phone number",
-                hintStyle: TextStyle(color: Colors.grey),
+                hintStyle: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
                 border: InputBorder.none,
               ),
             ),

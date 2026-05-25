@@ -10,6 +10,7 @@ class FilterDragHandle
   @override
   Widget build(BuildContext context) {
 
+    final colorScheme = Theme.of(context).colorScheme;
     return Center(
 
       child: Container(
@@ -19,7 +20,7 @@ class FilterDragHandle
 
         decoration: BoxDecoration(
 
-          color: Colors.grey.shade300,
+          color: colorScheme.outlineVariant,
 
           borderRadius:
           BorderRadius.circular(100),

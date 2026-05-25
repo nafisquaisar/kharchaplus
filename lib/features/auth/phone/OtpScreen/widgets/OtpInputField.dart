@@ -106,6 +106,9 @@ class _OtpInputFieldState extends State<OtpInputField>
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         double totalWidth = constraints.maxWidth;
@@ -121,19 +124,19 @@ class _OtpInputFieldState extends State<OtpInputField>
                 width: boxWidth.clamp(45, 60),
                 height: 55,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: colorScheme.surface,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isFocused
-                        ? const Color(0xFF2EC4B6)
-                        : Colors.grey.shade300,
+                        ? colorScheme.primary
+                        : colorScheme.outlineVariant,
                     width: isFocused ? 2 : 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
                       color: isFocused
-                          ? const Color(0xFF2EC4B6).withOpacity(0.2)
-                          : Colors.black.withOpacity(0.05),
+                          ? colorScheme.primary.withOpacity(0.2)
+                          : colorScheme.shadow.withOpacity(0.05),
                       blurRadius: isFocused ? 10 : 6,
                       offset: const Offset(0, 3),
                     ),
@@ -164,9 +167,10 @@ class _OtpInputFieldState extends State<OtpInputField>
                     maxLength: 6,
                     autofillHints: const [AutofillHints.oneTimeCode],
 
-                    style: const TextStyle(
+                    style: textTheme.titleMedium?.copyWith(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
+                      color: colorScheme.onSurface,
                     ),
 
                     decoration: const InputDecoration(

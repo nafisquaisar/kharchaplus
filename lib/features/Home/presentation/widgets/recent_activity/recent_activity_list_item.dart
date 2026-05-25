@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/constants/AppColors.dart';
 import '../../../domain/entities/RecentActivityEntity.dart';
 
 class RecentActivityListItem extends StatelessWidget {
@@ -17,6 +16,8 @@ class RecentActivityListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -32,7 +33,7 @@ class RecentActivityListItem extends StatelessWidget {
                 height: 42,
                 width: 42,
                 decoration: BoxDecoration(
-                  color: recentActivityBgColor(item.type),
+                  color: recentActivityBgColor(context, item.type),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -48,8 +49,8 @@ class RecentActivityListItem extends StatelessWidget {
                   children: [
                     Text(
                       item.title,
-                      style: TextStyle(
-                        color: AppColors.black,
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurface,
                         fontWeight: FontWeight.w700,
                         fontSize: width * 0.037,
                       ),
@@ -57,8 +58,8 @@ class RecentActivityListItem extends StatelessWidget {
                     SizedBox(height: width * 0.004),
                     Text(
                       item.subtitle,
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
                         fontSize: width * 0.029,
                         fontWeight: FontWeight.w500,
                       ),
@@ -68,8 +69,8 @@ class RecentActivityListItem extends StatelessWidget {
               ),
               Text(
                 '₹${item.amount.toStringAsFixed(0)}',
-                style: TextStyle(
-                  color: AppColors.black,
+                style: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.w700,
                   fontSize: width * 0.038,
                 ),
@@ -87,12 +88,13 @@ class RecentActivityDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.symmetric(
         vertical: 6,
       ),
       height: 1,
-      color: const Color(0xFFF1F3F5),
+      color: colorScheme.outlineVariant,
     );
   }
 }
@@ -125,25 +127,26 @@ IconData recentActivityIcon(String type) {
   }
 }
 
-Color recentActivityBgColor(String type) {
+Color recentActivityBgColor(BuildContext context, String type) {
+  final colorScheme = Theme.of(context).colorScheme;
   switch (type) {
     case 'electricity':
-      return const Color(0xFFFFF4E8);
+      return const Color(0xFFE58A00).withOpacity(0.12);
 
     case 'expense_cycle':
     case 'expense_item':
     case 'expense':
-      return const Color(0xFFFFF1F3);
+      return const Color(0xFFE11D48).withOpacity(0.12);
 
     case 'food':
-      return const Color(0xFFEEF4FF);
+      return const Color(0xFF2563EB).withOpacity(0.12);
 
     case 'water_intake':
     case 'water_management':
-      return const Color(0xFFEAF7F6);
+      return const Color(0xFF2D8C82).withOpacity(0.12);
 
     default:
-      return Colors.grey.shade100;
+      return colorScheme.surfaceContainerHighest;
   }
 }
 

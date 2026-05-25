@@ -49,6 +49,7 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AuthViewModel>();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: const OtpAppBar(),
@@ -77,8 +78,8 @@ class _OtpScreenState extends State<OtpScreen> {
               const SizedBox(height: 10),
               Text(
                 otpError!,
-                style: const TextStyle(
-                  color: Colors.red,
+                style: TextStyle(
+                  color: colorScheme.error,
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                 ),

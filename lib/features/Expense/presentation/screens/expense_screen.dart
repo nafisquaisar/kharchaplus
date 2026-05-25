@@ -65,6 +65,8 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     final vm = context.watch<ExpenseCardViewModel>();
 
     final userId = FirebaseAuth.instance.currentUser!.uid;
@@ -88,13 +90,13 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     }).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       body: RefreshIndicator(
         displacement: 40,
         edgeOffset: 20,
         color: AppColors.accent,
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         onRefresh: () {
           return context.read<ExpenseCardViewModel>().refreshCards();
         },
@@ -138,12 +140,12 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
                   child: Column(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.error_outline_rounded,
 
                         size: 64,
 
-                        color: Colors.redAccent,
+                        color: colorScheme.error,
                       ),
 
                       const SizedBox(height: 14),
@@ -151,10 +153,10 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       Text(
                         vm.error!,
 
-                        style: const TextStyle(
+                        style: textTheme.bodyMedium?.copyWith(
                           fontSize: 16,
-
                           fontWeight: FontWeight.w600,
+                          color: colorScheme.onSurface,
                         ),
 
                         textAlign: TextAlign.center,
@@ -181,32 +183,39 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                 !vm.isInitialLoading &&
                 vm.error == null &&
                 filteredCards.isEmpty)
-              const Center(
+              Center(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 100),
+                  padding: const EdgeInsets.only(top: 100),
 
                   child: Column(
                     children: [
-                      Icon(Icons.wallet_rounded, size: 70, color: Colors.grey),
+                      Icon(
+                        Icons.wallet_rounded,
+                        size: 70,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
 
-                      SizedBox(height: 14),
+                      const SizedBox(height: 14),
 
                       Text(
                         "No Expense Cards",
 
-                        style: TextStyle(
+                        style: textTheme.titleMedium?.copyWith(
                           fontSize: 18,
 
                           fontWeight: FontWeight.w700,
+                          color: colorScheme.onSurface,
                         ),
                       ),
 
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
                       Text(
                         "Create your first expense card",
 
-                        style: TextStyle(color: Colors.grey),
+                        style: textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
 
                         textAlign: TextAlign.center,
                       ),

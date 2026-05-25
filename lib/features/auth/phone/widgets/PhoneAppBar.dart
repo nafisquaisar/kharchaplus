@@ -8,12 +8,14 @@ class PhoneAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppBar(
       title: const Text("Phone Login"),
 
       backgroundColor: Colors.transparent,
       elevation: 0,
-      foregroundColor: AppColors.textPrimary,
+      foregroundColor: colorScheme.onPrimary,
 
       // 🔥 THIS LINE IS THE REAL FIX
       systemOverlayStyle: const SystemUiOverlayStyle(

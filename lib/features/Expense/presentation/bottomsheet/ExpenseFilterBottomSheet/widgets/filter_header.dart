@@ -13,6 +13,7 @@ class FilterHeader
   @override
   Widget build(BuildContext context) {
 
+    final textTheme = Theme.of(context).textTheme;
     return Row(
 
       mainAxisAlignment:
@@ -20,11 +21,11 @@ class FilterHeader
 
       children: [
 
-        const Text(
+        Text(
 
           'Filters',
 
-          style: TextStyle(
+          style: textTheme.titleLarge?.copyWith(
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),

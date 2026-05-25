@@ -9,15 +9,20 @@ class SocialLoginButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AuthViewModel>();
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             "Welcome",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            style: textTheme.titleMedium?.copyWith(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
 
           const SizedBox(height: 30),
@@ -28,12 +33,12 @@ class SocialLoginButtons extends StatelessWidget {
             height: 55,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
+                backgroundColor: colorScheme.surface,
+                foregroundColor: colorScheme.onSurface,
                 elevation: 2,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
-                  side: BorderSide(color: Colors.grey.shade300),
+                  side: BorderSide(color: colorScheme.outlineVariant),
                 ),
               ),
               onPressed: vm.isLoading
@@ -59,12 +64,12 @@ class SocialLoginButtons extends StatelessWidget {
               )
                   : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.g_mobiledata, size: 28),
-                  SizedBox(width: 10),
+                children: [
+                  const Icon(Icons.g_mobiledata, size: 28),
+                  const SizedBox(width: 10),
                   Text(
                     "Continue with Google",
-                    style: TextStyle(fontSize: 16),
+                    style: textTheme.bodyLarge?.copyWith(fontSize: 16),
                   ),
                 ],
               ),
@@ -79,7 +84,8 @@ class SocialLoginButtons extends StatelessWidget {
             height: 55,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -90,9 +96,12 @@ class SocialLoginButtons extends StatelessWidget {
                   MaterialPageRoute(builder: (_) => const PhoneScreen()),
                 );
               },
-              child: const Text(
+              child: Text(
                 "Continue with Phone",
-                style: TextStyle(fontSize: 16),
+                style: textTheme.bodyLarge?.copyWith(
+                  fontSize: 16,
+                  color: colorScheme.onPrimary,
+                ),
               ),
             ),
           ),

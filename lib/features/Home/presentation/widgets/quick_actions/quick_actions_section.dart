@@ -19,6 +19,8 @@ class QuickActionsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     final actions = [
       {
@@ -97,10 +99,10 @@ class QuickActionsSection extends StatelessWidget {
                   Text(
                     "Quick Actions",
 
-                    style: TextStyle(
+                    style: textTheme.titleMedium?.copyWith(
                       fontSize: width * 0.05,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.black,
+                      color: colorScheme.onSurface,
                     ),
                   ),
 
@@ -109,9 +111,9 @@ class QuickActionsSection extends StatelessWidget {
                   Text(
                     "Access all important tools",
 
-                    style: TextStyle(
+                    style: textTheme.bodySmall?.copyWith(
                       fontSize: width * 0.03,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -206,6 +208,11 @@ class QuickActionsSection extends StatelessWidget {
     required Color iconColor,
     required Widget screen,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final surfaceStart = colorScheme.surface;
+    final surfaceEnd = Color.lerp(surfaceStart, iconColor, 0.08) ?? surfaceStart;
+
     return Material(
       color: Colors.transparent,
 
@@ -228,8 +235,8 @@ class QuickActionsSection extends StatelessWidget {
               end: Alignment.bottomRight,
 
               colors: [
-                Colors.white,
-                iconColor.withOpacity(0.05),
+                surfaceStart,
+                surfaceEnd,
               ],
             ),
 
@@ -242,8 +249,7 @@ class QuickActionsSection extends StatelessWidget {
 
             boxShadow: [
               BoxShadow(
-                color:
-                Colors.black.withOpacity(0.035),
+                color: colorScheme.shadow.withOpacity(0.035),
 
                 blurRadius: 14,
 
@@ -291,8 +297,7 @@ class QuickActionsSection extends StatelessWidget {
                     Icon(
                       Icons.arrow_outward_rounded,
                       size: 16,
-                      color:
-                      AppColors.textSecondary,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ],
                 ),
@@ -307,10 +312,10 @@ class QuickActionsSection extends StatelessWidget {
 
                   overflow: TextOverflow.ellipsis,
 
-                  style: TextStyle(
+                  style: textTheme.bodyMedium?.copyWith(
                     fontSize: width * 0.034,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.black,
+                    color: colorScheme.onSurface,
                   ),
                 ),
 
@@ -324,10 +329,9 @@ class QuickActionsSection extends StatelessWidget {
 
                   overflow: TextOverflow.ellipsis,
 
-                  style: TextStyle(
+                  style: textTheme.bodySmall?.copyWith(
                     fontSize: width * 0.026,
-                    color:
-                    AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

@@ -8,7 +8,6 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -68,8 +67,9 @@ import 'features/Profile/data/repository/overview_repository_impl.dart';
 import 'features/Profile/presentation/viewmodel/overview_viewmodel.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
+
+  await ThemeController.init();
 
   await Firebase.initializeApp(
     options:
@@ -87,7 +87,6 @@ void main() async {
 
   /// background tasks
   Future.microtask(() async {
-
     tz.initializeTimeZones();
 
     await FirebaseAppCheck.instance.activate(
@@ -100,20 +99,6 @@ void main() async {
     FirebaseFirestore.instance.settings =
     const Settings(
       persistenceEnabled: true,
-    );
-
-    SystemChrome.setSystemUIOverlayStyle(
-
-      const SystemUiOverlayStyle(
-        statusBarColor:
-        Colors.transparent,
-
-        statusBarIconBrightness:
-        Brightness.light,
-
-        statusBarBrightness:
-        Brightness.dark,
-      ),
     );
   });
 }
@@ -439,7 +424,11 @@ class ExpenseTrackerApp extends StatelessWidget {
           title: 'Kharcha Plus',
 
           builder: (context, child) {
-            SystemUI.setLight();
+            if (isDark) {
+              SystemUI.setLight();
+            } else {
+              SystemUI.setDark();
+            }
             return child!;
           },
 

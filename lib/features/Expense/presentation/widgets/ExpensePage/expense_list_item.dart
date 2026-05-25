@@ -23,6 +23,8 @@ class ExpenseListItem extends StatelessWidget {
 
     final width =
         MediaQuery.of(context).size.width;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     final isExpense =
         expense.type ==
@@ -157,7 +159,7 @@ class ExpenseListItem extends StatelessWidget {
 
         decoration: BoxDecoration(
 
-          color: Colors.white,
+          color: colorScheme.surface,
 
           borderRadius:
           BorderRadius.circular(
@@ -168,10 +170,7 @@ class ExpenseListItem extends StatelessWidget {
 
             BoxShadow(
 
-              color: Colors.black
-                  .withOpacity(
-                0.03,
-              ),
+              color: colorScheme.shadow.withOpacity(0.03),
 
               blurRadius: 6,
 
@@ -238,18 +237,15 @@ class ExpenseListItem extends StatelessWidget {
 
                 children: [
 
-                  Text(
+                    Text(
 
                     expense.categoryName,
 
-                    style: TextStyle(
-
-                      fontSize:
-                      width * 0.038,
-
-                      fontWeight:
-                      FontWeight.w600,
-                    ),
+                      style: textTheme.bodyMedium?.copyWith(
+                        fontSize: width * 0.038,
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface,
+                      ),
                   ),
 
                   const SizedBox(
@@ -264,15 +260,9 @@ class ExpenseListItem extends StatelessWidget {
 
                         formattedDate,
 
-                        style: TextStyle(
-
-                          fontSize:
-                          width *
-                              0.030,
-
-                          color: Colors
-                              .grey
-                              .shade600,
+                        style: textTheme.bodySmall?.copyWith(
+                          fontSize: width * 0.030,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
 
@@ -281,8 +271,8 @@ class ExpenseListItem extends StatelessWidget {
                       ),
 
                       _paymentChip(
-                        expense
-                            .paymentMode,
+                        context,
+                        expense.paymentMode,
                       ),
                     ],
                   ),
@@ -300,15 +290,9 @@ class ExpenseListItem extends StatelessWidget {
 
                       expense.note!,
 
-                      style: TextStyle(
-
-                        fontSize:
-                        width *
-                            0.028,
-
-                        color: Colors
-                            .grey
-                            .shade500,
+                      style: textTheme.bodySmall?.copyWith(
+                        fontSize: width * 0.028,
+                        color: colorScheme.onSurfaceVariant,
                       ),
 
                       maxLines: 1,
@@ -326,14 +310,9 @@ class ExpenseListItem extends StatelessWidget {
 
               "${isExpense ? "-" : "+"}₹${expense.amount.toStringAsFixed(0)}",
 
-              style: TextStyle(
-
-                fontSize:
-                width * 0.038,
-
-                fontWeight:
-                FontWeight.bold,
-
+              style: textTheme.bodyMedium?.copyWith(
+                fontSize: width * 0.038,
+                fontWeight: FontWeight.bold,
                 color: amountColor,
               ),
             ),
@@ -389,8 +368,11 @@ class ExpenseListItem extends StatelessWidget {
   /// 🔥 PAYMENT CHIP
 
   Widget _paymentChip(
+      BuildContext context,
       PaymentMode mode) {
 
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
 
       padding:
@@ -401,8 +383,7 @@ class ExpenseListItem extends StatelessWidget {
 
       decoration: BoxDecoration(
 
-        color:
-        Colors.grey.shade200,
+        color: colorScheme.surfaceContainerHighest,
 
         borderRadius:
         BorderRadius.circular(
@@ -414,9 +395,9 @@ class ExpenseListItem extends StatelessWidget {
 
         mode.name.toUpperCase(),
 
-        style:
-        const TextStyle(
+        style: textTheme.bodySmall?.copyWith(
           fontSize: 10,
+          color: colorScheme.onSurfaceVariant,
         ),
       ),
     );

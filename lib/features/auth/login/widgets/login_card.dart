@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/AppColors.dart';
 import 'footer.dart';
 import 'header_wave.dart' hide GoogleButton;
 import 'google_button.dart';
@@ -10,11 +9,13 @@ class LoginCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       height: double.infinity,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Column(
@@ -37,13 +38,16 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
           Text(
             "Welcome!",
-            style: TextStyle(
+            style: textTheme.titleMedium?.copyWith(
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
@@ -54,9 +58,9 @@ class _Content extends StatelessWidget {
             child: Text(
               "Track and manage your expenses easily.",
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: textTheme.bodyMedium?.copyWith(
                 fontSize: 14,
-                color: AppColors.textSecondary,
+                color: colorScheme.onSurfaceVariant,
                 height: 1.4,
               ),
             ),

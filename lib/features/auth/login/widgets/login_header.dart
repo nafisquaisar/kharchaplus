@@ -5,6 +5,8 @@ class LoginHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       height: 240,
       width: double.infinity,
@@ -22,21 +24,21 @@ class LoginHeader extends StatelessWidget {
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text(
               "Sign in",
               style: TextStyle(
-                color: Colors.white70,
+                color: colorScheme.onPrimary.withOpacity(0.7),
                 fontSize: 16,
               ),
             ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
             Text(
               "MyStudyLife",
               style: TextStyle(
-                color: Colors.white,
+                color: colorScheme.onPrimary,
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),

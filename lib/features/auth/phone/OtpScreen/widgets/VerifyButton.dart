@@ -12,6 +12,8 @@ class VerifyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SizedBox(
       width: double.infinity,
       height: 55,
@@ -27,7 +29,7 @@ class VerifyButton extends StatelessWidget {
           ),
         ),
         child: isLoading
-            ? const CircularProgressIndicator(color: Colors.white)
+            ? CircularProgressIndicator(color: colorScheme.onPrimary)
             : const Text("Verify"),
       ),
     );

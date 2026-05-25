@@ -9,6 +9,7 @@ class ResendSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final canResend = vm.canResendOtp;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.only(top: 16),
@@ -43,8 +44,8 @@ class ResendSection extends StatelessWidget {
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: canResend
-                      ? const Color(0xFF2EC4B6)
-                      : Colors.grey.shade400,
+                      ? colorScheme.primary
+                      : colorScheme.onSurfaceVariant,
                 ),
               ),
             ),
@@ -59,7 +60,7 @@ class ResendSection extends StatelessWidget {
               "in ${vm.resendSecondsRemaining}s",
               style: TextStyle(
                 fontSize: 13,
-                color: Colors.grey.shade600,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
         ],

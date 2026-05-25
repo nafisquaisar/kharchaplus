@@ -2,7 +2,6 @@ import 'package:expense_tracker/features/Track/WaterTracking/presentation/screen
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../core/constants/AppColors.dart';
 import '../../../domain/entities/water_tracking_entity.dart';
 import '../../providers/water_tracking/water_tracking_home_providers.dart';
 
@@ -14,6 +13,7 @@ class WaterTrackingCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
+    final colorScheme = Theme.of(context).colorScheme;
     final snapshot = ref.watch(waterTrackingHomeNotifierProvider);
     final drinking = snapshot.maybeWhen(
       data: (data) => data,
@@ -43,11 +43,11 @@ class WaterTrackingCard extends ConsumerWidget {
         width * 0.03,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.035),
+            color: colorScheme.shadow.withOpacity(0.035),
             blurRadius: 14,
             offset: const Offset(0, 5),
           ),
@@ -73,9 +73,7 @@ class WaterTrackingCard extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: const Color(
-                          0xFFEAF7F6,
-                        ),
+                        color: const Color(0xFF2D8C82).withOpacity(0.12),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -90,14 +88,14 @@ class WaterTrackingCard extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: width * 0.04,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.black,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ],
                 ),
                 Icon(
                   Icons.chevron_right_rounded,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   size: width * 0.065,
                 ),
               ],
@@ -108,6 +106,7 @@ class WaterTrackingCard extends ConsumerWidget {
 
           /// 💧 DRINKING CARD
           _waterCard(
+            context: context,
             width: width,
             icon: Icons.local_drink_rounded,
             title: "Drinking",
@@ -115,7 +114,7 @@ class WaterTrackingCard extends ConsumerWidget {
             subValue: "/ $goalText",
             progress: progress,
             progressText: progressText,
-            iconBg: const Color(0xFFEAF7F6),
+            iconBg: const Color(0xFF2D8C82).withOpacity(0.12),
             iconColor: const Color(0xFF2D8C82),
           ),
 
@@ -127,12 +126,10 @@ class WaterTrackingCard extends ConsumerWidget {
               width * 0.03,
             ),
             decoration: BoxDecoration(
-              color: const Color(0xFFFCFCFD),
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: const Color(
-                  0xFFF1F3F5,
-                ),
+                color: colorScheme.outlineVariant,
               ),
             ),
             child: Row(
@@ -141,9 +138,7 @@ class WaterTrackingCard extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: const Color(
-                      0xFFEAF7F6,
-                    ),
+                    color: const Color(0xFF2D8C82).withOpacity(0.12),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -163,7 +158,7 @@ class WaterTrackingCard extends ConsumerWidget {
                       Text(
                         "Water Management",
                         style: TextStyle(
-                          color: AppColors.black,
+                            color: colorScheme.onSurface,
                           fontWeight: FontWeight.w600,
                           fontSize: width * 0.036,
                         ),
@@ -174,7 +169,7 @@ class WaterTrackingCard extends ConsumerWidget {
                       Text(
                         expenseText,
                         style: TextStyle(
-                          color: AppColors.black,
+                            color: colorScheme.onSurface,
                           fontWeight: FontWeight.w700,
                           fontSize: width * 0.055,
                         ),
@@ -190,9 +185,7 @@ class WaterTrackingCard extends ConsumerWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(
-                      0xFFEAF7F6,
-                    ),
+                    color: const Color(0xFF2D8C82).withOpacity(0.12),
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Row(
@@ -278,6 +271,7 @@ class WaterTrackingCard extends ConsumerWidget {
   }
 
   Widget _waterCard({
+    required BuildContext context,
     required double width,
     required IconData icon,
     required String title,
@@ -288,17 +282,17 @@ class WaterTrackingCard extends ConsumerWidget {
     required Color iconBg,
     required Color iconColor,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: EdgeInsets.all(
         width * 0.03,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFFFCFCFD),
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: const Color(
-            0xFFF1F3F5,
-          ),
+          color: colorScheme.outlineVariant,
         ),
       ),
       child: Row(
@@ -326,8 +320,8 @@ class WaterTrackingCard extends ConsumerWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    color: AppColors.black,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                     fontSize: width * 0.036,
                   ),
@@ -340,16 +334,16 @@ class WaterTrackingCard extends ConsumerWidget {
                     children: [
                       TextSpan(
                         text: value,
-                        style: TextStyle(
-                          color: AppColors.black,
+                        style: textTheme.titleLarge?.copyWith(
+                          color: colorScheme.onSurface,
                           fontWeight: FontWeight.w700,
                           fontSize: width * 0.06,
                         ),
                       ),
                       TextSpan(
                         text: " $subValue",
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.w600,
                           fontSize: width * 0.04,
                         ),
@@ -374,9 +368,7 @@ class WaterTrackingCard extends ConsumerWidget {
                   child: CircularProgressIndicator(
                     value: progress,
                     strokeWidth: 4,
-                    backgroundColor: const Color(
-                      0xFFF1F3F5,
-                    ),
+                    backgroundColor: colorScheme.outlineVariant,
                     valueColor: AlwaysStoppedAnimation(
                       iconColor,
                     ),

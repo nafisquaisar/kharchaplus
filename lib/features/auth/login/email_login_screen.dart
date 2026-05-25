@@ -25,6 +25,13 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AuthViewModel>();
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final inputFill = colorScheme.surfaceContainerHighest;
+    final inputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide.none,
+    );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Email Login')),
@@ -36,41 +43,46 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
             children: [
               Text(
                 _isSignUp ? 'Create account' : 'Welcome back',
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: textTheme.titleMedium?.copyWith(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 _isSignUp
                     ? 'Use email and password to create your account.'
                     : 'Sign in using your email and password.',
-                style: TextStyle(color: Colors.grey.shade600),
+                style: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
               const SizedBox(height: 24),
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
+                style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
                 decoration: InputDecoration(
                   labelText: 'Email',
+                  labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+                  hintStyle: TextStyle(color: colorScheme.onSurfaceVariant),
                   filled: true,
-                  fillColor: Colors.grey.shade100,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
+                  fillColor: inputFill,
+                  border: inputBorder,
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
+                style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
                 decoration: InputDecoration(
                   labelText: 'Password',
+                  labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+                  hintStyle: TextStyle(color: colorScheme.onSurfaceVariant),
                   filled: true,
-                  fillColor: Colors.grey.shade100,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
+                  fillColor: inputFill,
+                  border: inputBorder,
                 ),
               ),
               const SizedBox(height: 24),

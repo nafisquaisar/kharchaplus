@@ -16,11 +16,13 @@ class RecentActivityFilterSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 24),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -29,17 +31,17 @@ class RecentActivityFilterSheet extends StatelessWidget {
             height: 4,
             width: 50,
             decoration: BoxDecoration(
-              color: Colors.grey.shade300,
+              color: colorScheme.outlineVariant,
               borderRadius: BorderRadius.circular(12),
             ),
           ),
           const SizedBox(height: 16),
           Text(
             'Filter Activity',
-            style: TextStyle(
+            style: textTheme.titleMedium?.copyWith(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: AppColors.black,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 12),
@@ -49,13 +51,16 @@ class RecentActivityFilterSheet extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               title: Text(
                 option,
-                style: TextStyle(
+                style: textTheme.bodyMedium?.copyWith(
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 ),
               ),
               trailing: isSelected
                   ?  Icon(Icons.check_circle_rounded, color: AppColors.accent)
-                  :  Icon(Icons.radio_button_unchecked_rounded),
+                  :  Icon(
+                      Icons.radio_button_unchecked_rounded,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
               onTap: () {
                 onSelected(option);
               },

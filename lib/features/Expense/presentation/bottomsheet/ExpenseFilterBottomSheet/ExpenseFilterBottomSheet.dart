@@ -46,6 +46,7 @@ class _ExpenseFilterBottomSheetState
   @override
   Widget build(BuildContext context) {
 
+    final colorScheme = Theme.of(context).colorScheme;
     return SafeArea(
 
       child: Container(
@@ -54,9 +55,9 @@ class _ExpenseFilterBottomSheetState
         const EdgeInsets.all(20),
 
         decoration:
-        const BoxDecoration(
+        BoxDecoration(
 
-          color: Colors.white,
+          color: colorScheme.surface,
 
           borderRadius:
           BorderRadius.vertical(
