@@ -38,8 +38,9 @@ class FoodTrackingHomeRemoteDataSourceImpl
     }
 
     try {
+      // fetch only non-deleted cycles for the current user
       final snapshot = await _collection(userId)
-          .orderBy('updatedAt', descending: true)
+          .where('isDeleted', isEqualTo: false)
           .get();
 
       final result = snapshot.docs
@@ -47,6 +48,7 @@ class FoodTrackingHomeRemoteDataSourceImpl
             (doc) => FoodTrackingHomeModel.fromJson(
               doc.data(),
               documentId: doc.id,
+              userId: userId,
             ),
           )
           .toList();
@@ -68,8 +70,9 @@ class FoodTrackingHomeRemoteDataSourceImpl
       return const Stream<List<FoodTrackingHomeModel>>.empty();
     }
 
+    // watch only non-deleted documents for this user
     return _collection(userId)
-        .orderBy('updatedAt', descending: true)
+        .where('isDeleted', isEqualTo: false)
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
@@ -77,6 +80,7 @@ class FoodTrackingHomeRemoteDataSourceImpl
             (doc) => FoodTrackingHomeModel.fromJson(
               doc.data(),
               documentId: doc.id,
+              userId: userId,
             ),
           )
           .toList();

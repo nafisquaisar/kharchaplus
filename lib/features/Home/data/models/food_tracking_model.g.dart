@@ -33,55 +33,65 @@ const FoodTrackingHomeModelSchema = CollectionSchema(
       name: r'isActive',
       type: IsarType.bool,
     ),
-    r'mealPrice': PropertySchema(
+    r'isDeleted': PropertySchema(
       id: 3,
+      name: r'isDeleted',
+      type: IsarType.bool,
+    ),
+    r'mealPrice': PropertySchema(
+      id: 4,
       name: r'mealPrice',
       type: IsarType.double,
     ),
     r'monthlyAmount': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'monthlyAmount',
       type: IsarType.double,
     ),
     r'progress': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'progress',
       type: IsarType.double,
     ),
     r'progressPercent': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'progressPercent',
       type: IsarType.long,
     ),
     r'remainingTiffin': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'remainingTiffin',
       type: IsarType.long,
     ),
     r'status': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'status',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'title',
       type: IsarType.string,
     ),
     r'totalEaten': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'totalEaten',
       type: IsarType.long,
     ),
     r'totalTiffin': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'totalTiffin',
       type: IsarType.long,
     ),
     r'updatedAt': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'updatedAt',
       type: IsarType.dateTime,
+    ),
+    r'userId': PropertySchema(
+      id: 14,
+      name: r'userId',
+      type: IsarType.string,
     )
   },
   estimateSize: _foodTrackingHomeModelEstimateSize,
@@ -107,6 +117,7 @@ int _foodTrackingHomeModelEstimateSize(
   bytesCount += 3 + object.id.length * 3;
   bytesCount += 3 + object.status.length * 3;
   bytesCount += 3 + object.title.length * 3;
+  bytesCount += 3 + object.userId.length * 3;
   return bytesCount;
 }
 
@@ -119,16 +130,18 @@ void _foodTrackingHomeModelSerialize(
   writer.writeDateTime(offsets[0], object.createdAt);
   writer.writeString(offsets[1], object.id);
   writer.writeBool(offsets[2], object.isActive);
-  writer.writeDouble(offsets[3], object.mealPrice);
-  writer.writeDouble(offsets[4], object.monthlyAmount);
-  writer.writeDouble(offsets[5], object.progress);
-  writer.writeLong(offsets[6], object.progressPercent);
-  writer.writeLong(offsets[7], object.remainingTiffin);
-  writer.writeString(offsets[8], object.status);
-  writer.writeString(offsets[9], object.title);
-  writer.writeLong(offsets[10], object.totalEaten);
-  writer.writeLong(offsets[11], object.totalTiffin);
-  writer.writeDateTime(offsets[12], object.updatedAt);
+  writer.writeBool(offsets[3], object.isDeleted);
+  writer.writeDouble(offsets[4], object.mealPrice);
+  writer.writeDouble(offsets[5], object.monthlyAmount);
+  writer.writeDouble(offsets[6], object.progress);
+  writer.writeLong(offsets[7], object.progressPercent);
+  writer.writeLong(offsets[8], object.remainingTiffin);
+  writer.writeString(offsets[9], object.status);
+  writer.writeString(offsets[10], object.title);
+  writer.writeLong(offsets[11], object.totalEaten);
+  writer.writeLong(offsets[12], object.totalTiffin);
+  writer.writeDateTime(offsets[13], object.updatedAt);
+  writer.writeString(offsets[14], object.userId);
 }
 
 FoodTrackingHomeModel _foodTrackingHomeModelDeserialize(
@@ -140,14 +153,16 @@ FoodTrackingHomeModel _foodTrackingHomeModelDeserialize(
   final object = FoodTrackingHomeModel(
     createdAt: reader.readDateTime(offsets[0]),
     id: reader.readString(offsets[1]),
-    mealPrice: reader.readDouble(offsets[3]),
-    monthlyAmount: reader.readDouble(offsets[4]),
-    remainingTiffin: reader.readLong(offsets[7]),
-    status: reader.readString(offsets[8]),
-    title: reader.readString(offsets[9]),
-    totalEaten: reader.readLong(offsets[10]),
-    totalTiffin: reader.readLong(offsets[11]),
-    updatedAt: reader.readDateTime(offsets[12]),
+    isDeleted: reader.readBool(offsets[3]),
+    mealPrice: reader.readDouble(offsets[4]),
+    monthlyAmount: reader.readDouble(offsets[5]),
+    remainingTiffin: reader.readLong(offsets[8]),
+    status: reader.readString(offsets[9]),
+    title: reader.readString(offsets[10]),
+    totalEaten: reader.readLong(offsets[11]),
+    totalTiffin: reader.readLong(offsets[12]),
+    updatedAt: reader.readDateTime(offsets[13]),
+    userId: reader.readString(offsets[14]),
   );
   object.isarId = id;
   return object;
@@ -167,25 +182,29 @@ P _foodTrackingHomeModelDeserializeProp<P>(
     case 2:
       return (reader.readBool(offset)) as P;
     case 3:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 4:
       return (reader.readDouble(offset)) as P;
     case 5:
       return (reader.readDouble(offset)) as P;
     case 6:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 7:
       return (reader.readLong(offset)) as P;
     case 8:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 9:
       return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 11:
       return (reader.readLong(offset)) as P;
     case 12:
+      return (reader.readLong(offset)) as P;
+    case 13:
       return (reader.readDateTime(offset)) as P;
+    case 14:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -487,6 +506,16 @@ extension FoodTrackingHomeModelQueryFilter on QueryBuilder<
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isActive',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel,
+      QAfterFilterCondition> isDeletedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isDeleted',
         value: value,
       ));
     });
@@ -1301,6 +1330,144 @@ extension FoodTrackingHomeModelQueryFilter on QueryBuilder<
       ));
     });
   }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel,
+      QAfterFilterCondition> userIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel,
+      QAfterFilterCondition> userIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel,
+      QAfterFilterCondition> userIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel,
+      QAfterFilterCondition> userIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'userId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel,
+      QAfterFilterCondition> userIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel,
+      QAfterFilterCondition> userIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel,
+          QAfterFilterCondition>
+      userIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel,
+          QAfterFilterCondition>
+      userIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'userId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel,
+      QAfterFilterCondition> userIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel,
+      QAfterFilterCondition> userIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'userId',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension FoodTrackingHomeModelQueryObject on QueryBuilder<
@@ -1350,6 +1517,20 @@ extension FoodTrackingHomeModelQuerySortBy
       sortByIsActiveDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isActive', Sort.desc);
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel, QAfterSortBy>
+      sortByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel, QAfterSortBy>
+      sortByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
     });
   }
 
@@ -1492,6 +1673,20 @@ extension FoodTrackingHomeModelQuerySortBy
       return query.addSortBy(r'updatedAt', Sort.desc);
     });
   }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel, QAfterSortBy>
+      sortByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel, QAfterSortBy>
+      sortByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.desc);
+    });
+  }
 }
 
 extension FoodTrackingHomeModelQuerySortThenBy
@@ -1535,6 +1730,20 @@ extension FoodTrackingHomeModelQuerySortThenBy
       thenByIsActiveDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isActive', Sort.desc);
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel, QAfterSortBy>
+      thenByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel, QAfterSortBy>
+      thenByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
     });
   }
 
@@ -1691,6 +1900,20 @@ extension FoodTrackingHomeModelQuerySortThenBy
       return query.addSortBy(r'updatedAt', Sort.desc);
     });
   }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel, QAfterSortBy>
+      thenByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel, QAfterSortBy>
+      thenByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.desc);
+    });
+  }
 }
 
 extension FoodTrackingHomeModelQueryWhereDistinct
@@ -1713,6 +1936,13 @@ extension FoodTrackingHomeModelQueryWhereDistinct
       distinctByIsActive() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isActive');
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel, QDistinct>
+      distinctByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isDeleted');
     });
   }
 
@@ -1785,6 +2015,13 @@ extension FoodTrackingHomeModelQueryWhereDistinct
       return query.addDistinctBy(r'updatedAt');
     });
   }
+
+  QueryBuilder<FoodTrackingHomeModel, FoodTrackingHomeModel, QDistinct>
+      distinctByUserId({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'userId', caseSensitive: caseSensitive);
+    });
+  }
 }
 
 extension FoodTrackingHomeModelQueryProperty on QueryBuilder<
@@ -1812,6 +2049,13 @@ extension FoodTrackingHomeModelQueryProperty on QueryBuilder<
       isActiveProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isActive');
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, bool, QQueryOperations>
+      isDeletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isDeleted');
     });
   }
 
@@ -1882,6 +2126,13 @@ extension FoodTrackingHomeModelQueryProperty on QueryBuilder<
       updatedAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'updatedAt');
+    });
+  }
+
+  QueryBuilder<FoodTrackingHomeModel, String, QQueryOperations>
+      userIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'userId');
     });
   }
 }

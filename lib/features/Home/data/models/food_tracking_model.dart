@@ -9,7 +9,15 @@ part 'food_tracking_model.g.dart';
 class FoodTrackingHomeModel extends FoodTrackingHomeEntity {
   Id isarId = Isar.autoIncrement;
 
+  // User id to scope local cache per authenticated user
+  String userId = '';
+
+  // soft-delete flag mirrored from remote so we can filter locally
+  bool isDeleted = false;
+
   FoodTrackingHomeModel({
+    required this.userId,
+    required this.isDeleted,
     required super.id,
     required super.title,
     required super.totalTiffin,
@@ -26,6 +34,8 @@ class FoodTrackingHomeModel extends FoodTrackingHomeEntity {
     FoodTrackingHomeEntity entity,
   ) {
     return FoodTrackingHomeModel(
+      userId: '',
+      isDeleted: false,
       id: entity.id,
       title: entity.title,
       totalTiffin: entity.totalTiffin,
@@ -49,6 +59,8 @@ class FoodTrackingHomeModel extends FoodTrackingHomeEntity {
       'monthlyAmount': monthlyAmount,
       'mealPrice': mealPrice,
       'status': status,
+      'isDeleted': isDeleted,
+      'userId': userId,
       'createdAt': firestore.Timestamp.fromDate(createdAt),
       'updatedAt': firestore.Timestamp.fromDate(updatedAt),
     };
@@ -57,8 +69,11 @@ class FoodTrackingHomeModel extends FoodTrackingHomeEntity {
   factory FoodTrackingHomeModel.fromJson(
     Map<String, dynamic> json, {
     String? documentId,
+    String? userId,
   }) {
     return FoodTrackingHomeModel(
+      userId: userId ?? (json['userId'] as String?) ?? '',
+      isDeleted: (json['isDeleted'] as bool?) ?? false,
       id: (json['id'] as String?) ?? documentId ?? '',
       title: (json['title'] as String?) ?? 'Untitled Mess',
       totalTiffin: (json['totalTiffin'] as num?)?.toInt() ?? 0,
