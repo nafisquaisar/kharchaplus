@@ -48,71 +48,6 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<AuthUser> signInWithEmailPassword({
-    required String email,
-    required String password,
-  }) async {
-    final userCredential = await _authDataSource.signInWithEmailPassword(
-      email: email,
-      password: password,
-    );
-    final user = _requireUser(userCredential.user);
-
-    await _userDataSource.upsertUserProfile(
-      user: user,
-      providers: _providerIds(user),
-    );
-
-    _logger.logLoginSuccess('email');
-    debugPrint('[Auth] Email sign-in success: ${user.uid}');
-    return _mapUser(user)!;
-  }
-
-  @override
-  Future<AuthUser> signUpWithEmailPassword({
-    required String email,
-    required String password,
-  }) async {
-    final userCredential = await _authDataSource.signUpWithEmailPassword(
-      email: email,
-      password: password,
-    );
-    final user = _requireUser(userCredential.user);
-
-    await _userDataSource.upsertUserProfile(
-      user: user,
-      providers: _providerIds(user),
-    );
-
-    _logger.logLoginSuccess('email');
-    debugPrint('[Auth] Email sign-up success: ${user.uid}');
-    return _mapUser(user)!;
-  }
-
-  @override
-  Future<AuthUser> linkEmailPassword({
-    required String email,
-    required String password,
-  }) async {
-    final credential = EmailAuthProvider.credential(
-      email: email,
-      password: password,
-    );
-
-    final userCredential = await _linkOrSignIn(credential);
-    final user = _requireUser(userCredential.user);
-
-    await _userDataSource.upsertUserProfile(
-      user: user,
-      providers: _providerIds(user),
-    );
-
-    _logger.logLinkingResult(success: true);
-    debugPrint('[Auth] Email linked: ${user.uid}');
-    return _mapUser(user)!;
-  }
-
-  @override
   Future<OtpSession> sendOtp(String phoneNumber, {bool isLinking = false}) async {
     final result = await _authDataSource.sendOtp(phoneNumber, isLinking: isLinking);
 
@@ -198,22 +133,23 @@ class AuthRepositoryImpl implements AuthRepository {
       }
     }
 
-    final user = _requireUser(userCredential.user);
-    if (user.uid != currentUser.uid) {
+    final linkedUser = _requireUser(userCredential.user);
+    final refreshedUser = await _reloadUser(linkedUser);
+    if (refreshedUser.uid != currentUser.uid) {
       await _userDataSource.mergeUserProfiles(
         fromUid: currentUser.uid,
-        toUid: user.uid,
+        toUid: refreshedUser.uid,
       );
     }
 
     await _userDataSource.upsertUserProfile(
-      user: user,
-      providers: _providerIds(user),
+      user: refreshedUser,
+      providers: _providerIds(refreshedUser),
     );
 
     _logger.logLinkingResult(success: true);
-    debugPrint('[Auth] Phone linked: ${user.uid}');
-    return _mapUser(user)!;
+    debugPrint('[Auth] Phone linked: ${refreshedUser.uid}');
+    return _mapUser(refreshedUser)!;
   }
 
   @override
@@ -273,6 +209,11 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     return _authDataSource.signInWithCredential(credential);
+  }
+
+  Future<User> _reloadUser(User user) async {
+    await user.reload();
+    return _authDataSource.currentUser ?? user;
   }
 
   AuthUser? _mapUser(User? user) {

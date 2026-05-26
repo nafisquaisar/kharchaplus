@@ -61,15 +61,23 @@ class FirestoreUserDataSource {
     final docRef = _firestore.collection('users').doc(user.uid);
     final snapshot = await docRef.get();
 
-    final baseData = {
+    final baseData = <String, Object?>{
       'uid': user.uid,
-      'email': user.email,
-      'phoneNumber': user.phoneNumber,
-      'displayName': user.displayName,
-      'photoUrl': user.photoURL,
-      'name': user.displayName,
-      'phone': user.phoneNumber,
     };
+
+    void putIfNotEmpty(String key, String? value) {
+      final trimmed = value?.trim();
+      if (trimmed != null && trimmed.isNotEmpty) {
+        baseData[key] = trimmed;
+      }
+    }
+
+    putIfNotEmpty('email', user.email);
+    putIfNotEmpty('phoneNumber', user.phoneNumber);
+    putIfNotEmpty('displayName', user.displayName);
+    putIfNotEmpty('photoUrl', user.photoURL);
+    putIfNotEmpty('name', user.displayName);
+    putIfNotEmpty('phone', user.phoneNumber);
 
     if (!snapshot.exists) {
       await docRef.set({
@@ -81,11 +89,11 @@ class FirestoreUserDataSource {
       return;
     }
 
-    await docRef.update({
+    await docRef.set({
       ...baseData,
       'providers': FieldValue.arrayUnion(providers),
       'lastLoginAt': FieldValue.serverTimestamp(),
-    });
+    }, SetOptions(merge: true));
   }
 
   Future<void> mergeUserProfiles({

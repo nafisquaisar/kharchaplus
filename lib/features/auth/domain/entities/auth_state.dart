@@ -33,10 +33,3 @@ class AuthError extends AuthState {
 
   const AuthError(this.message);
 }
-
-class AuthProfileIncomplete extends AuthState {
-  final AuthUser user;
-  final Set<ProfileField> missingFields;
-
-  const AuthProfileIncomplete(this.user, this.missingFields);
-}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:expense_tracker/features/Profile/presentation/viewmodel/profile_viewmodel.dart';
+import '../../../core/utils/AppFlushbar.dart';
 import '../domain/entities/auth_state.dart';
 import '../domain/entities/auth_user.dart';
 import '../phone/phone_screen.dart';
@@ -25,23 +26,18 @@ class ProfileCompletionScreen extends StatefulWidget {
 class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
   late final TextEditingController _nameController;
   late final TextEditingController _emailController;
-  late final TextEditingController _phoneController;
-  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.user.displayName ?? '');
     _emailController = TextEditingController(text: widget.user.email ?? '');
-    _phoneController = TextEditingController(text: widget.user.phoneNumber ?? '');
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
-    _phoneController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
@@ -51,10 +47,10 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     final profileVm = context.read<ProfileViewModel>();
     final missing = widget.missingFields;
     final isPhoneUser = widget.user.providers.contains('phone');
-    final isEmailUser = widget.user.providers.contains('email');
 
-    final needsEmailLink = missing.contains(ProfileField.email) && isPhoneUser;
-    final needsPhoneLink = missing.contains(ProfileField.phone) && isEmailUser;
+    final needsPhoneLink = missing.contains(ProfileField.phone) && !isPhoneUser;
+    final needsProfileDetails = missing.contains(ProfileField.name) ||
+        missing.contains(ProfileField.email);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Complete Profile')),
@@ -91,141 +87,88 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
                 ),
                 const SizedBox(height: 16),
               ],
-              if (needsEmailLink) ...[
-                _buildTextField(
-                  controller: _passwordController,
-                  label: 'Password',
-                  hint: 'Create a password',
-                  obscureText: true,
-                ),
-                const SizedBox(height: 12),
+              // if (needsPhoneLink) ...[
+              //   SizedBox(
+              //     width: double.infinity,
+              //     height: 48,
+              //     child: OutlinedButton(
+              //       onPressed: vm.isLoading
+              //           ? null
+              //           : () {
+              //               Navigator.push(
+              //                 context,
+              //                 MaterialPageRoute(
+              //                   builder: (_) => const PhoneScreen(isLinking: true),
+              //                 ),
+              //               );
+              //             },
+              //       child: const Text('Link Phone'),
+              //     ),
+              //   ),
+              //   const SizedBox(height: 24),
+              // ],
+              if (needsProfileDetails) ...[
                 SizedBox(
                   width: double.infinity,
-                  height: 48,
-                  child: OutlinedButton(
-                    onPressed: vm.isLoading
-                        ? null
-                        : () async {
-                            final email = _emailController.text.trim();
-                            final password = _passwordController.text.trim();
+                  height: 52,
+                  child: Selector<ProfileViewModel, bool>(
+                    selector: (_, pvm) => pvm.isSavingProfile,
+                    builder: (context, isSavingProfile, _) {
+                      return ElevatedButton(
+                        onPressed: isSavingProfile
+                            ? null
+                            : () async {
+                                final name = missing.contains(ProfileField.name)
+                                    ? _nameController.text.trim()
+                                    : (profileVm.profile?.name ??
+                                        widget.user.displayName ??
+                                        '');
+                                final email = missing.contains(ProfileField.email)
+                                    ? _emailController.text.trim()
+                                    : (profileVm.profile?.email ??
+                                        widget.user.email ??
+                                        '');
+                                final phone = widget.user.phoneNumber ??
+                                    profileVm.profile?.phone ??
+                                    '';
 
-                            if (email.isEmpty || password.length < 6) {
-                              _showSnack(context,
-                                  'Enter a valid email and password (min 6).');
-                              return;
-                            }
+                                if (missing.contains(ProfileField.name) && name.isEmpty) {
+                                  _showSnack(context, 'Name is required');
+                                  return;
+                                }
+                                if (missing.contains(ProfileField.email) && email.isEmpty) {
+                                  _showSnack(context, 'Email is required');
+                                  return;
+                                }
 
-                            final success = await vm.linkEmailPassword(
-                              email: email,
-                              password: password,
-                            );
+                                final success = await profileVm.saveProfile(
+                                  name: name,
+                                  email: email,
+                                  phone: phone,
+                                  photoUrl: vm.currentUser?.photoUrl,
+                                );
 
-                            if (!context.mounted) {
-                              return;
-                            }
+                                if (!context.mounted) {
+                                  return;
+                                }
 
-                            if (!success) {
-                              _showSnack(context,
-                                  vm.errorMessage ?? 'Email linking failed');
-                            }
-                          },
-                    child: const Text('Link Email'),
+                                if (!success) {
+                                  _showSnack(context,
+                                      profileVm.errorMessage ?? 'Profile update failed');
+                                }
+                              },
+                        child: isSavingProfile
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : const Text('Continue'),
+                      );
+                    },
                   ),
                 ),
-                const SizedBox(height: 24),
               ],
-              if (missing.contains(ProfileField.phone)) ...[
-                _buildTextField(
-                  controller: _phoneController,
-                  label: 'Phone',
-                  hint: 'Enter your phone number',
-                  keyboardType: TextInputType.phone,
-                ),
-                const SizedBox(height: 12),
-              ],
-              if (needsPhoneLink) ...[
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: OutlinedButton(
-                    onPressed: vm.isLoading
-                        ? null
-                        : () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const PhoneScreen(isLinking: true),
-                              ),
-                            );
-                          },
-                    child: const Text('Link Phone'),
-                  ),
-                ),
-                const SizedBox(height: 24),
-              ],
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: Selector<ProfileViewModel, bool>(
-                  selector: (_, pvm) => pvm.isSavingProfile,
-                  builder: (context, isSavingProfile, _) {
-                    return ElevatedButton(
-                      onPressed: isSavingProfile
-                          ? null
-                          : () async {
-                              final name = _nameController.text.trim();
-                              final email = _emailController.text.trim();
-                              final phone = _phoneController.text.trim();
-
-                              if (missing.contains(ProfileField.name) && name.isEmpty) {
-                                _showSnack(context, 'Name is required');
-                                return;
-                              }
-                              if (missing.contains(ProfileField.email) && email.isEmpty) {
-                                _showSnack(context, 'Email is required');
-                                return;
-                              }
-                              if (missing.contains(ProfileField.phone) && phone.isEmpty) {
-                                _showSnack(context, 'Phone is required');
-                                return;
-                              }
-
-                              if (needsEmailLink &&
-                                  _passwordController.text.trim().isEmpty) {
-                                _showSnack(context, 'Link email before saving');
-                                return;
-                              }
-
-                              final success = await profileVm.saveProfile(
-                                name: name,
-                                email: email,
-                                phone: phone,
-                                photoUrl: vm.currentUser?.photoUrl,
-                              );
-
-                              if (!context.mounted) {
-                                return;
-                              }
-
-                              if (success) {
-                                await vm.refreshProfile();
-                                return;
-                              }
-
-                              _showSnack(context,
-                                  profileVm.errorMessage ?? 'Profile update failed');
-                            },
-                      child: isSavingProfile
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Text('Continue'),
-                    );
-                  },
-                ),
-              ),
             ],
           ),
         ),
@@ -257,7 +200,15 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     );
   }
 
-  void _showSnack(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  void _showSnack(
+      BuildContext context,
+      String message, {
+        bool isError = false,
+      }) {
+    if (isError) {
+      AppFlushbar.showError(context, message);
+    } else {
+      AppFlushbar.showSuccess(context, message);
+    }
   }
 }

@@ -29,14 +29,10 @@ import 'features/auth/data/datasources/firebase_auth_data_source.dart';
 import 'features/auth/data/datasources/firestore_user_data_source.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
-import 'features/auth/domain/usecases/get_user_profile_use_case.dart';
-import 'features/auth/domain/usecases/link_email_password_use_case.dart';
 import 'features/auth/domain/usecases/link_phone_use_case.dart';
 import 'features/auth/domain/usecases/logout_use_case.dart';
 import 'features/auth/domain/usecases/send_otp_use_case.dart';
-import 'features/auth/domain/usecases/sign_in_with_email_password_use_case.dart';
 import 'features/auth/domain/usecases/sign_in_with_google_use_case.dart';
-import 'features/auth/domain/usecases/sign_up_with_email_password_use_case.dart';
 import 'features/auth/domain/usecases/verify_otp_use_case.dart';
 import 'features/auth/extra/AuthWrapper.dart';
 import 'features/auth/viewmodel/auth_viewmodel.dart';
@@ -167,18 +163,6 @@ class ExpenseTrackerApp extends StatelessWidget {
         ),
 
         provider.Provider(
-          create: (context) => SignInWithEmailPasswordUseCase(
-            context.read<AuthRepository>(),
-          ),
-        ),
-
-        provider.Provider(
-          create: (context) => SignUpWithEmailPasswordUseCase(
-            context.read<AuthRepository>(),
-          ),
-        ),
-
-        provider.Provider(
           create: (context) => SendOtpUseCase(
             context.read<AuthRepository>(),
           ),
@@ -197,19 +181,7 @@ class ExpenseTrackerApp extends StatelessWidget {
         ),
 
         provider.Provider(
-          create: (context) => LinkEmailPasswordUseCase(
-            context.read<AuthRepository>(),
-          ),
-        ),
-
-        provider.Provider(
           create: (context) => LogoutUseCase(
-            context.read<AuthRepository>(),
-          ),
-        ),
-
-        provider.Provider(
-          create: (context) => GetUserProfileUseCase(
             context.read<AuthRepository>(),
           ),
         ),
@@ -222,16 +194,10 @@ class ExpenseTrackerApp extends StatelessWidget {
           create: (context) => AuthViewModel(
             authRepository: context.read<AuthRepository>(),
             signInWithGoogle: context.read<SignInWithGoogleUseCase>(),
-            signInWithEmailPassword:
-                context.read<SignInWithEmailPasswordUseCase>(),
-            signUpWithEmailPassword:
-                context.read<SignUpWithEmailPasswordUseCase>(),
             sendOtp: context.read<SendOtpUseCase>(),
             verifyOtp: context.read<VerifyOtpUseCase>(),
             linkPhone: context.read<LinkPhoneUseCase>(),
-            linkEmailPassword: context.read<LinkEmailPasswordUseCase>(),
             logout: context.read<LogoutUseCase>(),
-            getUserProfile: context.read<GetUserProfileUseCase>(),
             logger: context.read<AuthLogger>(),
             cooldownStorage: context.read<AuthCooldownStorage>(),
           ),

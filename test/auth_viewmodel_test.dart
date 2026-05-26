@@ -8,20 +8,15 @@ import 'package:expense_tracker/features/auth/domain/entities/auth_exception.dar
 import 'package:expense_tracker/features/auth/domain/entities/auth_state.dart';
 import 'package:expense_tracker/features/auth/domain/entities/auth_user.dart';
 import 'package:expense_tracker/features/auth/domain/entities/otp_session.dart';
-import 'package:expense_tracker/features/auth/domain/entities/user_profile.dart';
 import 'package:expense_tracker/features/auth/domain/repositories/auth_repository.dart';
-import 'package:expense_tracker/features/auth/domain/usecases/link_email_password_use_case.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/link_phone_use_case.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/logout_use_case.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/send_otp_use_case.dart';
-import 'package:expense_tracker/features/auth/domain/usecases/sign_in_with_email_password_use_case.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/sign_in_with_google_use_case.dart';
-import 'package:expense_tracker/features/auth/domain/usecases/sign_up_with_email_password_use_case.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/verify_otp_use_case.dart';
 import 'package:expense_tracker/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:expense_tracker/features/auth/data/services/auth_logger.dart';
 import 'package:expense_tracker/features/auth/data/services/auth_cooldown_storage.dart';
-import 'package:expense_tracker/features/auth/domain/usecases/get_user_profile_use_case.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
@@ -40,17 +35,6 @@ class MockAuthLogger extends Mock implements AuthLogger {}
 
 class MockCooldownStorage extends Mock implements AuthCooldownStorage {}
 
-class MockSignInWithEmailPasswordUseCase extends Mock
-    implements SignInWithEmailPasswordUseCase {}
-
-class MockSignUpWithEmailPasswordUseCase extends Mock
-    implements SignUpWithEmailPasswordUseCase {}
-
-class MockLinkEmailPasswordUseCase extends Mock
-    implements LinkEmailPasswordUseCase {}
-
-class MockGetUserProfileUseCase extends Mock implements GetUserProfileUseCase {}
-
 void main() {
   late MockAuthRepository repository;
   late MockSignInWithGoogleUseCase signInWithGoogle;
@@ -60,24 +44,16 @@ void main() {
   late MockLogoutUseCase logout;
   late MockAuthLogger logger;
   late MockCooldownStorage cooldownStorage;
-  late MockSignInWithEmailPasswordUseCase signInWithEmailPassword;
-  late MockSignUpWithEmailPasswordUseCase signUpWithEmailPassword;
-  late MockLinkEmailPasswordUseCase linkEmailPassword;
-  late MockGetUserProfileUseCase getUserProfile;
   late StreamController<AuthUser?> authStream;
 
   AuthViewModel buildViewModel() {
     return AuthViewModel(
       authRepository: repository,
       signInWithGoogle: signInWithGoogle,
-      signInWithEmailPassword: signInWithEmailPassword,
-      signUpWithEmailPassword: signUpWithEmailPassword,
       sendOtp: sendOtp,
       verifyOtp: verifyOtp,
       linkPhone: linkPhone,
-      linkEmailPassword: linkEmailPassword,
       logout: logout,
-      getUserProfile: getUserProfile,
       logger: logger,
       cooldownStorage: cooldownStorage,
     );
@@ -92,10 +68,6 @@ void main() {
     logout = MockLogoutUseCase();
     logger = MockAuthLogger();
     cooldownStorage = MockCooldownStorage();
-    signInWithEmailPassword = MockSignInWithEmailPasswordUseCase();
-    signUpWithEmailPassword = MockSignUpWithEmailPasswordUseCase();
-    linkEmailPassword = MockLinkEmailPasswordUseCase();
-    getUserProfile = MockGetUserProfileUseCase();
     authStream = StreamController<AuthUser?>.broadcast();
 
     when(() => repository.userChanges())
@@ -118,14 +90,6 @@ void main() {
         .thenAnswer((_) async {});
     when(() => logger.logLinkingResult(success: any(named: 'success'), reason: any(named: 'reason')))
         .thenAnswer((_) async {});
-    when(() => getUserProfile(any())).thenAnswer(
-      (_) async => const UserProfile(
-        uid: 'uid-1',
-        name: 'Tester',
-        email: 'user@test.com',
-        phone: '+15555550000',
-      ),
-    );
   });
 
   tearDown(() async {
@@ -169,14 +133,6 @@ void main() {
 
     when(() => sendOtp('+15555553333', isLinking: any(named: 'isLinking')))
         .thenAnswer((_) async => OtpSession.autoVerified(user));
-    when(() => getUserProfile(any())).thenAnswer(
-      (_) async => const UserProfile(
-        uid: 'uid-2',
-        name: 'Phone User',
-        email: 'phone@test.com',
-        phone: '+15555553333',
-      ),
-    );
 
     final result = await vm.sendOtp('+15555553333');
 
@@ -208,14 +164,6 @@ void main() {
         .thenAnswer((_) async => const OtpSession.codeSent('ver-id'));
     when(() => verifyOtp(verificationId: 'ver-id', otp: '123456'))
         .thenAnswer((_) async => user);
-    when(() => getUserProfile(any())).thenAnswer(
-      (_) async => const UserProfile(
-        uid: 'uid-3',
-        name: 'Otp User',
-        email: 'otp@test.com',
-        phone: '+15555555555',
-      ),
-    );
 
     await vm.sendOtp('+15555555555');
     final success = await vm.verifyOtp('123456');

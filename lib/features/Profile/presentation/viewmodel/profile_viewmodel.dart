@@ -6,8 +6,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
-import 'package:expense_tracker/features/auth/domain/entities/user_profile.dart';
+import 'package:expense_tracker/features/auth/domain/entities/auth_state.dart';
+import 'package:expense_tracker/features/auth/domain/entities/auth_user.dart';
 import 'package:expense_tracker/features/Profile/data/repository/profile_repository.dart';
+
+import '../../../auth/domain/entities/user_profile.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   final ProfileRepository _repository;
@@ -34,6 +37,27 @@ class ProfileViewModel extends ChangeNotifier {
   String get resolvedEmail => _profile?.email ?? '';
   String get resolvedPhone => _profile?.phone ?? '';
   String? get resolvedPhotoUrl => _profile?.photoUrl;
+
+  Set<ProfileField> missingProfileFields(AuthUser user) {
+    final missing = <ProfileField>{};
+
+    final name = _profile?.name ?? user.displayName ?? '';
+    if (name.trim().isEmpty) {
+      missing.add(ProfileField.name);
+    }
+
+    final email = _profile?.email ?? user.email ?? '';
+    if (email.trim().isEmpty) {
+      missing.add(ProfileField.email);
+    }
+
+    // final phone = _profile?.phone ?? user.phoneNumber ?? '';
+    // if (phone.trim().isEmpty) {
+    //   missing.add(ProfileField.phone);
+    // }
+
+    return missing;
+  }
 
   void bindUser(String? uid) {
     if (_userId == uid) {

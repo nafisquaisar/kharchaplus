@@ -10,29 +10,20 @@ import '../domain/entities/auth_exception.dart';
 import '../domain/entities/auth_state.dart';
 import '../domain/entities/auth_user.dart';
 import '../domain/entities/otp_session.dart';
-import '../domain/entities/user_profile.dart';
 import '../domain/repositories/auth_repository.dart';
-import '../domain/usecases/get_user_profile_use_case.dart';
-import '../domain/usecases/link_email_password_use_case.dart';
 import '../domain/usecases/link_phone_use_case.dart';
 import '../domain/usecases/logout_use_case.dart';
 import '../domain/usecases/send_otp_use_case.dart';
-import '../domain/usecases/sign_in_with_email_password_use_case.dart';
 import '../domain/usecases/sign_in_with_google_use_case.dart';
-import '../domain/usecases/sign_up_with_email_password_use_case.dart';
 import '../domain/usecases/verify_otp_use_case.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthRepository _authRepository;
   final SignInWithGoogleUseCase _signInWithGoogle;
-  final SignInWithEmailPasswordUseCase _signInWithEmailPassword;
-  final SignUpWithEmailPasswordUseCase _signUpWithEmailPassword;
   final SendOtpUseCase _sendOtp;
   final VerifyOtpUseCase _verifyOtp;
   final LinkPhoneUseCase _linkPhone;
-  final LinkEmailPasswordUseCase _linkEmailPassword;
   final LogoutUseCase _logout;
-  final GetUserProfileUseCase _getUserProfile;
   final AuthLogger _logger;
   final AuthCooldownStorage _cooldownStorage;
 
@@ -44,31 +35,22 @@ class AuthViewModel extends ChangeNotifier {
   AuthState _state = const AuthInitial();
   String? _verificationId;
   AuthUser? _currentUser;
-  UserProfile? _profile;
 
   AuthViewModel({
     required AuthRepository authRepository,
     required SignInWithGoogleUseCase signInWithGoogle,
-    required SignInWithEmailPasswordUseCase signInWithEmailPassword,
-    required SignUpWithEmailPasswordUseCase signUpWithEmailPassword,
     required SendOtpUseCase sendOtp,
     required VerifyOtpUseCase verifyOtp,
     required LinkPhoneUseCase linkPhone,
-    required LinkEmailPasswordUseCase linkEmailPassword,
     required LogoutUseCase logout,
-    required GetUserProfileUseCase getUserProfile,
     required AuthLogger logger,
     required AuthCooldownStorage cooldownStorage,
   })  : _authRepository = authRepository,
         _signInWithGoogle = signInWithGoogle,
-        _signInWithEmailPassword = signInWithEmailPassword,
-        _signUpWithEmailPassword = signUpWithEmailPassword,
         _sendOtp = sendOtp,
         _verifyOtp = verifyOtp,
         _linkPhone = linkPhone,
-        _linkEmailPassword = linkEmailPassword,
         _logout = logout,
-        _getUserProfile = getUserProfile,
         _logger = logger,
         _cooldownStorage = cooldownStorage {
     _authSubscription = _authRepository.userChanges().listen(
@@ -94,24 +76,23 @@ class AuthViewModel extends ChangeNotifier {
   int get resendSecondsRemaining => _resendSecondsRemaining;
 
   AuthUser? get currentUser => _currentUser;
-  UserProfile? get profile => _profile;
 
   String get resolvedName {
-    final value = _profile?.name ?? _currentUser?.displayName ?? '';
+    final value = _currentUser?.displayName ?? '';
     return value.trim();
   }
 
   String get resolvedEmail {
-    final value = _profile?.email ?? _currentUser?.email ?? '';
+    final value = _currentUser?.email ?? '';
     return value.trim();
   }
 
   String get resolvedPhone {
-    final value = _profile?.phone ?? _currentUser?.phoneNumber ?? '';
+    final value = _currentUser?.phoneNumber ?? '';
     return value.trim();
   }
 
-  String? get resolvedPhotoUrl => _profile?.photoUrl ?? _currentUser?.photoUrl;
+  String? get resolvedPhotoUrl => _currentUser?.photoUrl;
 
   Future<bool> signInWithGoogle() async {
     try {
@@ -135,67 +116,6 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> signInWithEmailPassword({
-    required String email,
-    required String password,
-  }) async {
-    _setState(const AuthLoading());
-
-    try {
-      await _signInWithEmailPassword(email: email, password: password);
-      return true;
-    } on FirebaseAuthException catch (e) {
-      _logger.logLoginFailure(e.message ?? 'Email sign-in failed');
-      _setState(AuthError(e.message ?? 'Email sign-in failed'));
-      return false;
-    } catch (e) {
-      _logger.logLoginFailure(_mapError(e));
-      _setState(AuthError(_mapError(e)));
-      return false;
-    }
-  }
-
-  Future<bool> signUpWithEmailPassword({
-    required String email,
-    required String password,
-  }) async {
-    _setState(const AuthLoading());
-
-    try {
-      await _signUpWithEmailPassword(email: email, password: password);
-      return true;
-    } on FirebaseAuthException catch (e) {
-      _logger.logLoginFailure(e.message ?? 'Email sign-up failed');
-      _setState(AuthError(e.message ?? 'Email sign-up failed'));
-      return false;
-    } catch (e) {
-      _logger.logLoginFailure(_mapError(e));
-      _setState(AuthError(_mapError(e)));
-      return false;
-    }
-  }
-
-  Future<bool> linkEmailPassword({
-    required String email,
-    required String password,
-  }) async {
-    _setState(const AuthLoading());
-
-    try {
-      final user = await _linkEmailPassword(email: email, password: password);
-      await _resolveProfile(user);
-      return true;
-    } on FirebaseAuthException catch (e) {
-      _logger.logLinkingResult(success: false, reason: e.message);
-      _setState(AuthError(e.message ?? 'Email linking failed'));
-      return false;
-    } catch (e) {
-      _logger.logLinkingResult(success: false, reason: _mapError(e));
-      _setState(AuthError(_mapError(e)));
-      return false;
-    }
-  }
-
   Future<OtpSendStatus?> sendOtp(String phoneNumber) async {
     _lastPhoneNumber = phoneNumber;
     _setState(const AuthLoading());
@@ -203,7 +123,8 @@ class AuthViewModel extends ChangeNotifier {
     try {
       final session = await _sendOtpWithRetry(phoneNumber, isLinking: false);
       if (session.isAutoVerified && session.user != null) {
-        await _resolveProfile(session.user!);
+        _currentUser = session.user;
+        _setState(AuthAuthenticated(session.user!));
         return OtpSendStatus.autoVerified;
       }
 
@@ -225,18 +146,20 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<OtpSendStatus?> sendOtpForLink(String phoneNumber) async {
     _lastPhoneNumber = phoneNumber;
+    final previousState = _state;
     _setState(const AuthLoading());
 
     try {
       final session = await _sendOtpWithRetry(phoneNumber, isLinking: true);
       if (session.isAutoVerified && session.user != null) {
-        await _resolveProfile(session.user!);
+        _currentUser = session.user;
+        _setState(AuthAuthenticated(session.user!));
         return OtpSendStatus.autoVerified;
       }
 
       _verificationId = session.verificationId;
       await _startResendCooldown(phoneNumber);
-      _setState(const AuthUnauthenticated());
+      _setState(previousState);
       return OtpSendStatus.codeSent;
     } on FirebaseAuthException catch (e) {
       final message = _formatAuthError(e);
@@ -295,7 +218,8 @@ class AuthViewModel extends ChangeNotifier {
         verificationId: _verificationId!,
         otp: otp,
       );
-      await _resolveProfile(user);
+      _currentUser = user;
+      _setState(AuthAuthenticated(user));
       return true;
     } on FirebaseAuthException catch (e) {
       final message = _formatAuthError(e);
@@ -322,7 +246,8 @@ class AuthViewModel extends ChangeNotifier {
         verificationId: _verificationId!,
         otp: otp,
       );
-      await _resolveProfile(user);
+      _currentUser = user;
+      _setState(AuthAuthenticated(user));
       return true;
     } on FirebaseAuthException catch (e) {
       final message = _formatAuthError(e);
@@ -341,71 +266,15 @@ class AuthViewModel extends ChangeNotifier {
     await _logout();
   }
 
-  Future<void> refreshProfile() async {
-    final user = _currentUser;
-    if (user == null) {
-      return;
-    }
-    await _resolveProfile(user);
-  }
-
   void _handleAuthUser(AuthUser? user) {
     if (user == null) {
       _currentUser = null;
-      _profile = null;
       _setState(const AuthUnauthenticated());
       return;
     }
 
     _currentUser = user;
-    final shouldShowLoading =
-        _state is! AuthAuthenticated && _state is! AuthProfileIncomplete;
-    if (shouldShowLoading) {
-      _setState(const AuthLoading());
-    }
-    _resolveProfile(user);
-  }
-
-  Future<void> _resolveProfile(
-    AuthUser user, {
-    UserProfile? profileOverride,
-  }) async {
-    try {
-      final profile = profileOverride ?? await _getUserProfile(user.uid);
-      _profile = profile;
-      final missing = _missingProfileFields(user, profile);
-      if (missing.isNotEmpty) {
-        _setState(AuthProfileIncomplete(user, missing));
-        return;
-      }
-      _setState(AuthAuthenticated(user));
-    } catch (e) {
-      _setState(AuthError(_mapError(e)));
-    }
-  }
-
-  Set<ProfileField> _missingProfileFields(
-    AuthUser user,
-    UserProfile? profile,
-  ) {
-    final missing = <ProfileField>{};
-
-    final name = profile?.name ?? user.displayName ?? '';
-    if (name.trim().isEmpty) {
-      missing.add(ProfileField.name);
-    }
-
-    final email = profile?.email ?? user.email ?? '';
-    if (email.trim().isEmpty) {
-      missing.add(ProfileField.email);
-    }
-
-    final phone = profile?.phone ?? user.phoneNumber ?? '';
-    if (phone.trim().isEmpty) {
-      missing.add(ProfileField.phone);
-    }
-
-    return missing;
+    _setState(AuthAuthenticated(user));
   }
 
 

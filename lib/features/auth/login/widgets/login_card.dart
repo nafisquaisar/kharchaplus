@@ -67,11 +67,9 @@ class _Content extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           const GoogleButton(),
-          // SizedBox(height: 15),
-          // EmailButton(),
-          const SizedBox(height: 15),
+          // const SizedBox(height: 15),
           // const PhoneButton(),
-          // const SizedBox(height: 20),
+          const SizedBox(height: 20),
           // SocialFooter(),
           Footer()
         ],

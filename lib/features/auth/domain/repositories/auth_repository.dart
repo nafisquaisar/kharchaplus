@@ -7,20 +7,6 @@ abstract class AuthRepository {
 
   Future<AuthUser> signInWithGoogle();
 
-  Future<AuthUser> signInWithEmailPassword({
-    required String email,
-    required String password,
-  });
-
-  Future<AuthUser> signUpWithEmailPassword({
-    required String email,
-    required String password,
-  });
-
-  Future<AuthUser> linkEmailPassword({
-    required String email,
-    required String password,
-  });
 
   Future<OtpSession> sendOtp(String phoneNumber, {bool isLinking = false});
 

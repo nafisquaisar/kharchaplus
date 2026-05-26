@@ -169,6 +169,7 @@ void main() {
     final user = MockUser();
 
     when(() => authDataSource.currentUser).thenReturn(user);
+    when(() => user.reload()).thenAnswer((_) async {});
     when(() => authDataSource.linkWithCredential(any()))
         .thenAnswer((_) async => userCredential);
     when(() => userCredential.user).thenReturn(user);
@@ -201,7 +202,11 @@ void main() {
     final mergedUserCredential = MockUserCredential();
     final mergedUser = MockUser();
 
-    when(() => authDataSource.currentUser).thenReturn(existingUser);
+    var currentUserCalls = 0;
+    when(() => authDataSource.currentUser).thenAnswer((_) {
+      currentUserCalls += 1;
+      return currentUserCalls == 1 ? existingUser : mergedUser;
+    });
     when(() => existingUser.uid).thenReturn('uid-old');
 
     when(() => authDataSource.linkWithCredential(any())).thenThrow(
@@ -210,6 +215,7 @@ void main() {
     when(() => authDataSource.signInWithCredential(any()))
         .thenAnswer((_) async => mergedUserCredential);
     when(() => mergedUserCredential.user).thenReturn(mergedUser);
+    when(() => mergedUser.reload()).thenAnswer((_) async {});
     when(() => mergedUser.uid).thenReturn('uid-new');
     when(() => mergedUser.email).thenReturn('new@test.com');
     when(() => mergedUser.phoneNumber).thenReturn('+15555559999');

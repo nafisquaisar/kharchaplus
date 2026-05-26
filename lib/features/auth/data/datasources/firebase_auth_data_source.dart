@@ -82,22 +82,6 @@ class FirebaseAuthDataSource {
     return user.linkWithCredential(credential);
   }
 
-  Future<UserCredential> signInWithEmailPassword({
-    required String email,
-    required String password,
-  }) {
-    return _auth.signInWithEmailAndPassword(email: email, password: password);
-  }
-
-  Future<UserCredential> signUpWithEmailPassword({
-    required String email,
-    required String password,
-  }) {
-    return _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-  }
 
   Future<OtpSessionResult> sendOtp(
     String phoneNumber, {
