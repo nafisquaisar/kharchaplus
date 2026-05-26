@@ -16,6 +16,7 @@ class NoteField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return TextField(
       controller: controller,
       maxLines: 3,
@@ -24,12 +25,12 @@ class NoteField extends StatelessWidget {
         hintText: "Add note...",
 
         hintStyle: TextStyle(
-          color: Colors.grey.shade500,
+          color: colorScheme.onSurfaceVariant,
           fontSize: 14,
         ),
 
         filled: true,
-        fillColor: AppColors.background,
+        fillColor: colorScheme.surfaceContainerHighest,
 
         contentPadding: const EdgeInsets.all(16),
 

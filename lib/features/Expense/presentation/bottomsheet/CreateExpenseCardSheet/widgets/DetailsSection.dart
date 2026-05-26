@@ -14,6 +14,7 @@ class DetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -24,7 +25,7 @@ class DetailsSection extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Colors.grey.shade700,
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
 
@@ -78,6 +79,7 @@ class _InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -87,7 +89,7 @@ class _InputField extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 12,
-            color: Colors.grey.shade600,
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
 
@@ -105,7 +107,7 @@ class _InputField extends StatelessWidget {
             prefixIcon: Icon(icon, size: 18),
 
             filled: true,
-            fillColor: AppColors.background,
+            fillColor: colorScheme.surfaceContainerHighest,
 
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 12,

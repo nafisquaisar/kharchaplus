@@ -8,6 +8,7 @@ class SheetHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         /// 🔥 DRAG HANDLE
@@ -15,7 +16,7 @@ class SheetHeader extends StatelessWidget {
           width: 40,
           height: 5,
           decoration: BoxDecoration(
-            color: Colors.grey.shade300,
+            color: colorScheme.outlineVariant,
             borderRadius: BorderRadius.circular(10),
           ),
         ),
@@ -59,7 +60,7 @@ class SheetHeader extends StatelessWidget {
                         : "Track your spending smartly",
                     style: TextStyle(
                       fontSize: 13,
-                      color: Colors.grey.shade600,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -73,7 +74,7 @@ class SheetHeader extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(Icons.close, size: 20 ,color: Colors.red,),

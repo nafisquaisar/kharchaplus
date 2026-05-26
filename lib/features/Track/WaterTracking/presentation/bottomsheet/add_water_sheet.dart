@@ -63,6 +63,8 @@ class _AddWaterSheetState extends ConsumerState<AddWaterSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.60,
@@ -78,9 +80,9 @@ class _AddWaterSheetState extends ConsumerState<AddWaterSheet> {
           },
           child: Container(
             clipBehavior: Clip.antiAlias,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(30),
               ),
             ),
@@ -101,7 +103,7 @@ class _AddWaterSheetState extends ConsumerState<AddWaterSheet> {
                       height: 5,
                       width: 60,
                       decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                        color: colorScheme.outlineVariant,
                         borderRadius: BorderRadius.circular(
                           20,
                         ),
@@ -111,7 +113,7 @@ class _AddWaterSheetState extends ConsumerState<AddWaterSheet> {
                   const SizedBox(height: 24),
                   Text(
                     isEditMode ? 'Update Water Intake' : 'Add Water Intake',
-                    style: const TextStyle(
+                    style: textTheme.titleLarge?.copyWith(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
@@ -127,7 +129,7 @@ class _AddWaterSheetState extends ConsumerState<AddWaterSheet> {
                     decoration: InputDecoration(
                       hintText: 'Enter amount in ml',
                       filled: true,
-                      fillColor: AppColors.primarybg,
+                      fillColor: colorScheme.surfaceContainerHighest,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(
                           18,
@@ -148,7 +150,7 @@ class _AddWaterSheetState extends ConsumerState<AddWaterSheet> {
                     decoration: InputDecoration(
                       hintText: 'Source Type',
                       filled: true,
-                      fillColor: AppColors.primarybg,
+                      fillColor: colorScheme.surfaceContainerHighest,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(
                           18,
@@ -346,11 +348,12 @@ class _DateTimeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final dateLabel = DateFormat('dd MMM yyyy').format(dateTime);
     final timeLabel = DateFormat('hh:mm a').format(dateTime);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.primarybg,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
@@ -389,6 +392,8 @@ class _DateTimePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
@@ -398,10 +403,10 @@ class _DateTimePill extends StatelessWidget {
           vertical: 10,
         ),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: AppColors.border,
+            color: colorScheme.outlineVariant,
           ),
         ),
         child: Row(
@@ -416,9 +421,10 @@ class _DateTimePill extends StatelessWidget {
               child: Text(
                 label,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: textTheme.bodySmall?.copyWith(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
+                  color: colorScheme.onSurface,
                 ),
               ),
             ),

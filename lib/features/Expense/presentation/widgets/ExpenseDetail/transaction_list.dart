@@ -187,17 +187,18 @@ class _TransactionListState
                       context,
                       scrollController,
                       ) {
+                    final colorScheme = Theme.of(context).colorScheme;
 
                     return Container(
 
                       decoration:
-                      const BoxDecoration(
+                      BoxDecoration(
 
                         color:
-                        Colors.white,
+                        colorScheme.surface,
 
                         borderRadius:
-                        BorderRadius.vertical(
+                        const BorderRadius.vertical(
                           top:
                           Radius.circular(
                             30,

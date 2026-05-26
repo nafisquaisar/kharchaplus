@@ -9,15 +9,17 @@ class ExpenseSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: colorScheme.shadow.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -36,10 +38,10 @@ class ExpenseSummaryCard extends StatelessWidget {
             children: [
                Text(
                 'This Month Expense',
-                style: TextStyle(
+                style: textTheme.bodyMedium?.copyWith(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.black,
+                  color: colorScheme.onSurface,
                 ),
               ),
 
@@ -47,10 +49,10 @@ class ExpenseSummaryCard extends StatelessWidget {
                 children:  [
                   Text(
                     'May 2024',
-                    style: TextStyle(
+                    style: textTheme.bodySmall?.copyWith(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
 
@@ -59,7 +61,7 @@ class ExpenseSummaryCard extends StatelessWidget {
                   Icon(
                     Icons.keyboard_arrow_down_rounded,
                     size: 18,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ],
               ),
@@ -90,26 +92,26 @@ class ExpenseSummaryCard extends StatelessWidget {
                           height: 46,
                           width: 46,
                           decoration: BoxDecoration(
-                            color: AppColors.primarybg,
+                            color: colorScheme.surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child:  Icon(
                             Icons.account_balance_wallet_outlined,
-                            color: AppColors.colorText,
+                            color: colorScheme.onSurface,
                             size: 22,
                           ),
                         ),
 
                         const SizedBox(width: 10),
 
-                         Expanded(
+                          Expanded(
                           child: Text(
                             '₹880',
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
+                            style: textTheme.titleLarge?.copyWith(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.black,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -118,14 +120,14 @@ class ExpenseSummaryCard extends StatelessWidget {
 
                     const SizedBox(height: 10),
 
-                    Row(
+                      Row(
                       children:  [
                         Text(
                           'vs Apr 2024',
-                          style: TextStyle(
+                            style: textTheme.bodySmall?.copyWith(
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.textSecondary,
+                              color: colorScheme.onSurfaceVariant,
                           ),
                         ),
 
@@ -164,6 +166,7 @@ class ExpenseSummaryCard extends StatelessWidget {
                 child: Column(
                   children: [
                     _buildMiniInfo(
+                      context,
                       icon: Icons.local_drink_outlined,
                       title: 'Drink',
                       value: '84L',
@@ -172,6 +175,7 @@ class ExpenseSummaryCard extends StatelessWidget {
                     const SizedBox(height: 8),
 
                     _buildMiniInfo(
+                      context,
                       icon: Icons.water_drop_outlined,
                       title: 'Tanker',
                       value: '420L',
@@ -186,18 +190,21 @@ class ExpenseSummaryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildMiniInfo({
+  Widget _buildMiniInfo(
+    BuildContext context, {
     required IconData icon,
     required String title,
     required String value,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 8,
         vertical: 7,
       ),
       decoration: BoxDecoration(
-        color: AppColors.primarybg,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
       ),
 
@@ -207,13 +214,13 @@ class ExpenseSummaryCard extends StatelessWidget {
             height: 28,
             width: 28,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(7),
             ),
             child: Icon(
               icon,
               size: 14,
-              color: AppColors.colorText,
+              color: colorScheme.onSurface,
             ),
           ),
 
@@ -226,10 +233,10 @@ class ExpenseSummaryCard extends StatelessWidget {
                 Text(
                   title,
                   overflow: TextOverflow.ellipsis,
-                  style:  TextStyle(
+                  style: textTheme.bodySmall?.copyWith(
                     fontSize: 9,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
 
@@ -238,10 +245,10 @@ class ExpenseSummaryCard extends StatelessWidget {
                 Text(
                   value,
                   overflow: TextOverflow.ellipsis,
-                  style:  TextStyle(
+                  style: textTheme.bodyMedium?.copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.black,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ],

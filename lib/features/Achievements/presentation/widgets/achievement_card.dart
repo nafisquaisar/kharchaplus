@@ -15,6 +15,7 @@ class AchievementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progress = _progressValue(achievement);
+    final theme = Theme.of(context);
 
     final gradient = achievement.isUnlocked
         ? LinearGradient(
@@ -64,7 +65,7 @@ class AchievementCard extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha(18),
+                color: theme.shadowColor.withOpacity(0.12),
                 blurRadius: 18,
                 offset: const Offset(0, 8),
               ),
@@ -173,11 +174,13 @@ class AchievementCard extends StatelessWidget {
     /// ONLY UNLOCKED
     if (!achievement.isUnlocked) return;
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
       barrierLabel: 'Badge Preview',
-      barrierColor: Colors.black.withOpacity(0.75),
+      barrierColor: colorScheme.scrim.withOpacity(0.75),
       transitionDuration: const Duration(milliseconds: 350),
       pageBuilder: (_, __, ___) {
         return SafeArea(
@@ -400,6 +403,8 @@ class _BadgeFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       width: size,
       height: size,
@@ -423,7 +428,7 @@ class _BadgeFrame extends StatelessWidget {
           BoxShadow(
             color: unlocked
                 ? AppColors.accent.withOpacity(0.10)
-                : Colors.black.withOpacity(0.04),
+                : theme.shadowColor.withOpacity(0.06),
             blurRadius: 14,
             offset: const Offset(0, 6),
           ),

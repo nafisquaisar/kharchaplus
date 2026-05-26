@@ -37,19 +37,22 @@ class MealSelector extends StatelessWidget {
 
     final dinnerEnabled = true;
 
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
       margin: const EdgeInsets.fromLTRB(14, 0, 14, 12),
 
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
 
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
 
         borderRadius: BorderRadius.circular(18),
 
         boxShadow: [
           BoxShadow(
-            color: AppColors.accent.withOpacity(0.06),
+            color: colorScheme.shadow.withOpacity(0.06),
 
             blurRadius: 12,
 
@@ -85,10 +88,11 @@ class MealSelector extends StatelessWidget {
                 child: Text(
                   key,
 
-                  style: const TextStyle(
+                  style: textTheme.bodyMedium?.copyWith(
                     fontSize: 13,
 
                     fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -155,6 +159,8 @@ class MealSelector extends StatelessWidget {
                       'lunch',
                     );
                   },
+                    context: context
+
                 ),
               ),
 
@@ -185,6 +191,9 @@ class MealSelector extends StatelessWidget {
                       'dinner',
                     );
                   },
+                    context: context
+
+
                 ),
               ),
 
@@ -217,6 +226,7 @@ class MealSelector extends StatelessWidget {
                         'special',
                       );
                     },
+                    context: context
                   ),
                 ),
               ],
@@ -243,7 +253,11 @@ class MealSelector extends StatelessWidget {
     required bool selected,
 
     required VoidCallback onTap,
+
+    required BuildContext context
+
   }) {
+
 
     return InkWell(
 
@@ -269,9 +283,7 @@ class MealSelector extends StatelessWidget {
               ? LinearGradient(
 
             colors: [
-
               color.withOpacity(0.18),
-
               color.withOpacity(0.08),
             ],
           )
@@ -281,7 +293,7 @@ class MealSelector extends StatelessWidget {
           color:
           selected
               ? null
-              : Colors.grey.shade50,
+              : Theme.of(context).colorScheme.surfaceContainerHighest,
 
           borderRadius:
           BorderRadius.circular(14),
@@ -290,7 +302,7 @@ class MealSelector extends StatelessWidget {
 
             color: selected
                 ? color
-                : Colors.grey.shade200,
+                : Theme.of(context).colorScheme.outlineVariant,
 
             width: 1.2,
           ),
@@ -318,7 +330,7 @@ class MealSelector extends StatelessWidget {
 
                   color: enabled
                       ? color
-                      : Colors.grey,
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
 
                 const SizedBox(width: 4),
@@ -342,8 +354,8 @@ class MealSelector extends StatelessWidget {
                       color:
 
                       enabled
-                          ? Colors.black87
-                          : Colors.grey,
+                          ? Theme.of(context).colorScheme.onSurface
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),

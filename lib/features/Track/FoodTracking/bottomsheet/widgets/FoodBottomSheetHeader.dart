@@ -21,6 +21,8 @@ class FoodBottomSheetHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
         /// 🔘 HANDLE
@@ -33,7 +35,7 @@ class FoodBottomSheetHeader extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 18),
 
             decoration: BoxDecoration(
-              color: Colors.grey.shade300,
+              color: colorScheme.outlineVariant,
 
               borderRadius: BorderRadius.circular(30),
             ),
@@ -45,13 +47,13 @@ class FoodBottomSheetHeader extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
 
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorScheme.surface,
 
             borderRadius: BorderRadius.circular(10),
 
             boxShadow: [
               BoxShadow(
-                color: AppColors.accent.withOpacity(0.12),
+                color: colorScheme.shadow.withOpacity(0.12),
 
                 blurRadius: 10,
 
@@ -71,7 +73,7 @@ class FoodBottomSheetHeader extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isUpdate
                       ? Colors.blue.withOpacity(0.12)
-                      : const Color(0xFFE7FAF8),
+                      : AppColors.primarybg,
 
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -79,7 +81,7 @@ class FoodBottomSheetHeader extends StatelessWidget {
                 child: Icon(
                   isUpdate ? Icons.edit_rounded : Icons.restaurant_rounded,
 
-                  color: isUpdate ? Colors.blue : const Color(0xFF00B8A9),
+                  color: isUpdate ? Colors.blue : AppColors.primary,
 
                   size: 22,
                 ),
@@ -96,12 +98,12 @@ class FoodBottomSheetHeader extends StatelessWidget {
                     Text(
                       title,
 
-                      style: const TextStyle(
+                      style: textTheme.titleSmall?.copyWith(
                         fontSize: 16,
 
                         fontWeight: FontWeight.w700,
 
-                        color: Colors.black,
+                        color: colorScheme.onSurface,
                       ),
                     ),
 
@@ -110,10 +112,10 @@ class FoodBottomSheetHeader extends StatelessWidget {
                     Text(
                       subtitle,
 
-                      style: const TextStyle(
+                      style: textTheme.bodySmall?.copyWith(
                         fontSize: 12,
 
-                        color: Colors.grey,
+                        color: colorScheme.onSurfaceVariant,
 
                         fontWeight: FontWeight.w500,
                       ),

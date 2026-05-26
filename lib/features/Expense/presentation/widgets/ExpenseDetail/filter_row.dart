@@ -21,6 +21,7 @@ class FilterRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       children: [
 
@@ -32,18 +33,21 @@ class FilterRow extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               children: [
                 _chip(
+                  context,
                   label: "All",
                   type: null,
                 ),
                 const SizedBox(width: 8),
 
                 _chip(
+                  context,
                   label: "Expense",
                   type: ExpenseType.expense,
                 ),
                 const SizedBox(width: 8),
 
                 _chip(
+                  context,
                   label: "Income",
                   type: ExpenseType.income,
                 ),
@@ -62,11 +66,15 @@ class FilterRow extends StatelessWidget {
             height: 34,
             width: 34,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.grey.shade300),
+              border: Border.all(color: colorScheme.outlineVariant),
             ),
-            child: const Icon(Icons.tune, size: 18),
+            child: Icon(
+              Icons.tune,
+              size: 18,
+              color: colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
 
@@ -90,7 +98,8 @@ class FilterRow extends StatelessWidget {
     );
   }
 
-  Widget _chip({
+  Widget _chip(
+    BuildContext context, {
 
     required String label,
 
@@ -100,6 +109,7 @@ class FilterRow extends StatelessWidget {
     final isSelected =
         selectedType == type;
 
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
 
       onTap: () => onChanged(type),
@@ -116,7 +126,7 @@ class FilterRow extends StatelessWidget {
 
           color: isSelected
               ? AppColors.accent
-              : Colors.white,
+              : colorScheme.surface,
 
           borderRadius:
           BorderRadius.circular(18),
@@ -125,7 +135,7 @@ class FilterRow extends StatelessWidget {
 
             color: isSelected
                 ? AppColors.accent
-                : Colors.grey.shade300,
+                : colorScheme.outlineVariant,
           ),
         ),
 
@@ -143,7 +153,7 @@ class FilterRow extends StatelessWidget {
 
               color: isSelected
                   ? Colors.white
-                  : Colors.black87,
+                  : colorScheme.onSurface,
             ),
           ),
         ),

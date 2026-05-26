@@ -52,9 +52,10 @@ class _PurchaseHistoryScreenState extends ConsumerState<WaterPurchaseHistoryScre
     final viewState = ref.watch(purchaseHistoryProvider);
     final rawState = ref.watch(purchaseNotifierProvider);
     final years = _extractYears(rawState.purchases);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(
           kToolbarHeight,
@@ -85,7 +86,7 @@ class _PurchaseHistoryScreenState extends ConsumerState<WaterPurchaseHistoryScre
         },
         child: RefreshIndicator(
           color: AppColors.accent,
-          backgroundColor: Colors.white,
+          backgroundColor: colorScheme.surface,
           onRefresh: () {
             return ref.read(purchaseNotifierProvider.notifier).loadPurchases();
           },
@@ -258,6 +259,7 @@ class _ErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24),
       child: Column(
@@ -274,7 +276,7 @@ class _ErrorState extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 12),

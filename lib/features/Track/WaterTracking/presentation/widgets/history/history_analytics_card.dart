@@ -18,14 +18,16 @@ class HistoryAnalyticsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: colorScheme.shadow.withValues(alpha: 0.05),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -54,10 +56,10 @@ class HistoryAnalyticsCard extends StatelessWidget {
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style:  TextStyle(
+                  style: textTheme.labelSmall?.copyWith(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -66,10 +68,10 @@ class HistoryAnalyticsCard extends StatelessWidget {
           const Spacer(),
           Text(
             value,
-            style:  TextStyle(
+            style: textTheme.titleMedium?.copyWith(
               fontSize: 16,
               fontWeight: FontWeight.w800,
-              color: AppColors.black,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 3),
@@ -77,10 +79,10 @@ class HistoryAnalyticsCard extends StatelessWidget {
             subtitle,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style:  TextStyle(
+            style: textTheme.labelSmall?.copyWith(
               fontSize: 10,
               fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ],

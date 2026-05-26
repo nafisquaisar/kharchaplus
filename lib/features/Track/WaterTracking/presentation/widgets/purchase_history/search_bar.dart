@@ -64,6 +64,8 @@ class _PurchaseHistorySearchBarState
     final search = ref.watch(
       purchaseHistorySearchProvider,
     );
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     if (_controller.text != search) {
       _controller.text = search;
@@ -86,15 +88,17 @@ class _PurchaseHistorySearchBarState
           horizontal: 14,
         ),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: _focusNode.hasFocus ? AppColors.primary : AppColors.border,
+            color: _focusNode.hasFocus
+                ? AppColors.primary
+                : colorScheme.outlineVariant,
             width: 1.2,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: colorScheme.shadow.withOpacity(0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -106,15 +110,15 @@ class _PurchaseHistorySearchBarState
           textInputAction: TextInputAction.search,
           textAlignVertical: TextAlignVertical.center,
           cursorColor: AppColors.accent,
-          style: TextStyle(
+          style: textTheme.bodyMedium?.copyWith(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: AppColors.black,
+            color: colorScheme.onSurface,
           ),
           decoration: InputDecoration(
             hintText: 'Search by type or vendor',
-            hintStyle: TextStyle(
-              color: AppColors.textSecondary.withOpacity(0.75),
+            hintStyle: textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -131,7 +135,7 @@ class _PurchaseHistorySearchBarState
                 height: 36,
                 width: 36,
                 decoration: BoxDecoration(
-                  color: AppColors.primarybg,
+                  color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
@@ -159,7 +163,7 @@ class _PurchaseHistorySearchBarState
                     child: Icon(
                       Icons.close_rounded,
                       size: 18,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   )
                 : null,

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../data/models/tracking_model.dart';
 
 class TrackingCard extends StatelessWidget {
-
   final TrackingModel tracking;
 
   final VoidCallback? onTap;
@@ -19,9 +18,7 @@ class TrackingCard extends StatelessWidget {
   /// =========================================
 
   IconData getTrackingIcon() {
-
     switch (tracking.iconType.toLowerCase()) {
-
       case "food":
         return Icons.fastfood_rounded;
 
@@ -41,9 +38,7 @@ class TrackingCard extends StatelessWidget {
   /// =========================================
 
   Color getTrackingColor() {
-
     switch (tracking.iconType.toLowerCase()) {
-
       case "food":
         return Colors.orange;
 
@@ -60,158 +55,100 @@ class TrackingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final color = getTrackingColor();
-
     final icon = getTrackingIcon();
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return InkWell(
-
       onTap: onTap,
-
       borderRadius: BorderRadius.circular(16),
-
       child: Container(
-
         margin: const EdgeInsets.only(bottom: 14),
-
         padding: const EdgeInsets.all(16),
-
         decoration: BoxDecoration(
-
-          color: Colors.white,
-
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
-
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: theme.shadowColor.withOpacity(0.08),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
           ],
         ),
-
         child: Column(
-
           children: [
-
             /// ===============================
             /// TOP ROW
             /// ===============================
 
             Row(
-
               children: [
-
                 Container(
-
                   padding: const EdgeInsets.all(12),
-
                   decoration: BoxDecoration(
-
                     color: color.withOpacity(0.12),
-
                     shape: BoxShape.circle,
                   ),
-
                   child: Icon(
                     icon,
                     color: color,
                     size: 24,
                   ),
                 ),
-
                 const SizedBox(width: 14),
-
                 Expanded(
-
                   child: Column(
-
-                    crossAxisAlignment:
-                    CrossAxisAlignment.start,
-
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       Text(
-
                         "${tracking.type} Tracking",
-
-                        style: const TextStyle(
-
+                        style: TextStyle(
                           fontWeight: FontWeight.w700,
-
                           fontSize: 16,
+                          color: colorScheme.onSurface,
                         ),
                       ),
-
                       const SizedBox(height: 4),
-
                       Text(
-
                         "${tracking.activeCycles} Active Cycles",
-
                         style: TextStyle(
-
-                          color: Colors.grey.shade600,
-
+                          color: colorScheme.onSurfaceVariant,
                           fontSize: 12,
                         ),
                       ),
                     ],
                   ),
                 ),
-
                 Column(
-
-                  crossAxisAlignment:
-                  CrossAxisAlignment.end,
-
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-
                     Text(
-
                       "₹ ${tracking.totalAmount.toStringAsFixed(0)}",
-
-                      style: const TextStyle(
-
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-
                         fontSize: 18,
+                        color: colorScheme.onSurface,
                       ),
                     ),
-
                     const SizedBox(height: 4),
-
                     Container(
-
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
                         vertical: 4,
                       ),
-
                       decoration: BoxDecoration(
-
                         color: tracking.isActive
                             ? Colors.green.withOpacity(0.12)
                             : Colors.red.withOpacity(0.12),
-
-                        borderRadius:
-                        BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(30),
                       ),
-
                       child: Text(
-
                         tracking.status,
-
                         style: TextStyle(
-
-                          color: tracking.isActive
-                              ? Colors.green
-                              : Colors.red,
-
+                          color: tracking.isActive ? Colors.green : Colors.red,
                           fontSize: 11,
-
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -228,20 +165,12 @@ class TrackingCard extends StatelessWidget {
             /// ===============================
 
             ClipRRect(
-
               borderRadius: BorderRadius.circular(20),
-
               child: LinearProgressIndicator(
-
                 value: tracking.progressPercent,
-
                 minHeight: 7,
-
-                backgroundColor:
-                color.withOpacity(0.10),
-
-                valueColor:
-                AlwaysStoppedAnimation(color),
+                backgroundColor: color.withOpacity(0.10),
+                valueColor: AlwaysStoppedAnimation(color),
               ),
             ),
 
@@ -252,23 +181,20 @@ class TrackingCard extends StatelessWidget {
             /// ===============================
 
             Row(
-
-              mainAxisAlignment:
-              MainAxisAlignment.spaceBetween,
-
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-
                 _buildStatItem(
+                  context,
                   "Today",
                   "₹ ${tracking.todayAmount.toStringAsFixed(0)}",
                 ),
-
                 _buildStatItem(
+                  context,
                   "Monthly",
                   "₹ ${tracking.monthlyAmount.toStringAsFixed(0)}",
                 ),
-
                 _buildStatItem(
+                  context,
                   "Records",
                   tracking.totalRecords.toString(),
                 ),
@@ -281,36 +207,27 @@ class TrackingCard extends StatelessWidget {
   }
 
   Widget _buildStatItem(
-      String title,
-      String value,
-      ) {
+    BuildContext context,
+    String title,
+    String value,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
-
       children: [
-
         Text(
-
           value,
-
-          style: const TextStyle(
-
+          style: TextStyle(
             fontWeight: FontWeight.bold,
-
             fontSize: 14,
+            color: colorScheme.onSurface,
           ),
         ),
-
         const SizedBox(height: 3),
-
         Text(
-
           title,
-
           style: TextStyle(
-
-            color: Colors.grey.shade600,
-
+            color: colorScheme.onSurfaceVariant,
             fontSize: 11,
           ),
         ),

@@ -34,9 +34,11 @@ class _FoodTrackingDetailScreenState extends ConsumerState<FoodTrackingDetailScr
   @override
   Widget build(BuildContext context) {
     final vm = ref.watch(mealEntryViewModelProvider);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -73,10 +75,10 @@ class _FoodTrackingDetailScreenState extends ConsumerState<FoodTrackingDetailScr
 
                     textAlign: TextAlign.center,
 
-                    style: const TextStyle(
+                    style: textTheme.bodyMedium?.copyWith(
                       fontSize: 14,
-
                       fontWeight: FontWeight.w500,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),

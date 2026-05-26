@@ -9,16 +9,18 @@ class DashboardStatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Container(
       height: 90, // increased a little
       margin: EdgeInsets.symmetric(horizontal: 10),
 
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.09),
+            color: theme.shadowColor.withOpacity(0.12),
             blurRadius: 12,
             spreadRadius: 0,
             offset: const Offset(0, 4),
@@ -42,7 +44,7 @@ class DashboardStatsCard extends StatelessWidget {
             ),
           ),
 
-          _buildDivider(),
+          _buildDivider(context),
 
           Expanded(
             child: Selector<ProfileAchievementViewModel, int>(
@@ -59,7 +61,7 @@ class DashboardStatsCard extends StatelessWidget {
             ),
           ),
 
-          _buildDivider(),
+          _buildDivider(context),
 
           Expanded(
             child: Selector<ProfileStreakViewModel, String>(
@@ -80,12 +82,12 @@ class DashboardStatsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDivider() {
+  Widget _buildDivider(BuildContext context) {
     return Container(
       height: 40,
       width: 1,
       margin: const EdgeInsets.symmetric(horizontal: 4),
-      color: Colors.grey.shade200,
+      color: Theme.of(context).dividerColor,
     );
   }
 }
@@ -107,6 +109,7 @@ class _StatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -155,7 +158,7 @@ class _StatItem extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 9,
-              color: Colors.grey.shade500,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ],

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/AppColors.dart';
-
 class SearchBarWidget
     extends StatelessWidget {
 
@@ -24,19 +22,22 @@ class SearchBarWidget
   @override
   Widget build(BuildContext context) {
 
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
 
       height: 54,
 
       decoration: BoxDecoration(
 
-        color: Colors.white,
+        color: colorScheme.surface,
 
         borderRadius:
         BorderRadius.circular(16),
 
         border: Border.all(
-          color: AppColors.border,
+          color: colorScheme.outlineVariant,
         ),
 
         boxShadow: [
@@ -44,7 +45,7 @@ class SearchBarWidget
           BoxShadow(
 
             color:
-            Colors.black.withOpacity(
+            colorScheme.shadow.withOpacity(
               0.04,
             ),
 
@@ -64,16 +65,17 @@ class SearchBarWidget
 
         onChanged: onChanged,
 
+        style: textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onSurface,
+        ),
+
         decoration: InputDecoration(
 
           hintText:
           "Search food cycles...",
 
-          hintStyle: TextStyle(
-
-            color:
-            Colors.grey.shade500,
-
+          hintStyle: textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
             fontSize: 14,
           ),
 
@@ -89,7 +91,7 @@ class SearchBarWidget
             Icons.search_rounded,
 
             color:
-            Colors.grey.shade500,
+            colorScheme.onSurfaceVariant,
           ),
 
           suffixIcon: InkWell(
@@ -101,7 +103,7 @@ class SearchBarWidget
               Icons.tune_rounded,
 
               color:
-              Colors.grey.shade500,
+              colorScheme.onSurfaceVariant,
             ),
           ),
         ),

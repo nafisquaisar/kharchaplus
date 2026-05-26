@@ -6,6 +6,7 @@ class ExpenseOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       padding: const EdgeInsets.all(16),
@@ -14,7 +15,7 @@ class ExpenseOverview extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: theme.shadowColor.withOpacity(0.06),
             blurRadius: 18,
             offset: const Offset(0, 6),
           ),
@@ -30,7 +31,7 @@ class ExpenseOverview extends StatelessWidget {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w700,
-              color: AppColors.black,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
 
@@ -43,6 +44,7 @@ class ExpenseOverview extends StatelessWidget {
             children: [
               Expanded(
                 child: _overviewCard(
+                  context,
                   icon: Icons.account_balance_wallet_rounded,
                   iconBg: const Color(0xFFE7F8F7),
                   iconColor: AppColors.primary,
@@ -57,6 +59,7 @@ class ExpenseOverview extends StatelessWidget {
 
               Expanded(
                 child: _overviewCard(
+                  context,
                   icon: Icons.trending_up_rounded,
                   iconBg: const Color(0xFFEAF8EC),
                   iconColor: const Color(0xFF22C55E),
@@ -75,6 +78,7 @@ class ExpenseOverview extends StatelessWidget {
             children: [
               Expanded(
                 child: _overviewCard(
+                  context,
                   icon: Icons.bolt_rounded,
                   iconBg: const Color(0xFFFFF4E5),
                   iconColor: const Color(0xFFF59E0B),
@@ -89,6 +93,7 @@ class ExpenseOverview extends StatelessWidget {
 
               Expanded(
                 child: _overviewCard(
+                  context,
                   icon: Icons.water_drop_rounded,
                   iconBg: const Color(0xFFE8F3FF),
                   iconColor: const Color(0xFF3B82F6),
@@ -105,7 +110,8 @@ class ExpenseOverview extends StatelessWidget {
     );
   }
 
-  Widget _overviewCard({
+  Widget _overviewCard(
+    BuildContext context, {
     required IconData icon,
     required Color iconBg,
     required Color iconColor,
@@ -114,13 +120,18 @@ class ExpenseOverview extends StatelessWidget {
     required String change,
     required bool isUp,
   }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+    final resolvedIconBg = isDark ? iconColor.withOpacity(0.15) : iconBg;
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.border,
+          color: colorScheme.outlineVariant,
           width: 1,
         ),
       ),
@@ -133,7 +144,7 @@ class ExpenseOverview extends StatelessWidget {
             height: 34,
             width: 34,
             decoration: BoxDecoration(
-              color: iconBg,
+              color: resolvedIconBg,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
@@ -153,7 +164,7 @@ class ExpenseOverview extends StatelessWidget {
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
 
@@ -165,7 +176,7 @@ class ExpenseOverview extends StatelessWidget {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: AppColors.black,
+              color: colorScheme.onSurface,
             ),
           ),
 

@@ -15,6 +15,8 @@ class ExpenseSummaryCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final analyticsState = ref.watch(expenseAnalyticsProvider);
     final analytics = analyticsState.data;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     final selected = ref.watch(selectedMonthProvider);
     final selectedDate = DateTime(selected.year, selected.month, 1);
@@ -39,11 +41,11 @@ class ExpenseSummaryCard extends ConsumerWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: colorScheme.shadow.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -62,10 +64,10 @@ class ExpenseSummaryCard extends ConsumerWidget {
             children: [
                Text(
                 'This Month Expense',
-                style: TextStyle(
+                style: textTheme.bodyMedium?.copyWith(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.black,
+                  color: colorScheme.onSurface,
                 ),
               ),
 
@@ -75,10 +77,10 @@ class ExpenseSummaryCard extends ConsumerWidget {
                   children: [
                     Text(
                       '$monthLabel ${selectedDate.year}',
-                      style:  TextStyle(
+                      style: textTheme.bodySmall?.copyWith(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textSecondary,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
 
@@ -87,7 +89,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
                      Icon(
                       Icons.keyboard_arrow_down_rounded,
                       size: 18,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ],
                 ),
@@ -102,7 +104,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
                 'Loading...',
                 style: TextStyle(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -114,7 +116,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
                 'Failed to load summary',
                 style: TextStyle(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -144,12 +146,12 @@ class ExpenseSummaryCard extends ConsumerWidget {
                           height: 46,
                           width: 46,
                           decoration: BoxDecoration(
-                            color: AppColors.primarybg,
+                            color: colorScheme.surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child:  Icon(
                             Icons.account_balance_wallet_outlined,
-                            color: AppColors.colorText,
+                            color: colorScheme.onSurface,
                             size: 22,
                           ),
                         ),
@@ -160,10 +162,10 @@ class ExpenseSummaryCard extends ConsumerWidget {
                           child: Text(
                             '₹${currentTotal.toStringAsFixed(0)}',
                             overflow: TextOverflow.ellipsis,
-                            style:  TextStyle(
+                            style: textTheme.titleLarge?.copyWith(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.black,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -176,10 +178,10 @@ class ExpenseSummaryCard extends ConsumerWidget {
                       children: [
                         Text(
                           'vs $prevMonthLabel ${previousMonth.year}',
-                          style:  TextStyle(
+                          style: textTheme.bodySmall?.copyWith(
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.textSecondary,
+                            color: colorScheme.onSurfaceVariant,
                           ),
                         ),
 
@@ -220,6 +222,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
                 child: Column(
                   children: [
                     _buildMiniInfo(
+                      context,
                       icon: Icons.local_drink_outlined,
                       title: 'Purchases',
                       value: '$totalPurchases',
@@ -228,6 +231,7 @@ class ExpenseSummaryCard extends ConsumerWidget {
                     const SizedBox(height: 8),
 
                     _buildMiniInfo(
+                      context,
                       icon: Icons.water_drop_outlined,
                       title: 'Tanker',
                       value: '$tankerQty',
@@ -243,18 +247,21 @@ class ExpenseSummaryCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildMiniInfo({
+  Widget _buildMiniInfo(
+    BuildContext context, {
     required IconData icon,
     required String title,
     required String value,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 8,
         vertical: 7,
       ),
       decoration: BoxDecoration(
-        color: AppColors.primarybg,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
       ),
 
@@ -264,13 +271,13 @@ class ExpenseSummaryCard extends ConsumerWidget {
             height: 28,
             width: 28,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(7),
             ),
             child: Icon(
               icon,
               size: 14,
-              color: AppColors.colorText,
+              color: colorScheme.onSurface,
             ),
           ),
 
@@ -283,10 +290,10 @@ class ExpenseSummaryCard extends ConsumerWidget {
                 Text(
                   title,
                   overflow: TextOverflow.ellipsis,
-                  style:  TextStyle(
+                  style: textTheme.bodySmall?.copyWith(
                     fontSize: 9,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
 
@@ -295,10 +302,10 @@ class ExpenseSummaryCard extends ConsumerWidget {
                 Text(
                   value,
                   overflow: TextOverflow.ellipsis,
-                  style:  TextStyle(
+                  style: textTheme.bodyMedium?.copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.black,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -434,6 +441,8 @@ class _MonthYearPickerSheetState extends ConsumerState<_MonthYearPickerSheet> {
   Widget build(BuildContext context) {
     final selected = ref.watch(selectedMonthProvider);
     final now = DateTime.now();
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Container(
       padding: EdgeInsets.fromLTRB(
@@ -442,9 +451,9 @@ class _MonthYearPickerSheetState extends ConsumerState<_MonthYearPickerSheet> {
         16,
         MediaQuery.of(context).padding.bottom + 16,
       ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -455,7 +464,7 @@ class _MonthYearPickerSheetState extends ConsumerState<_MonthYearPickerSheet> {
               height: 4,
               width: 36,
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
+                color: colorScheme.outlineVariant,
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
@@ -464,17 +473,21 @@ class _MonthYearPickerSheetState extends ConsumerState<_MonthYearPickerSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text(
+              Text(
                 'Select Month',
-                style: TextStyle(
+                style: textTheme.titleSmall?.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.black,
+                  color: colorScheme.onSurface,
                 ),
               ),
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.cancel, color: Colors.red.withOpacity(0.6), size: 20),
+                icon: Icon(
+                  Icons.cancel,
+                  color: Colors.red.withOpacity(0.6),
+                  size: 20,
+                ),
               ),
             ],
           ),
@@ -493,28 +506,30 @@ class _MonthYearPickerSheetState extends ConsumerState<_MonthYearPickerSheet> {
                 selected: isSelected,
                 onSelected: (_) => _updateSelection(month: monthIndex),
                 selectedColor: AppColors.accent,
-                backgroundColor: Colors.white,
+                backgroundColor: colorScheme.surfaceContainerHighest,
                 side: BorderSide(
                   color: isSelected
                       ? AppColors.accent
                       : isCurrent
                           ? AppColors.accent
-                          : Colors.grey.shade300,
+                          : colorScheme.outlineVariant,
                 ),
                 labelStyle: TextStyle(
-                  color: isSelected ? Colors.white : AppColors.textSecondary,
+                  color: isSelected
+                      ? colorScheme.onPrimary
+                      : colorScheme.onSurfaceVariant,
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                 ),
               );
             }),
           ),
           const SizedBox(height: 16),
-           Text(
+          Text(
             'Year',
-            style: TextStyle(
+            style: textTheme.bodySmall?.copyWith(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 8),
@@ -545,7 +560,7 @@ class _MonthYearPickerSheetState extends ConsumerState<_MonthYearPickerSheet> {
                             ? AppColors.accent
                             : isCurrentYear
                                 ? AppColors.colorText
-                                : AppColors.textSecondary,
+                                : colorScheme.onSurfaceVariant,
                       ),
                     ),
                   );

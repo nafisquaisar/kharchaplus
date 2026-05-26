@@ -13,19 +13,20 @@ class PurchaseHistoryAnalyticsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       width: double.infinity,
 
       padding: const EdgeInsets.all(10),
 
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
 
         borderRadius: BorderRadius.circular(12),
 
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: colorScheme.shadow.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

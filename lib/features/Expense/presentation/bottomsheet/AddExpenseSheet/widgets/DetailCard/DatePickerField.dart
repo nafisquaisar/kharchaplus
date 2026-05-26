@@ -18,6 +18,8 @@ class DatePickerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return InkWell(
       borderRadius: BorderRadius.circular(16),
 
@@ -39,7 +41,7 @@ class DatePickerField extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14),
 
         decoration: BoxDecoration(
-          color: AppColors.background,
+          color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(16),
         ),
 
@@ -50,7 +52,7 @@ class DatePickerField extends StatelessWidget {
               height: 32,
               width: 32,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
@@ -67,17 +69,18 @@ class DatePickerField extends StatelessWidget {
                 DateFormat("d MMM yyyy")
                     .format(selectedDate),
 
-                style: const TextStyle(
+                style: textTheme.bodyMedium?.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
+                  color: colorScheme.onSurface,
                 ),
               ),
             ),
 
-            const Icon(
+            Icon(
               Icons.arrow_forward_ios_rounded,
               size: 14,
-              color: Colors.grey,
+              color: colorScheme.onSurfaceVariant,
             ),
           ],
         ),

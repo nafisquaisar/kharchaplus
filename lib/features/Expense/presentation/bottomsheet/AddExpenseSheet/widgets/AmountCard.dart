@@ -29,14 +29,15 @@ class AmountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.15),
+            color: colorScheme.shadow.withOpacity(.15),
             blurRadius: 14,
             offset: const Offset(0, 6),
           ),

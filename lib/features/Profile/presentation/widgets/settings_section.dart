@@ -10,6 +10,7 @@ class SettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -17,7 +18,7 @@ class SettingsSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.035),
+            color: theme.shadowColor.withOpacity(0.08),
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -40,6 +41,7 @@ class SettingsSection extends StatelessWidget {
             },
 
             child: _settingsTile(
+              context,
               title: "Settings & Preferences",
               subtitle: "Manage app settings",
               icon: Icons.settings,
@@ -77,6 +79,7 @@ class SettingsSection extends StatelessWidget {
             },
 
             child: _settingsTile(
+              context,
               title: "Help & Support",
               subtitle: "FAQs, Contact Support",
               icon: Icons.help_rounded,
@@ -102,6 +105,7 @@ class SettingsSection extends StatelessWidget {
             },
 
             child: _settingsTile(
+              context,
               title: "Privacy Policy",
               subtitle: "Learn how we protect your data",
               icon: Icons.privacy_tip_outlined,
@@ -126,6 +130,7 @@ class SettingsSection extends StatelessWidget {
             },
 
             child: _settingsTile(
+              context,
               title: "About App",
               subtitle: "Version 1.0.0",
               icon: Icons.info_outline_rounded,
@@ -146,13 +151,18 @@ class SettingsSection extends StatelessWidget {
     );
   }
 
-  Widget _settingsTile({
+  Widget _settingsTile(
+    BuildContext context, {
     required String title,
     required String subtitle,
     required IconData icon,
     required Color iconColor,
     required Color bgColor,
   }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+    final tileBgColor = isDark ? colorScheme.surfaceVariant : bgColor;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 14,
@@ -166,7 +176,7 @@ class SettingsSection extends StatelessWidget {
             height: 40,
             width: 40,
             decoration: BoxDecoration(
-              color: bgColor,
+              color: tileBgColor,
               borderRadius: BorderRadius.circular(12),
             ),
 
@@ -190,7 +200,7 @@ class SettingsSection extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.black,
+                    color: colorScheme.onSurface,
                   ),
                 ),
 
@@ -214,7 +224,7 @@ class SettingsSection extends StatelessWidget {
           Icon(
             Icons.chevron_right_rounded,
             size: 22,
-            color: Colors.grey.shade500,
+            color: colorScheme.onSurfaceVariant,
           ),
         ],
       ),

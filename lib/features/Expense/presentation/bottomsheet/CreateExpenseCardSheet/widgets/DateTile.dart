@@ -18,6 +18,7 @@ class DateTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isEmpty = value == "Select date";
+    final colorScheme = Theme.of(context).colorScheme;
 
     return InkWell(
       onTap: onTap,
@@ -26,7 +27,7 @@ class DateTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         decoration: BoxDecoration(
-          color: AppColors.background,
+          color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
         ),
 
@@ -58,7 +59,7 @@ class DateTile extends StatelessWidget {
                     title,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey.shade600,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
 
@@ -71,8 +72,8 @@ class DateTile extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: isEmpty
-                          ? AppColors.textSecondary
-                          : AppColors.colorText,
+                          ? colorScheme.onSurfaceVariant
+                          : colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -80,10 +81,10 @@ class DateTile extends StatelessWidget {
             ),
 
             /// 🔥 ARROW (UX improvement)
-            const Icon(
+            Icon(
               Icons.chevron_right,
               size: 18,
-              color: Colors.grey,
+              color: colorScheme.onSurfaceVariant,
             ),
           ],
         ),

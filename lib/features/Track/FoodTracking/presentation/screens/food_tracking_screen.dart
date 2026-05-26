@@ -227,7 +227,7 @@ class _FoodTrackingScreenState extends ConsumerState<FoodTrackingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       // =========================
       // APP BAR

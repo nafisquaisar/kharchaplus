@@ -75,6 +75,7 @@ class _CategoryDropdownState
   @override
   Widget build(BuildContext context) {
     final cat = widget.selected;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +105,7 @@ class _CategoryDropdownState
               padding:
               const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(9),
               ),
               child: Row(
@@ -144,7 +145,7 @@ class _CategoryDropdownState
                         "Select category",
                         style: TextStyle(
                           fontSize: 13,
-                          color: Colors.grey.shade500,
+                          color: colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -242,12 +243,14 @@ class _CategoryBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       height: MediaQuery.of(context).size.height * .60,
       padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(
           top: Radius.circular(22),
         ),
       ),
@@ -259,7 +262,7 @@ class _CategoryBottomSheetState
             width: 50,
             margin: const EdgeInsets.only(bottom: 18),
             decoration: BoxDecoration(
-              color: Colors.grey.shade300,
+              color: colorScheme.outlineVariant,
               borderRadius: BorderRadius.circular(20),
             ),
           ),
@@ -267,7 +270,7 @@ class _CategoryBottomSheetState
           Container(
             height: 48,
             decoration: BoxDecoration(
-              color: AppColors.background,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(14),
             ),
             child: TextField(
@@ -277,7 +280,7 @@ class _CategoryBottomSheetState
                 border: InputBorder.none,
                 hintText: "Search category",
                 hintStyle: TextStyle(
-                  color: Colors.grey.shade500,
+                  color: colorScheme.onSurfaceVariant,
                   fontSize: 14,
                 ),
                 prefixIcon: Icon(
@@ -316,7 +319,7 @@ class _CategoryBottomSheetState
                       widget.selected?.id == cat.id
                           ? Color(cat.color)
                           .withOpacity(.08)
-                          : Colors.white,
+                          : colorScheme.surface,
                       borderRadius:
                       BorderRadius.circular(14),
                       border: Border.all(
@@ -324,7 +327,7 @@ class _CategoryBottomSheetState
                         widget.selected?.id ==
                             cat.id
                             ? Color(cat.color)
-                            : Colors.grey.shade200,
+                            : colorScheme.outlineVariant,
                       ),
                     ),
                     child: Row(
@@ -351,10 +354,10 @@ class _CategoryBottomSheetState
                         Expanded(
                           child: Text(
                             cat.name,
-                            style: const TextStyle(
+                            style: textTheme.bodyMedium?.copyWith(
                               fontSize: 15,
-                              fontWeight:
-                              FontWeight.w600,
+                              fontWeight: FontWeight.w600,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                         ),

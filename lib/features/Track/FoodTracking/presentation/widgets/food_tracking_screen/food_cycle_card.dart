@@ -39,6 +39,7 @@ class FoodCycleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final colorScheme = Theme.of(context).colorScheme;
 
     final progress = totalTiffin == 0 ? 0.0 : totalEaten / totalTiffin;
 
@@ -54,12 +55,12 @@ class FoodCycleCard extends StatelessWidget {
         ),
 
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: colorScheme.outlineVariant),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: colorScheme.shadow.withOpacity(0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -96,7 +97,7 @@ class FoodCycleCard extends StatelessWidget {
                         dateRange,
                         style: TextStyle(
                           fontSize: width * 0.030,
-                          color: Colors.grey.shade600,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -114,7 +115,7 @@ class FoodCycleCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: width * 0.028,
 
-                      color: Colors.grey.shade600,
+                      color: colorScheme.onSurfaceVariant,
 
                       fontWeight: FontWeight.w500,
                     ),
@@ -164,10 +165,13 @@ class FoodCycleCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: [
-                      const Text(
+                      Text(
                         "Monthly Amount",
 
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
                       ),
 
                       const SizedBox(height: 3),
@@ -179,6 +183,7 @@ class FoodCycleCard extends StatelessWidget {
                           fontSize: width * 0.058,
 
                           fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ],
@@ -195,7 +200,7 @@ class FoodCycleCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: width * 0.026,
 
-                        color: Colors.grey.shade600,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
 
@@ -208,6 +213,7 @@ class FoodCycleCard extends StatelessWidget {
                         fontSize: width * 0.032,
 
                         fontWeight: FontWeight.w700,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -225,7 +231,7 @@ class FoodCycleCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: width * 0.026,
 
-                        color: Colors.grey.shade600,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
 
@@ -238,6 +244,7 @@ class FoodCycleCard extends StatelessWidget {
                         fontSize: width * 0.032,
 
                         fontWeight: FontWeight.w700,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -255,7 +262,7 @@ class FoodCycleCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: width * 0.026,
 
-                        color: Colors.grey.shade600,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
 
@@ -268,6 +275,7 @@ class FoodCycleCard extends StatelessWidget {
                         fontSize: width * 0.032,
 
                         fontWeight: FontWeight.w700,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -290,7 +298,7 @@ class FoodCycleCard extends StatelessWidget {
 
                 minHeight: 7,
 
-                backgroundColor: Colors.grey.shade200,
+                backgroundColor: colorScheme.surfaceContainerHighest,
 
                 valueColor:  AlwaysStoppedAnimation(AppColors.primary),
               ),

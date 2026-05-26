@@ -78,6 +78,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -93,9 +94,9 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height * 0.95,
             ),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(30),
               ),
             ),
@@ -107,7 +108,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                   height: 5,
                   width: 56,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: colorScheme.outlineVariant,
                     borderRadius: BorderRadius.circular(999),
                   ),
                 ),
@@ -137,7 +138,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                                 style:  TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w800,
-                                  color: AppColors.black,
+                                  color: colorScheme.onSurface,
                                 ),
                               ),
                               InkWell(
@@ -159,7 +160,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                             style:  TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: AppColors.textSecondary,
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                           const SizedBox(height: 18),
@@ -343,18 +344,21 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                                         ),
                                       )
                                     : Text(
-                                        widget.isEdit
-                                            ? 'Update Purchase'
-                                            : 'Save Purchase',
-                                        key: const ValueKey(
-                                          'save',
-                                        ),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 15,
-                                        ),
-                                      ),
+
+                                  widget.isEdit
+                                      ? 'Update Purchase'
+                                      : 'Save Purchase',
+
+                                  key: ValueKey(
+                                    widget.isEdit,
+                                  ),
+
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -513,18 +517,19 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
     required String hintText,
     required IconData icon,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return InputDecoration(
       hintText: hintText,
       hintStyle:  TextStyle(
-        color: AppColors.textSecondary,
+        color: colorScheme.onSurfaceVariant,
         fontSize: 13,
       ),
       prefixIcon: Icon(
         icon,
-        color: AppColors.textSecondary,
+        color: colorScheme.onSurfaceVariant,
       ),
       filled: true,
-      fillColor: AppColors.primarybg,
+      fillColor: colorScheme.surfaceContainerHighest,
       contentPadding: const EdgeInsets.symmetric(
         vertical: 14,
         horizontal: 14,
@@ -569,13 +574,14 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
 
     final picked = await showModalBottomSheet<PurchaseType>(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(24),
         ),
       ),
       builder: (_) {
+        final colorScheme = Theme.of(context).colorScheme;
         return SafeArea(
           top: false,
           child: Padding(
@@ -592,7 +598,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                   width: 48,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: colorScheme.outlineVariant,
                     borderRadius: BorderRadius.circular(
                       999,
                     ),
@@ -607,7 +613,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 15,
-                        color: AppColors.black,
+                        color: colorScheme.onSurface,
                       ),
                     ),
 
@@ -643,7 +649,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                         4,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.primarybg,
+                        color: colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(
                           10,
                         ),
@@ -657,7 +663,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.black.withOpacity(
+                            color: colorScheme.shadow.withOpacity(
                               0.2,
                             ),
                             blurRadius: 12,
@@ -685,7 +691,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                                   style:  TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w700,
-                                    color: AppColors.black,
+                                        color: colorScheme.onSurface,
                                   ),
                                 ),
                                 const SizedBox(
@@ -696,7 +702,7 @@ class _PurchaseFormSheetState extends ConsumerState<PurchaseFormSheet> {
                                   style:  TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500,
-                                    color: AppColors.textSecondary,
+                                    color: colorScheme.onSurfaceVariant,
                                   ),
                                 ),
                               ],
@@ -749,12 +755,13 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       children: [
         Icon(
           icon,
           size: 14,
-          color: AppColors.textSecondary,
+          color: colorScheme.onSurfaceVariant,
         ),
         const SizedBox(width: 6),
         Text(
@@ -762,7 +769,7 @@ class _SectionLabel extends StatelessWidget {
           style:  TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: AppColors.textSecondary,
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
       ],
@@ -775,6 +782,7 @@ class _TypeSelectorCard extends StatelessWidget {
   final bool enabled;
   final VoidCallback onTap;
 
+
   const _TypeSelectorCard({
     required this.option,
     required this.enabled,
@@ -783,21 +791,30 @@ class _TypeSelectorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return InkWell(
       onTap: enabled ? onTap : null,
       borderRadius: BorderRadius.circular(10),
+
       child: AnimatedContainer(
+
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeOut,
         padding: const EdgeInsets.all(4),
+
         decoration: BoxDecoration(
-          color: AppColors.primarybg,
+
+          color: colorScheme.surfaceContainerHighest,
+
           borderRadius: BorderRadius.circular(10),
+
           border: Border.all(
             color: AppColors.accent.withOpacity(0.18),
             width: 1.1,
           ),
+
           boxShadow: [
+
             BoxShadow(
               color: AppColors.accent.withOpacity(0.08),
               blurRadius: 12,
@@ -805,50 +822,72 @@ class _TypeSelectorCard extends StatelessWidget {
             ),
           ],
         ),
+
         child: Row(
+
           children: [
+
             Image.asset(
-                height: 40,
-                width: 40,
-                option.iconPath,
-                fit: BoxFit.contain,
-              ),
+              option.iconPath,
+              height: 40,
+              width: 40,
+              fit: BoxFit.contain,
+            ),
+
             const SizedBox(width: 12),
+
             Expanded(
+
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+
+                crossAxisAlignment:
+                CrossAxisAlignment.start,
+
                 children: [
+
                   Text(
+
                     option.label,
-                    style:  TextStyle(
+
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.black,
+                      color: colorScheme.onSurface,
                     ),
                   ),
+
                   const SizedBox(height: 2),
+
                   Text(
+
                     option.subtitle,
-                    style:  TextStyle(
+
+                    style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textSecondary,
+                      color:
+                      colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
               ),
             ),
+
             Icon(
+
               Icons.expand_more_rounded,
+
               color: AppColors.accent.withOpacity(
                 enabled ? 1 : 0.5,
               ),
+
               size: 22,
             ),
           ],
         ),
       ),
     );
+
   }
 }
 
@@ -865,6 +904,7 @@ class _PaymentStatusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final color = _statusColor(status);
     final icon = _statusIcon(status);
 
@@ -879,7 +919,7 @@ class _PaymentStatusCard extends StatelessWidget {
           vertical: 11,
         ),
         decoration: BoxDecoration(
-          color: selected ? color.withOpacity(0.16) : AppColors.primarybg,
+          color: selected ? color.withOpacity(0.16) : colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: selected ? color : Colors.transparent,
@@ -900,7 +940,7 @@ class _PaymentStatusCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: selected ? color : AppColors.black,
+                color: selected ? color : colorScheme.onSurface,
               ),
             ),
           ],

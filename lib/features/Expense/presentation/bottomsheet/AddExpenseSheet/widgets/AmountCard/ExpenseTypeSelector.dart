@@ -21,7 +21,7 @@ class ExpenseTypeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isExpense = selected == ExpenseType.expense;
-
+    final colorScheme = Theme.of(context).colorScheme;
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: () {
@@ -36,7 +36,7 @@ class ExpenseTypeSelector extends StatelessWidget {
         height: 45,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
-          color: AppColors.background,
+          color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isExpense

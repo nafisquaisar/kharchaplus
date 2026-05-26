@@ -26,6 +26,8 @@ void showAddCategoryBottomSheet(BuildContext context) {
     builder: (_) {
       return StatefulBuilder(
         builder: (context, setState) {
+          final colorScheme = Theme.of(context).colorScheme;
+          final textTheme = Theme.of(context).textTheme;
           return DraggableScrollableSheet(
             initialChildSize: 0.85,
 
@@ -46,7 +48,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                 ),
 
                 decoration:  BoxDecoration(
-                  color: AppColors.primarybg,
+                  color: colorScheme.surface,
 
                   borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
                 ),
@@ -66,7 +68,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                           height: 5,
                           width: 60,
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
+                            color: colorScheme.outlineVariant,
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
@@ -80,10 +82,10 @@ void showAddCategoryBottomSheet(BuildContext context) {
                            Expanded(
                             child: Text(
                               "Add Category",
-                              style: TextStyle(
+                              style: textTheme.titleMedium?.copyWith(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w800,
-                                color: AppColors.colorText,
+                                color: colorScheme.onSurface,
                               ),
                             ),
                           ),
@@ -112,7 +114,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
                       Container(
                         height: 50,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: colorScheme.surface,
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
@@ -150,7 +152,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
 
                             filled: true,
 
-                            fillColor: Colors.white,
+                            fillColor: colorScheme.surface,
 
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
@@ -188,11 +190,11 @@ void showAddCategoryBottomSheet(BuildContext context) {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
 
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: colorScheme.surface,
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(.09),
+                              color: colorScheme.shadow.withOpacity(.09),
                               blurRadius: 12,
                               offset: const Offset(0, 5),
                             ),
@@ -220,11 +222,11 @@ void showAddCategoryBottomSheet(BuildContext context) {
                                 crossAxisAlignment: CrossAxisAlignment.start,
 
                                 children: [
-                                  const Text(
+                                  Text(
                                     "Preview",
-                                    style: TextStyle(
+                                    style: textTheme.labelSmall?.copyWith(
                                       fontSize: 10,
-                                      color: Colors.grey,
+                                      color: colorScheme.onSurfaceVariant,
                                     ),
                                   ),
 
@@ -238,10 +240,10 @@ void showAddCategoryBottomSheet(BuildContext context) {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
 
-                                    style:  TextStyle(
+                                    style: textTheme.bodyMedium?.copyWith(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700,
-                                      color: AppColors.colorText,
+                                      color: colorScheme.onSurface,
                                     ),
                                   ),
                                 ],
@@ -328,15 +330,15 @@ void showAddCategoryBottomSheet(BuildContext context) {
                       const SizedBox(height: 24),
 
                       /// 🔥 Choose Icon
-                       Text(
+                        Text(
                         "Choose Icon",
 
-                        style: TextStyle(
+                        style: textTheme.titleSmall?.copyWith(
                           fontSize: 17,
 
                           fontWeight: FontWeight.w700,
 
-                          color: AppColors.colorText,
+                          color: colorScheme.onSurface,
                         ),
                       ),
 
@@ -383,14 +385,14 @@ void showAddCategoryBottomSheet(BuildContext context) {
                               decoration: BoxDecoration(
                                 color: isSelected
                                     ? item["color"]
-                                    : Colors.white,
+                                    : colorScheme.surface,
 
                                 borderRadius: BorderRadius.circular(20),
 
                                 border: Border.all(
                                   color: isSelected
                                       ? item["color"]
-                                      : Colors.grey.shade300,
+                                      : colorScheme.outlineVariant,
                                 ),
 
                                 boxShadow: [
@@ -435,7 +437,7 @@ void showAddCategoryBottomSheet(BuildContext context) {
 
                                       color: isSelected
                                           ? Colors.white
-                                          : AppColors.colorText,
+                                          : colorScheme.onSurface,
                                     ),
                                   ),
                                 ],

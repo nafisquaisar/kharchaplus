@@ -75,12 +75,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text("Edit Profile"),
         backgroundColor: AppColors.accent,
-        foregroundColor: Colors.white,
+        foregroundColor: colorScheme.onPrimary,
       ),
 
       body: SingleChildScrollView(
@@ -114,7 +115,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     children: [
                       CircleAvatar(
                         radius: 50,
-                        backgroundColor: AppColors.card,
+                        backgroundColor: colorScheme.surfaceVariant,
                         child: ClipOval(
                           child: state.selectedImageFile != null
                               ? Image.file(
@@ -153,8 +154,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               shape: BoxShape.circle,
                               gradient: AppColors.kharchaGradient,
                             ),
-                            child: const Icon(Icons.camera_alt,
-                                size: 16, color: Colors.white),
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: 16,
+                              color: colorScheme.onPrimary,
+                            ),
                           ),
                         ),
                       ),
@@ -180,7 +184,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       minimumSize: const Size(double.infinity, 50),
                     ),
                     child: isBusy
-                        ? const CircularProgressIndicator(color: Colors.white)
+                        ? CircularProgressIndicator(color: colorScheme.onPrimary)
                         : const Text("Save"),
                   ),
                   if (state.isUploadingImage)
@@ -219,7 +223,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       decoration: InputDecoration(
         labelText: label,
         filled: true,
-        fillColor: AppColors.card,
+        fillColor: Theme.of(context).colorScheme.surface,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),

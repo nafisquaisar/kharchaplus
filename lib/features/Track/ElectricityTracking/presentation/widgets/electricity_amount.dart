@@ -16,7 +16,7 @@ class ElectricityAmountSection extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-
+		final colorScheme = Theme.of(context).colorScheme;
 		return Container(
 			padding: const EdgeInsets.symmetric(
 				horizontal: 10,
@@ -24,7 +24,7 @@ class ElectricityAmountSection extends StatelessWidget {
 			),
 
 			decoration: BoxDecoration(
-				color: AppColors.background,
+				color: colorScheme.surfaceContainerHighest,
 				borderRadius: BorderRadius.circular(8),
 			),
 
@@ -40,7 +40,7 @@ class ElectricityAmountSection extends StatelessWidget {
 								  child: Text(
 								  	label,
 								  	style: TextStyle(
-								  		color: AppColors.textSecondary,
+								  		color: colorScheme.onSurfaceVariant,
 								  		fontSize: 11,
 								  		fontWeight: FontWeight.w500,
 								  	),
@@ -72,7 +72,7 @@ class ElectricityAmountSection extends StatelessWidget {
 
 						child: Icon(
 							Icons.flash_on_rounded,
-							color: AppColors.textPrimary,
+							color: colorScheme.onPrimary,
 							size: 18,
 						),
 					),

@@ -62,6 +62,8 @@ class _UpdateGoalSheetState extends ConsumerState<UpdateGoalSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: EdgeInsets.only(
         left: 24,
@@ -69,9 +71,9 @@ class _UpdateGoalSheetState extends ConsumerState<UpdateGoalSheet> {
         top: 24,
         bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
       ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(
           top: Radius.circular(30),
         ),
       ),
@@ -80,11 +82,12 @@ class _UpdateGoalSheetState extends ConsumerState<UpdateGoalSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          const Text(
+          Text(
             'Update Daily Goal',
-            style: TextStyle(
+            style: textTheme.titleLarge?.copyWith(
               fontSize: 22,
               fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 24),
@@ -96,7 +99,7 @@ class _UpdateGoalSheetState extends ConsumerState<UpdateGoalSheet> {
             decoration: InputDecoration(
               hintText: 'Daily Goal in ml',
               filled: true,
-              fillColor: AppColors.primarybg,
+              fillColor: colorScheme.surfaceContainerHighest,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
                   18,

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/constants/AppColors.dart';
-
 class ElectricityStatsSection extends StatelessWidget {
   final List<ElectricityStatItem> items;
 
@@ -39,12 +37,13 @@ class _StatCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+	final colorScheme = Theme.of(context).colorScheme;
 	return Column(
 	  children: [
 		Text(
 		  item.label,
 		  style: TextStyle(
-			color: AppColors.textSecondary,
+			color: colorScheme.onSurfaceVariant,
 			fontSize: 11,
 		  ),
 		),
@@ -52,7 +51,7 @@ class _StatCell extends StatelessWidget {
 		Text(
 		  item.value,
 		  style: TextStyle(
-			color: AppColors.black,
+			color: colorScheme.onSurface,
 			fontWeight: FontWeight.w600,
 		  ),
 		),
@@ -60,4 +59,3 @@ class _StatCell extends StatelessWidget {
 	);
   }
 }
-

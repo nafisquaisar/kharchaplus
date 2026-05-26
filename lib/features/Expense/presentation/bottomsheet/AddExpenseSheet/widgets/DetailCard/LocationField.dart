@@ -11,12 +11,13 @@ class LocationField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       height: 52,
       padding: const EdgeInsets.symmetric(horizontal: 14),
 
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
       ),
 
@@ -35,7 +36,7 @@ class LocationField extends StatelessWidget {
             child: Text(
               "Add location",
               style: TextStyle(
-                color: Colors.grey.shade600,
+                color: colorScheme.onSurfaceVariant,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -44,7 +45,7 @@ class LocationField extends StatelessWidget {
           Text(
             "Optional",
             style: TextStyle(
-              color: Colors.grey.shade500,
+              color: colorScheme.onSurfaceVariant,
               fontSize: 12,
             ),
           ),

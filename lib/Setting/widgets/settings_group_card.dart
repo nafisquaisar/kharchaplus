@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/AppColors.dart';
 
 class SettingsGroupCard extends StatelessWidget {
+
   final List<Widget> children;
 
   const SettingsGroupCard({
@@ -12,18 +13,33 @@ class SettingsGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final colorScheme =
+        Theme.of(context).colorScheme;
+
     return Container(
+
       decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(10),
+
+        color: colorScheme.surface,
+
+        borderRadius:
+        BorderRadius.circular(10),
+
         boxShadow: [
+
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
+
+            color: colorScheme.shadow
+                .withOpacity(.05),
+
             blurRadius: 20,
+
             offset: const Offset(0, 8),
           ),
         ],
       ),
+
       child: Column(
         children: children,
       ),
@@ -32,15 +48,27 @@ class SettingsGroupCard extends StatelessWidget {
 }
 
 /// 🔥 Divider
+
 class SettingsDivider extends StatelessWidget {
-  const SettingsDivider({super.key});
+
+  const SettingsDivider({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
+
+    final colorScheme =
+        Theme.of(context).colorScheme;
+
     return Divider(
+
       height: 1,
-      color: Colors.grey.shade200,
+
+      color: colorScheme.outlineVariant,
+
       indent: 20,
+
       endIndent: 20,
     );
   }

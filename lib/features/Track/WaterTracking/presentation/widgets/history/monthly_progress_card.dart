@@ -18,15 +18,17 @@ class MonthlyProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: colorScheme.shadow.withValues(alpha: 0.05),
             blurRadius: 12,
             offset: const Offset(0, 5),
           ),
@@ -37,10 +39,10 @@ class MonthlyProgressCard extends StatelessWidget {
         children: [
            Text(
             'Monthly Goal Progress',
-            style: TextStyle(
+            style: textTheme.titleSmall?.copyWith(
               fontSize: 14,
               fontWeight: FontWeight.w800,
-              color: AppColors.black,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 10),
@@ -75,7 +77,7 @@ class MonthlyProgressCard extends StatelessWidget {
                 child: LinearProgressIndicator(
                   minHeight: 10,
                   value: value,
-                  backgroundColor: AppColors.primarybg,
+                  backgroundColor: colorScheme.surfaceContainerHighest,
                   valueColor:  AlwaysStoppedAnimation<Color>(
                     AppColors.accent,
                   ),
@@ -100,32 +102,34 @@ class _MetricChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
         vertical: 7,
       ),
       decoration: BoxDecoration(
-        color: AppColors.primarybg,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         children: [
           Text(
             label,
-            style:  TextStyle(
+            style: textTheme.labelSmall?.copyWith(
               fontSize: 10,
               fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             value,
-            style:  TextStyle(
+            style: textTheme.bodySmall?.copyWith(
               fontSize: 12,
               fontWeight: FontWeight.w800,
-              color: AppColors.black,
+              color: colorScheme.onSurface,
             ),
           ),
         ],

@@ -45,6 +45,7 @@ class DateFilterSection
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
 
@@ -76,7 +77,7 @@ class DateFilterSection
             decoration: BoxDecoration(
 
               border: Border.all(
-                color: Colors.grey.shade300,
+                color: colorScheme.outlineVariant,
               ),
 
               borderRadius:
@@ -87,8 +88,9 @@ class DateFilterSection
 
               children: [
 
-                const Icon(
+                Icon(
                   Icons.calendar_month,
+                  color: colorScheme.onSurfaceVariant,
                 ),
 
                 const SizedBox(width: 12),
@@ -101,6 +103,7 @@ class DateFilterSection
                         endDate != null
                         ? '${DateFormat('dd MMM yyyy').format(startDate!)} - ${DateFormat('dd MMM yyyy').format(endDate!)}'
                         : 'Select date range',
+                    style: TextStyle(color: colorScheme.onSurface),
                   ),
                 ),
               ],

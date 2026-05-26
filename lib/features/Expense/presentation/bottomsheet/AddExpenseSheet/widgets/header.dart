@@ -19,7 +19,8 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     final isUpdate =
         title == "Update Expense";
 
@@ -43,7 +44,7 @@ class Header extends StatelessWidget {
             decoration: BoxDecoration(
 
               color:
-              Colors.grey.shade300,
+              colorScheme.outlineVariant,
 
               borderRadius:
               BorderRadius.circular(
@@ -64,7 +65,7 @@ class Header extends StatelessWidget {
 
           decoration: BoxDecoration(
 
-            color: Colors.white,
+            color: colorScheme.surface,
 
             borderRadius:
             BorderRadius.circular(
@@ -153,7 +154,7 @@ class Header extends StatelessWidget {
                       title,
 
                       style:
-                      const TextStyle(
+                      textTheme.titleMedium?.copyWith(
 
                         fontSize: 16,
 
@@ -162,7 +163,7 @@ class Header extends StatelessWidget {
                             .w700,
 
                         color:
-                        Colors.black,
+                        colorScheme.onSurface,
                       ),
                     ),
 
@@ -175,12 +176,12 @@ class Header extends StatelessWidget {
                       subtitle,
 
                       style:
-                      const TextStyle(
+                      textTheme.bodySmall?.copyWith(
 
                         fontSize: 12,
 
                         color:
-                        Colors.grey,
+                        colorScheme.onSurfaceVariant,
 
                         fontWeight:
                         FontWeight

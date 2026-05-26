@@ -71,6 +71,8 @@ class _GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -79,11 +81,11 @@ class _GoalCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorScheme.surface,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: colorScheme.shadow.withOpacity(0.04),
                 blurRadius: 8,
                 offset:  Offset(0, 3),
               ),
@@ -95,7 +97,7 @@ class _GoalCard extends StatelessWidget {
                Icon(
                 Icons.track_changes_outlined,
                 size: 18,
-                color: AppColors.colorText,
+                color: colorScheme.onSurface,
               ),
 
                SizedBox(width: 8),
@@ -107,10 +109,10 @@ class _GoalCard extends StatelessWidget {
                   children: [
                      Text(
                       'Daily Goal',
-                      style: TextStyle(
+                      style: textTheme.labelSmall?.copyWith(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textSecondary,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
 
@@ -118,10 +120,10 @@ class _GoalCard extends StatelessWidget {
 
                     Text(
                       isLoading ? '...' : goalText,
-                      style:  TextStyle(
+                      style: textTheme.titleMedium?.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.black,
+                        color: colorScheme.onSurface,
                       ),
                     ),
 
@@ -131,10 +133,10 @@ class _GoalCard extends StatelessWidget {
                       children:  [
                         Text(
                           'Edit Goal',
-                          style: TextStyle(
+                          style: textTheme.labelSmall?.copyWith(
                             fontSize: 10,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.colorText,
+                            color: colorScheme.onSurface,
                           ),
                         ),
 
@@ -143,7 +145,7 @@ class _GoalCard extends StatelessWidget {
                         Icon(
                           Icons.edit_outlined,
                           size: 12,
-                          color: AppColors.colorText,
+                          color: colorScheme.onSurface,
                         ),
                       ],
                     ),
@@ -173,14 +175,16 @@ class _StreakCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: colorScheme.shadow.withOpacity(0.04),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -196,10 +200,10 @@ class _StreakCard extends StatelessWidget {
               children: [
                  Text(
                   'Streak',
-                  style: TextStyle(
+                  style: textTheme.labelSmall?.copyWith(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
 
@@ -207,10 +211,10 @@ class _StreakCard extends StatelessWidget {
 
                 Text(
                   streakText,
-                  style:  TextStyle(
+                  style: textTheme.titleMedium?.copyWith(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.black,
+                    color: colorScheme.onSurface,
                   ),
                 ),
 
@@ -218,10 +222,10 @@ class _StreakCard extends StatelessWidget {
 
                 Text(
                   'Best: $bestStreak Days',
-                  style:  TextStyle(
+                  style: textTheme.labelSmall?.copyWith(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],

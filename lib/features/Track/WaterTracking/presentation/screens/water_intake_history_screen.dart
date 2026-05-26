@@ -53,6 +53,8 @@ class _WaterIntakeHistoryScreenState
   Widget build(BuildContext context) {
     final state = ref.watch(historyNotifierProvider);
     final notifier = ref.read(historyNotifierProvider.notifier);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     final selectedMonthDate = DateTime(
       state.selectedYear,
@@ -64,7 +66,7 @@ class _WaterIntakeHistoryScreenState
     final selectedDayTotal = _sumIntake(state.intakeTimeline);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: PreferredSize(
         preferredSize:
         const Size.fromHeight(
@@ -97,7 +99,7 @@ class _WaterIntakeHistoryScreenState
 
       body: RefreshIndicator(
         color: AppColors.accent,
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         onRefresh: notifier.refresh,
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(
@@ -133,15 +135,15 @@ class _WaterIntakeHistoryScreenState
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.grey.withValues(alpha: 0.20),
+                      color: colorScheme.outlineVariant,
                     ),
                   ),
                   child: Text(
                     '$monthLabel \u25be',
-                    style: TextStyle(
+                    style: textTheme.bodySmall?.copyWith(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: AppColors.accent,
@@ -204,7 +206,7 @@ class _WaterIntakeHistoryScreenState
               const SizedBox(height: 10),
               Text(
                 state.error!,
-                style: const TextStyle(
+                style: textTheme.bodySmall?.copyWith(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   color: Colors.redAccent,
@@ -428,6 +430,7 @@ class _TimelineHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       children: [
         Text(
@@ -435,7 +438,7 @@ class _TimelineHeader extends StatelessWidget {
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w800,
-            color: AppColors.black,
+            color: colorScheme.onSurface,
           ),
         ),
         const Spacer(),
@@ -471,6 +474,7 @@ class _HistoryTabSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     const tabs = [
       WaterHistoryTab.day,
       WaterHistoryTab.week,
@@ -488,11 +492,11 @@ class _HistoryTabSwitcher extends StatelessWidget {
       height: 48,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: colorScheme.shadow.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -527,7 +531,7 @@ class _HistoryTabSwitcher extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                             color: tab == selectedTab
                                 ? Colors.white
-                                : AppColors.textSecondary,
+                                : colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ),
@@ -558,11 +562,13 @@ class _HistoryEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -574,11 +580,11 @@ class _HistoryEmptyState extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'No intake history found \ud83d\udca7',
-            style: TextStyle(
+            'No intake history found 💧',
+            style: textTheme.bodySmall?.copyWith(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: AppColors.textSecondary,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -588,64 +594,113 @@ class _HistoryEmptyState extends StatelessWidget {
 }
 
 class _HistoryFilterSheet extends StatelessWidget {
+
   final WaterHistoryTab selectedTab;
+
   final ValueChanged<WaterHistoryTab> onSelected;
 
   const _HistoryFilterSheet({
+    super.key,
     required this.selectedTab,
     required this.onSelected,
   });
 
   @override
   Widget build(BuildContext context) {
+
+    final colorScheme =
+        Theme.of(context).colorScheme;
+
+    final textTheme =
+        Theme.of(context).textTheme;
+
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(
+
+      decoration: BoxDecoration(
+
+        color: colorScheme.surface,
+
+        borderRadius:
+        const BorderRadius.vertical(
           top: Radius.circular(24),
         ),
       ),
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+
+      padding: const EdgeInsets.fromLTRB(
+        20,
+        18,
+        20,
+        24,
+      ),
+
       child: SafeArea(
+
         top: false,
+
         child: Column(
+
           mainAxisSize: MainAxisSize.min,
+
           children: [
+
             Container(
+
               width: 52,
               height: 5,
+
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(999),
+
+                color:
+                colorScheme.outlineVariant,
+
+                borderRadius:
+                BorderRadius.circular(999),
               ),
             ),
+
             const SizedBox(height: 16),
+
             Align(
+
               alignment: Alignment.centerLeft,
+
               child: Text(
+
                 'Filter Timeline',
-                style: TextStyle(
+
+                style:
+                textTheme.titleMedium?.copyWith(
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.black,
+                  color: colorScheme.onSurface,
                 ),
               ),
             ),
+
             const SizedBox(height: 12),
+
             _FilterTile(
               label: 'Day',
-              selected: selectedTab == WaterHistoryTab.day,
-              onTap: () => onSelected(WaterHistoryTab.day),
+              selected:
+              selectedTab == WaterHistoryTab.day,
+              onTap: () =>
+                  onSelected(WaterHistoryTab.day),
             ),
+
             _FilterTile(
               label: 'Week',
-              selected: selectedTab == WaterHistoryTab.week,
-              onTap: () => onSelected(WaterHistoryTab.week),
+              selected:
+              selectedTab == WaterHistoryTab.week,
+              onTap: () =>
+                  onSelected(WaterHistoryTab.week),
             ),
+
             _FilterTile(
               label: 'Month',
-              selected: selectedTab == WaterHistoryTab.month,
-              onTap: () => onSelected(WaterHistoryTab.month),
+              selected:
+              selectedTab == WaterHistoryTab.month,
+              onTap: () =>
+                  onSelected(WaterHistoryTab.month),
             ),
           ],
         ),
@@ -653,7 +708,6 @@ class _HistoryFilterSheet extends StatelessWidget {
     );
   }
 }
-
 class _FilterTile extends StatelessWidget {
   final String label;
   final bool selected;
@@ -667,13 +721,15 @@ class _FilterTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return ListTile(
       contentPadding: EdgeInsets.zero,
       onTap: onTap,
       title: Text(
         label,
-        style: const TextStyle(
+        style: TextStyle(
           fontWeight: FontWeight.w700,
+          color: colorScheme.onSurface,
         ),
       ),
       trailing: AnimatedContainer(
@@ -685,7 +741,7 @@ class _FilterTile extends StatelessWidget {
           shape: BoxShape.circle,
           color: selected ? AppColors.accent : Colors.transparent,
           border: Border.all(
-            color: selected ? AppColors.accent : Colors.grey.shade400,
+            color: selected ? AppColors.accent : colorScheme.outlineVariant,
           ),
         ),
         child: selected
@@ -705,9 +761,10 @@ class _AnalyticsSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
+      baseColor: colorScheme.surfaceContainerHighest,
+      highlightColor: colorScheme.surface,
       child: GridView.count(
         crossAxisCount: 2,
         childAspectRatio: 1.5,
@@ -719,7 +776,7 @@ class _AnalyticsSkeleton extends StatelessWidget {
           4,
           (_) => Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(16),
             ),
           ),
@@ -734,9 +791,10 @@ class _TimelineSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
+      baseColor: colorScheme.surfaceContainerHighest,
+      highlightColor: colorScheme.surface,
       child: Column(
         children: List.generate(
           4,
@@ -744,7 +802,7 @@ class _TimelineSkeleton extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 10),
             height: 64,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(14),
             ),
           ),

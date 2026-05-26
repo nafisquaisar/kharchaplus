@@ -90,13 +90,16 @@ class _ShimmerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: theme.shadowColor.withOpacity(0.08),
             blurRadius: 12,
             spreadRadius: 0,
             offset: const Offset(0, 4),
@@ -164,6 +167,8 @@ class _ShimmerBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -179,9 +184,9 @@ class _ShimmerBox extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.grey.shade200,
-                  Colors.grey.shade100,
-                  Colors.grey.shade200,
+                  colorScheme.surfaceContainerHighest,
+                  colorScheme.surface,
+                  colorScheme.surfaceContainerHighest,
                 ],
                 stops: [0, 0.5, 1],
               ),
@@ -192,4 +197,3 @@ class _ShimmerBox extends StatelessWidget {
     );
   }
 }
-

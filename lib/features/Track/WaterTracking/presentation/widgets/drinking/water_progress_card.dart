@@ -16,6 +16,8 @@ class WaterProgressCard extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     final analyticsState = ref.watch(
       waterIntakeAnalyticsProvider,
     );
@@ -37,11 +39,11 @@ class WaterProgressCard extends ConsumerWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: colorScheme.shadow.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -58,10 +60,10 @@ class WaterProgressCard extends ConsumerWidget {
             children: [
                Text(
                 "Today's Progress",
-                style: TextStyle(
+                style: textTheme.bodyMedium?.copyWith(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.black,
+                  color: colorScheme.onSurface,
                 ),
               ),
               Text(
@@ -70,7 +72,7 @@ class WaterProgressCard extends ConsumerWidget {
                 "${DateTime.now().year}",
                 style: TextStyle(
                   fontSize: 11,
-                  color: Colors.grey.shade600,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -86,7 +88,7 @@ class WaterProgressCard extends ConsumerWidget {
                 'Loading...',
                 style: TextStyle(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -98,7 +100,7 @@ class WaterProgressCard extends ConsumerWidget {
                 'Failed to load data',
                 style: TextStyle(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -110,7 +112,7 @@ class WaterProgressCard extends ConsumerWidget {
                 'No intake yet today',
                 style: TextStyle(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -141,7 +143,7 @@ class WaterProgressCard extends ConsumerWidget {
                         style:  TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.colorText,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(
@@ -151,7 +153,7 @@ class WaterProgressCard extends ConsumerWidget {
                         "of ${(analytics.dailyGoalMl / 1000).toStringAsFixed(1)}L",
                         style: TextStyle(
                           fontSize: 10,
-                          color: AppColors.textSecondary,
+                          color: colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -163,7 +165,7 @@ class WaterProgressCard extends ConsumerWidget {
                         style:  TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.black,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ],
@@ -176,13 +178,14 @@ class WaterProgressCard extends ConsumerWidget {
                 margin: const EdgeInsets.symmetric(
                   horizontal: 10,
                 ),
-                color: Colors.grey.shade200,
+                color: colorScheme.outlineVariant,
               ),
               Expanded(
                 flex: 4,
                 child: Column(
                   children: [
                     _buildInfoTile(
+                      context,
                       icon: Icons.water_drop_outlined,
                       title: "${remainingL}L",
                       subtitle: "Remaining",
@@ -192,11 +195,12 @@ class WaterProgressCard extends ConsumerWidget {
                         vertical: 8,
                       ),
                       child: Divider(
-                        color: Colors.grey.shade200,
+                        color: colorScheme.outlineVariant,
                         height: 1,
                       ),
                     ),
                     _buildInfoTile(
+                      context,
                       icon: Icons.track_changes_outlined,
                       title: "${(analytics.dailyGoalMl / 1000).toStringAsFixed(1)}L",
                       subtitle: "Daily Goal",
@@ -216,7 +220,7 @@ class WaterProgressCard extends ConsumerWidget {
               vertical: 2,
             ),
             decoration: BoxDecoration(
-              color: AppColors.primarybg,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(
                 8,
               ),
@@ -236,7 +240,7 @@ class WaterProgressCard extends ConsumerWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 11,
-                      color: AppColors.colorText,
+                      color: colorScheme.onSurface,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -249,16 +253,19 @@ class WaterProgressCard extends ConsumerWidget {
     );
   }
 
-  static Widget _buildInfoTile({
+  static Widget _buildInfoTile(
+    BuildContext context, {
     required IconData icon,
     required String title,
     required String subtitle,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Row(
       children: [
         Icon(
           icon,
-          color: AppColors.colorText,
+          color: colorScheme.onSurface,
           size: 16,
         ),
         const SizedBox(width: 6),
@@ -269,10 +276,10 @@ class WaterProgressCard extends ConsumerWidget {
               Text(
                 title,
                 overflow: TextOverflow.ellipsis,
-                style:  TextStyle(
+                style: textTheme.bodyMedium?.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.colorText,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(
@@ -281,9 +288,9 @@ class WaterProgressCard extends ConsumerWidget {
               Text(
                 subtitle,
                 overflow: TextOverflow.ellipsis,
-                style:  TextStyle(
+                style: textTheme.bodySmall?.copyWith(
                   fontSize: 9,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w600,
                 ),
               ),

@@ -5,21 +5,18 @@ import '../../../../../core/constants/AppColors.dart';
 import '../../domain/entities/electricity_entity.dart';
 import '../widgets/electricity_summary_card.dart';
 
-
-
 class ElectricitySheet extends StatefulWidget {
-
   final ElectricityEntity? entity;
 
   final String userId;
 
   final Future<bool> Function(
-      ElectricityEntity,
-      ) onSave;
+    ElectricityEntity,
+  ) onSave;
 
   final void Function(
-      String message,
-      )? onValidationError;
+    String message,
+  )? onValidationError;
 
   const ElectricitySheet({
     super.key,
@@ -30,24 +27,17 @@ class ElectricitySheet extends StatefulWidget {
   });
 
   @override
-  State<ElectricitySheet> createState() =>
-      _ElectricitySheetState();
+  State<ElectricitySheet> createState() => _ElectricitySheetState();
 }
 
-class _ElectricitySheetState
-    extends State<ElectricitySheet> {
+class _ElectricitySheetState extends State<ElectricitySheet> {
+  final titleController = TextEditingController();
 
-  final titleController =
-  TextEditingController();
+  final prevController = TextEditingController();
 
-  final prevController =
-  TextEditingController();
+  final currentController = TextEditingController();
 
-  final currentController =
-  TextEditingController();
-
-  final rateController =
-  TextEditingController();
+  final rateController = TextEditingController();
 
   DateTime start = DateTime.now();
 
@@ -61,24 +51,18 @@ class _ElectricitySheetState
 
   @override
   void initState() {
-
     super.initState();
 
     if (widget.entity != null) {
-
       final entity = widget.entity!;
 
-      titleController.text =
-          entity.title ?? "";
+      titleController.text = entity.title ?? "";
 
-      prevController.text =
-          entity.prevUnit.toString();
+      prevController.text = entity.prevUnit.toString();
 
-      currentController.text =
-          entity.currentUnit.toString();
+      currentController.text = entity.currentUnit.toString();
 
-      rateController.text =
-          entity.rate.toString();
+      rateController.text = entity.rate.toString();
 
       start = entity.startDate;
 
@@ -90,7 +74,6 @@ class _ElectricitySheetState
 
   @override
   void dispose() {
-
     titleController.dispose();
 
     prevController.dispose();
@@ -103,18 +86,13 @@ class _ElectricitySheetState
   }
 
   void calculate() {
+    final prev = int.tryParse(prevController.text) ?? 0;
 
-    final prev =
-        int.tryParse(prevController.text) ?? 0;
+    final current = int.tryParse(currentController.text) ?? 0;
 
-    final current =
-        int.tryParse(currentController.text) ?? 0;
-
-    final rate =
-        double.tryParse(rateController.text) ?? 0;
+    final rate = double.tryParse(rateController.text) ?? 0;
 
     setState(() {
-
       consumed = current - prev;
 
       if (consumed < 0) {
@@ -126,25 +104,17 @@ class _ElectricitySheetState
   }
 
   Future<void> pickDate(
-      bool isStart,
-      ) async {
-
+    bool isStart,
+  ) async {
     final picked = await showDatePicker(
-
       context: context,
-
-      initialDate:
-      isStart ? start : end,
-
+      initialDate: isStart ? start : end,
       firstDate: DateTime(2020),
-
       lastDate: DateTime(2100),
     );
 
     if (picked != null) {
-
       setState(() {
-
         if (isStart) {
           start = picked;
         } else {
@@ -155,74 +125,40 @@ class _ElectricitySheetState
   }
 
   ElectricityEntity _buildEntity() {
-
     final now = DateTime.now();
 
-    final prev =
-        int.tryParse(prevController.text) ?? 0;
+    final prev = int.tryParse(prevController.text) ?? 0;
 
-    final current =
-        int.tryParse(currentController.text) ?? 0;
+    final current = int.tryParse(currentController.text) ?? 0;
 
-    final rate =
-        double.tryParse(rateController.text) ?? 0;
+    final rate = double.tryParse(rateController.text) ?? 0;
 
-    final title =
-    titleController.text.trim();
+    final title = titleController.text.trim();
 
     final base = widget.entity;
 
     return ElectricityEntity(
-
-      id: base?.id ??
-          now.microsecondsSinceEpoch.toString(),
-
-      title:
-      title.isEmpty ? null : title,
-
+      id: base?.id ?? now.microsecondsSinceEpoch.toString(),
+      title: title.isEmpty ? null : title,
       startDate: start,
-
       endDate: end,
-
       prevUnit: prev,
-
       currentUnit: current,
-
       rate: rate,
-
-      isSynced:
-      base?.isSynced ?? false,
-
-      isDeleted:
-      base?.isDeleted ?? false,
-
-      isEdited:
-      base?.isEdited ?? false,
-
-      isActive:
-      base?.isActive ?? true,
-
-      isOfflineCreated:
-      base?.isOfflineCreated ?? true,
-
-      version:
-      base?.version ?? 0,
-
-      createdAt:
-      base?.createdAt ?? now,
-
+      isSynced: base?.isSynced ?? false,
+      isDeleted: base?.isDeleted ?? false,
+      isEdited: base?.isEdited ?? false,
+      isActive: base?.isActive ?? true,
+      isOfflineCreated: base?.isOfflineCreated ?? true,
+      version: base?.version ?? 0,
+      createdAt: base?.createdAt ?? now,
       updatedAt: now,
-
-      userId:
-      base?.userId ?? widget.userId,
-
-      serverId:
-      base?.serverId,
+      userId: base?.userId ?? widget.userId,
+      serverId: base?.serverId,
     );
   }
 
   String? _validate() {
-
     if (widget.userId.trim().isEmpty) {
       return 'User not authenticated';
     }
@@ -231,11 +167,9 @@ class _ElectricitySheetState
       return 'Start date must be before end date';
     }
 
-    final prev =
-        int.tryParse(prevController.text) ?? -1;
+    final prev = int.tryParse(prevController.text) ?? -1;
 
-    final current =
-        int.tryParse(currentController.text) ?? -1;
+    final current = int.tryParse(currentController.text) ?? -1;
 
     if (prev < 0 || current < 0) {
       return 'Enter valid unit readings';
@@ -245,8 +179,7 @@ class _ElectricitySheetState
       return 'Previous unit must be <= current unit';
     }
 
-    final rate =
-        double.tryParse(rateController.text) ?? -1;
+    final rate = double.tryParse(rateController.text) ?? -1;
 
     if (rate <= 0) {
       return 'Enter a valid rate';
@@ -256,16 +189,13 @@ class _ElectricitySheetState
   }
 
   Future<void> submit() async {
-
     if (isSaving) {
       return;
     }
 
-    final validationMessage =
-    _validate();
+    final validationMessage = _validate();
 
     if (validationMessage != null) {
-
       widget.onValidationError?.call(
         validationMessage,
       );
@@ -278,18 +208,12 @@ class _ElectricitySheetState
     });
 
     try {
-
-      final entity =
-      _buildEntity();
+      final entity = _buildEntity();
 
       await widget.onSave(entity);
-
     } catch (_) {
-
     } finally {
-
       if (mounted) {
-
         setState(() {
           isSaving = false;
         });
@@ -298,9 +222,8 @@ class _ElectricitySheetState
   }
 
   String formatDate(
-      DateTime date,
-      ) {
-
+    DateTime date,
+  ) {
     return DateFormat(
       "d MMM yyyy",
     ).format(date);
@@ -308,93 +231,58 @@ class _ElectricitySheetState
 
   @override
   Widget build(BuildContext context) {
-
-    final maxHeight =
-        MediaQuery.of(context).size.height * 0.85;
+    final maxHeight = MediaQuery.of(context).size.height * 0.85;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Padding(
-
       padding: EdgeInsets.only(
-
         left: 16,
         right: 16,
         top: 16,
-
-        bottom:
-        MediaQuery.of(context).viewInsets.bottom,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-
       child: SizedBox(
-
         height: maxHeight,
-
         child: Column(
-
           children: [
-
             Container(
-
               width: 48,
               height: 5,
-
               decoration: BoxDecoration(
-
-                color: AppColors.textSecondary
-                    .withOpacity(0.3),
-
-                borderRadius:
-                BorderRadius.circular(12),
+                color: colorScheme.outlineVariant,
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
-
             const SizedBox(height: 12),
-
             Text(
-
-              widget.entity == null
-                  ? 'Add Electricity'
-                  : 'Update Electricity',
-
-              style: TextStyle(
+              widget.entity == null ? 'Add Electricity' : 'Update Electricity',
+              style: textTheme.titleMedium?.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppColors.accent,
+                color: colorScheme.onSurface,
               ),
             ),
-
             const SizedBox(height: 16),
-
             Expanded(
-
               child: SingleChildScrollView(
-
                 child: Column(
-
                   children: [
-
                     _SectionCard(
-
                       title: 'Details',
-
                       child: Column(
-
                         children: [
-
                           _InputField(
                             controller: titleController,
                             hint: 'Title (Optional)',
                           ),
-
                           const SizedBox(height: 12),
-
                           _DateRow(
                             label: 'Start',
                             value: formatDate(start),
                             onTap: () => pickDate(true),
                           ),
-
                           const SizedBox(height: 10),
-
                           _DateRow(
                             label: 'End',
                             value: formatDate(end),
@@ -403,42 +291,30 @@ class _ElectricitySheetState
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 12),
-
                     _SectionCard(
-
                       title: 'Readings',
-
                       child: Column(
-
                         children: [
-
                           _InputField(
                             controller: prevController,
                             hint: 'Previous Unit',
                             keyboardType: TextInputType.number,
                             onChanged: (_) => calculate(),
                           ),
-
                           const SizedBox(height: 10),
-
                           _InputField(
                             controller: currentController,
                             hint: 'Current Unit',
                             keyboardType: TextInputType.number,
                             onChanged: (_) => calculate(),
                           ),
-
                           const SizedBox(height: 10),
-
                           _ReadOnlyRow(
                             label: 'Consumed Units',
                             value: '$consumed',
                           ),
-
                           const SizedBox(height: 10),
-
                           _InputField(
                             controller: rateController,
                             hint: 'Rate per Unit (₹)',
@@ -448,71 +324,61 @@ class _ElectricitySheetState
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 12),
-
                     ElectricitySummaryCard(
                       title: 'Calculation Summary',
                       amount: total,
                       subtitle: '$consumed units × rate',
                     ),
-
                     const SizedBox(height: 24),
                   ],
                 ),
               ),
             ),
-
             SafeArea(
-
               top: false,
-
               child: SizedBox(
-
                 width: double.infinity,
-
-                child: ElevatedButton(
-
-                  onPressed:
-                  isSaving ? null : submit,
-
-                  style: ElevatedButton.styleFrom(
-
-                    backgroundColor:
-                    AppColors.accent,
-
-                    foregroundColor:
-                    AppColors.textPrimary,
-
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 14,
-                    ),
-
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(16),
-                    ),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: AppColors.buttonGradient,
+                    borderRadius: BorderRadius.circular(16),
                   ),
-
-                  child: isSaving
-                      ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child:
-                    CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
+                  child: ElevatedButton(
+                    onPressed: isSaving ? null : submit,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      foregroundColor: Colors.white,
+                      disabledBackgroundColor: Colors.transparent,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 14,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                     ),
-                  )
-                      : Text(
-                    widget.entity == null
-                        ? 'Save'
-                        : 'Update',
+                    child: isSaving
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            widget.entity == null ? 'Save' : 'Update',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15,
+                            ),
+                          ),
                   ),
                 ),
               ),
             ),
-
             const SizedBox(height: 12),
           ],
         ),
@@ -520,6 +386,7 @@ class _ElectricitySheetState
     );
   }
 }
+
 class _SectionCard extends StatelessWidget {
   final String title;
   final Widget child;
@@ -531,14 +398,15 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: AppColors.accent.withOpacity(0.08),
+            color: colorScheme.shadow.withOpacity(0.08),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -578,14 +446,22 @@ class _InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
       onChanged: onChanged,
+      style: textTheme.bodyMedium?.copyWith(
+        color: colorScheme.onSurface,
+      ),
       decoration: InputDecoration(
         hintText: hint,
+        hintStyle: textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onSurfaceVariant,
+        ),
         filled: true,
-        fillColor: AppColors.background,
+        fillColor: colorScheme.surfaceContainerHighest,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
@@ -608,13 +484,14 @@ class _DateRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(14),
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.background,
+          color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
@@ -647,10 +524,11 @@ class _ReadOnlyRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
@@ -672,4 +550,3 @@ class _ReadOnlyRow extends StatelessWidget {
     );
   }
 }
-

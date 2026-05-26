@@ -26,12 +26,17 @@ class AppFlushbar {
   }
 
   static void showInfo(BuildContext context, String message) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     Flushbar(
-      message: message,
+      messageText: Text(
+        message,
+        style: TextStyle(color: colorScheme.onInverseSurface),
+      ),
       duration: const Duration(seconds: 2),
       margin: const EdgeInsets.all(16),
       borderRadius: BorderRadius.circular(12),
-      backgroundColor: Colors.black87,
+      backgroundColor: colorScheme.inverseSurface,
       flushbarPosition: FlushbarPosition.TOP,
     ).show(context);
   }
@@ -43,6 +48,7 @@ class AppFlushbar {
         required VoidCallback onUndo,
       }) {
     late Flushbar flush;
+    final colorScheme = Theme.of(context).colorScheme;
 
     flush = Flushbar(
       messageText: Column(
@@ -51,7 +57,7 @@ class AppFlushbar {
           /// 🔥 MESSAGE
           Text(
             message,
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: colorScheme.onInverseSurface),
           ),
 
           const SizedBox(height: 8),
@@ -64,7 +70,7 @@ class AppFlushbar {
               return LinearProgressIndicator(
                 value: value,
                 minHeight: 3,
-                backgroundColor: Colors.white24,
+                backgroundColor: colorScheme.onInverseSurface.withOpacity(0.2),
                 valueColor:
                  AlwaysStoppedAnimation<Color>(AppColors.accent),
               );
@@ -76,7 +82,7 @@ class AppFlushbar {
       duration: const Duration(seconds: 5),
       margin: const EdgeInsets.all(16),
       borderRadius: BorderRadius.circular(12),
-      backgroundColor: Colors.black87,
+      backgroundColor: colorScheme.inverseSurface,
       flushbarPosition: FlushbarPosition.BOTTOM,
 
       /// 🔥 UNDO BUTTON

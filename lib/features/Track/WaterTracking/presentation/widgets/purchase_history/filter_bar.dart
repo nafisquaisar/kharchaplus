@@ -17,16 +17,18 @@ class PurchaseHistoryFilterBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filter = ref.watch(purchaseHistoryFilterProvider);
     final notifier = ref.read(purchaseHistoryFilterProvider.notifier);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: colorScheme.shadow.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -37,10 +39,10 @@ class PurchaseHistoryFilterBar extends ConsumerWidget {
         children: [
           Text(
             'Filters',
-            style: TextStyle(
+            style: textTheme.bodySmall?.copyWith(
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: AppColors.black,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 10),
@@ -133,6 +135,7 @@ class PurchaseHistoryFilterBar extends ConsumerWidget {
     required List<DropdownMenuItem<T>> items,
     required ValueChanged<T?> onChanged,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return SizedBox(
       width: 160,
       child: DropdownButtonFormField<T>(
@@ -140,7 +143,7 @@ class PurchaseHistoryFilterBar extends ConsumerWidget {
         decoration: InputDecoration(
           labelText: label,
           filled: true,
-          fillColor: AppColors.primarybg,
+          fillColor: colorScheme.surfaceContainerHighest,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           border: OutlineInputBorder(

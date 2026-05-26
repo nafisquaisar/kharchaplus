@@ -35,6 +35,7 @@ class CalendarDay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final colorScheme = Theme.of(context).colorScheme;
     return LayoutBuilder(
 
       builder: (context, constraints) {
@@ -153,7 +154,7 @@ class CalendarDay extends StatelessWidget {
                         color:
                         selected
                             ? Colors.white
-                            : AppColors.black,
+                            : colorScheme.onSurface,
 
                         fontWeight:
                         FontWeight.w600,

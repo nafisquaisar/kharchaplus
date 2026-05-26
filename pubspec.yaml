@@ -115,4 +115,4 @@ flutter_native_splash:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/logo/logo1.png"
+  image_path: "assets/logo/appicon.png"

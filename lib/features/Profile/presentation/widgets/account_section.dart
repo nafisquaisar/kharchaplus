@@ -9,9 +9,11 @@ class AccountSection extends StatelessWidget {
 
   Widget tile(
       String title,
+      BuildContext context,
       IconData icon, {
         bool isDanger = false,
         VoidCallback? onTap,
+
       }) {
     final Color iconColor =
     isDanger ? AppColors.deleteBackground : AppColors.primary;
@@ -19,7 +21,7 @@ class AccountSection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Material(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
@@ -115,12 +117,14 @@ class AccountSection extends StatelessWidget {
         // 🔥 LOGOUT (DANGER STYLE)
         tile(
           "Logout",
+          context,
           Icons.logout,
           isDanger: true,
           onTap: () async {
             final vm =context.read<AuthViewModel>();
             await vm.logout();
           },
+
         ),
       ],
     );

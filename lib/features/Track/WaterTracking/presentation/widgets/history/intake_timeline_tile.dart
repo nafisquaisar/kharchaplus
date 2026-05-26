@@ -21,15 +21,17 @@ class IntakeTimelineTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final timeLabel = DateFormat('hh:mm a').format(intake.dateTime);
     final source = intake.sourceType;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: Colors.grey.withValues(alpha: 0.14),
+          color: colorScheme.outlineVariant,
         ),
       ),
       child: Row(
@@ -38,7 +40,7 @@ class IntakeTimelineTile extends StatelessWidget {
             height: 34,
             width: 34,
             decoration: BoxDecoration(
-              color: AppColors.primarybg,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
@@ -56,10 +58,10 @@ class IntakeTimelineTile extends StatelessWidget {
                   children: [
                     Text(
                       timeLabel,
-                      style:  TextStyle(
+                      style: textTheme.bodySmall?.copyWith(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.black,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -76,10 +78,10 @@ class IntakeTimelineTile extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   source,
-                  style:  TextStyle(
+                  style: textTheme.labelSmall?.copyWith(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../../core/constants/AppColors.dart';
-
 class ElectricityLoadingState extends StatelessWidget {
   final int itemCount;
 
@@ -13,6 +11,7 @@ class ElectricityLoadingState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: itemCount,
@@ -20,12 +19,12 @@ class ElectricityLoadingState extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),
           child: Shimmer.fromColors(
-            baseColor: AppColors.background,
-            highlightColor: AppColors.card,
+            baseColor: colorScheme.surfaceContainerHighest,
+            highlightColor: colorScheme.surface,
             child: Container(
               height: 140,
               decoration: BoxDecoration(
-                color: AppColors.card,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
@@ -35,4 +34,3 @@ class ElectricityLoadingState extends StatelessWidget {
     );
   }
 }
-

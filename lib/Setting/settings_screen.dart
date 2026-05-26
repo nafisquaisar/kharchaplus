@@ -1,180 +1,280 @@
-  /// 📁 settings_screen.dart
+/// 📁 settings_screen.dart
 library;
 
-  import 'package:expense_tracker/Setting/widgets/settings_group_card.dart';
-  import 'package:expense_tracker/Setting/widgets/settings_section_title.dart';
-  import 'package:expense_tracker/Setting/widgets/settings_tile.dart';
-  import 'package:expense_tracker/about/about_app_screen.dart';
-  import 'package:expense_tracker/help_support/help_support_screen.dart';
-  import 'package:expense_tracker/privacypolicy/privacy_policy_screen.dart';
-  import 'package:flutter/material.dart';
-  import '../../../core/constants/AppColors.dart';
-  import '../core/Common/CommonAppBar.dart';
-  import '../core/theme/theme_controller.dart';
+import 'package:expense_tracker/Setting/widgets/settings_group_card.dart';
+import 'package:expense_tracker/Setting/widgets/settings_section_title.dart';
+import 'package:expense_tracker/Setting/widgets/settings_tile.dart';
+import 'package:expense_tracker/about/about_app_screen.dart';
+import 'package:expense_tracker/help_support/help_support_screen.dart';
+import 'package:expense_tracker/privacypolicy/privacy_policy_screen.dart';
+import 'package:flutter/material.dart';
+
+import '../../../core/constants/AppColors.dart';
+import '../core/Common/CommonAppBar.dart';
+import '../core/theme/theme_controller.dart';
 import '../features/Lock/AppLockStorage.dart';
 
+class SettingsScreen extends StatefulWidget {
 
-  class SettingsScreen extends StatefulWidget {
-    const SettingsScreen({super.key});
+  const SettingsScreen({
+    super.key,
+  });
 
-    @override
-    State<SettingsScreen> createState() => _SettingsScreenState();
+  @override
+  State<SettingsScreen> createState() =>
+      _SettingsScreenState();
+}
+
+class _SettingsScreenState
+    extends State<SettingsScreen> {
+
+  bool isAppLockEnabled = false;
+
+  @override
+  void initState() {
+
+    super.initState();
+
+    loadAppLock();
   }
 
-  class _SettingsScreenState extends State<SettingsScreen> {
-    bool isAppLockEnabled = false;
-    @override
-    void initState() {
-      super.initState();
-      loadAppLock();
-    }
+  Future<void> loadAppLock() async {
 
-    Future<void> loadAppLock() async {
-      final enabled = await AppLockStorage.isEnabled();
+    final enabled =
+    await AppLockStorage.isEnabled();
 
-      setState(() {
-        isAppLockEnabled = enabled;
-      });
-    }
+    setState(() {
+      isAppLockEnabled = enabled;
+    });
+  }
 
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        backgroundColor: AppColors.background,
-        body: Column(
-          children: [
-            /// 🔥 COMMON APP BAR
-            CommonAppBar(
-              title: "Settings",
-              isHome: false,
-              onMenuTap: () => Navigator.pop(context),
-              onNotificationTap: () {},
-            ),
+  @override
+  Widget build(BuildContext context) {
 
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 24,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /// 🔥 GENERAL
-                    const SettingsSectionTitle(
-                      title: "GENERAL",
-                    ),
+    final colorScheme =
+        Theme.of(context).colorScheme;
 
-                    const SizedBox(height: 16),
+    return Scaffold(
 
-                    SettingsGroupCard(
-                      children: [
-                        ValueListenableBuilder<bool>(
-                          valueListenable: ThemeController.isDark,
-                          builder: (context, isDark, child) {
-                            return SettingsTile(
-                              icon: Icons.dark_mode_outlined,
-                              title: "Dark Mode",
-                              switchValue: isDark,
-                              onSwitchChanged: (value) {
-                                ThemeController.isDark.value = value;
-                              },
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+      backgroundColor:
+      Theme.of(context)
+          .scaffoldBackgroundColor,
 
+      body: Column(
 
+        children: [
 
-                    const SizedBox(height: 34),
+          /// 🔥 COMMON APP BAR
 
-                    /// 🔥 SECURITY
-                    const SettingsSectionTitle(
-                       title: "SECURITY",
-                    ),
+          CommonAppBar(
 
-                    const SizedBox(height: 16),
+            title: "Settings",
 
-                    SettingsGroupCard(
-                      children: [
-                        SettingsTile(
-                          icon: Icons.fingerprint,
-                          title: "Fingerprint Lock",
-                          switchValue: isAppLockEnabled,
-                          onSwitchChanged: (value) async {
-                            await AppLockStorage.setEnabled(value);
+            isHome: false,
 
-                            setState(() {
-                              isAppLockEnabled = value;
-                            });
-                          },
-                        ),
+            onMenuTap: () =>
+                Navigator.pop(context),
 
-                        const SettingsDivider(),
+            onNotificationTap: () {},
+          ),
 
-                        SettingsTile(
-                          icon: Icons.lock_outline_rounded,
-                          title: "Privacy And Security",
-                          onTap: () {
+          Expanded(
 
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const PrivacyPolicyScreen()));
-                          },
-                        ),
-                      ],
-                    ),
+            child: SingleChildScrollView(
 
-                    const SizedBox(height: 34),
+              padding:
+              const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 24,
+              ),
 
-                    /// 🔥 SUPPORT
-                    const SettingsSectionTitle(
-                      title: "SUPPORT",
-                    ),
+              child: Column(
 
-                    const SizedBox(height: 16),
+                crossAxisAlignment:
+                CrossAxisAlignment.start,
 
-                    SettingsGroupCard(
-                      children: [
-                        SettingsTile(
-                          icon: Icons.help_outline_rounded,
-                          title: "Help Center",
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const HelpSupportScreen()));
-                          },
-                        ),
+                children: [
 
-                        // const SettingsDivider(),
+                  /// 🔥 GENERAL
 
-                        // SettingsTile(
-                        //   icon: Icons.chat_bubble_outline_rounded,
-                        //   title: "Contact Us",
-                        //   onTap: () {},
-                        // ),
+                  const SettingsSectionTitle(
+                    title: "GENERAL",
+                  ),
 
-                        const SettingsDivider(),
+                  const SizedBox(height: 16),
 
-                        SettingsTile(
-                          icon: Icons.info_outline_rounded,
-                          title: "About App",
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const AboutAppScreen()));
-                          },
-                        ),
-                      ],
-                    ),
+                  SettingsGroupCard(
 
-                    // const SizedBox(height: 40),
-                    //
-                    // /// 🔥 LOGOUT
-                    // LogoutButton(
-                    //   onTap: () {},
-                    // ),
-                  ],
-                ),
+                    children: [
+
+                      ValueListenableBuilder<bool>(
+
+                        valueListenable:
+                        ThemeController.isDark,
+
+                        builder:
+                            (
+                            context,
+                            isDark,
+                            child,
+                            ) {
+
+                          return SettingsTile(
+
+                            icon:
+                            Icons.dark_mode_outlined,
+
+                            title: "Dark Mode",
+
+                            switchValue: isDark,
+
+                            onSwitchChanged:
+                                (value) async {
+
+                                  await ThemeController.setDark(value);                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 34),
+
+                  /// 🔥 SECURITY
+
+                  const SettingsSectionTitle(
+                    title: "SECURITY",
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  SettingsGroupCard(
+
+                    children: [
+
+                      SettingsTile(
+
+                        icon: Icons.fingerprint,
+
+                        title: "Fingerprint Lock",
+
+                        switchValue:
+                        isAppLockEnabled,
+
+                        onSwitchChanged:
+                            (value) async {
+
+                          await AppLockStorage
+                              .setEnabled(value);
+
+                          setState(() {
+                            isAppLockEnabled =
+                                value;
+                          });
+                        },
+                      ),
+
+                      const SettingsDivider(),
+
+                      SettingsTile(
+
+                        icon: Icons
+                            .lock_outline_rounded,
+
+                        title:
+                        "Privacy And Security",
+
+                        onTap: () {
+
+                          Navigator.push(
+
+                            context,
+
+                            MaterialPageRoute(
+
+                              builder: (context) =>
+                              const PrivacyPolicyScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 34),
+
+                  /// 🔥 SUPPORT
+
+                  const SettingsSectionTitle(
+                    title: "SUPPORT",
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  SettingsGroupCard(
+
+                    children: [
+
+                      SettingsTile(
+
+                        icon:
+                        Icons.help_outline_rounded,
+
+                        title: "Help Center",
+
+                        onTap: () {
+
+                          Navigator.push(
+
+                            context,
+
+                            MaterialPageRoute(
+
+                              builder: (context) =>
+                              const HelpSupportScreen(),
+                            ),
+                          );
+                        },
+                      ),
+
+                      const SettingsDivider(),
+
+                      SettingsTile(
+
+                        icon:
+                        Icons.info_outline_rounded,
+
+                        title: "About App",
+
+                        onTap: () {
+
+                          Navigator.push(
+
+                            context,
+
+                            MaterialPageRoute(
+
+                              builder: (context) =>
+                              const AboutAppScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  Divider(
+                    color:
+                    colorScheme.outlineVariant,
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      );
-    }
+          ),
+        ],
+      ),
+    );
   }
+}

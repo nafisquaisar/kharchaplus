@@ -30,7 +30,7 @@ class HeaderWave extends StatelessWidget {
               Text(
                 "Kharcha Plus",
                 style: TextStyle(
-                  color: colorScheme.onPrimary,
+                  color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),

@@ -20,6 +20,7 @@ class WaterCalendarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final year = month.year;
     final monthIndex = month.month;
     final firstDay = DateTime(year, monthIndex, 1);
@@ -29,11 +30,11 @@ class WaterCalendarWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: colorScheme.shadow.withValues(alpha: 0.05),
             blurRadius: 14,
             offset: const Offset(0, 6),
           ),
@@ -64,7 +65,11 @@ class WaterCalendarWidget extends StatelessWidget {
               final ratio = dailyGoalMl == 0 ? 0.0 : total / dailyGoalMl;
               final isSelected = _isSameDay(date, selectedDate);
 
-              final color = _heatColor(total: total, ratio: ratio);
+              final color = _heatColor(
+                total: total,
+                ratio: ratio,
+                emptyColor: colorScheme.surfaceContainerHighest,
+              );
 
               return GestureDetector(
                 onTap: () => onDaySelected(date),
@@ -94,7 +99,11 @@ class WaterCalendarWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: _textColorForBackground(color),
+                        color: _textColorForBackground(
+                          color,
+                          emptyColor: colorScheme.surfaceContainerHighest,
+                          emptyText: colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   ),
@@ -103,7 +112,7 @@ class WaterCalendarWidget extends StatelessWidget {
             },
           ),
           const SizedBox(height: 12),
-          const _HeatLegend(),
+          _HeatLegend(noDataColor: colorScheme.surfaceContainerHighest),
         ],
       ),
     );
@@ -112,9 +121,10 @@ class WaterCalendarWidget extends StatelessWidget {
   Color _heatColor({
     required int total,
     required double ratio,
+    required Color emptyColor,
   }) {
     if (total <= 0) {
-      return Colors.grey.shade200;
+      return emptyColor;
     }
     if (ratio >= 1.0) {
       return const Color(0xFF37B56A);
@@ -125,9 +135,13 @@ class WaterCalendarWidget extends StatelessWidget {
     return const Color(0xFFE65C5C);
   }
 
-  Color _textColorForBackground(Color color) {
-    if (color == Colors.grey.shade200) {
-      return Colors.grey.shade600;
+  Color _textColorForBackground(
+    Color color, {
+    required Color emptyColor,
+    required Color emptyText,
+  }) {
+    if (color == emptyColor) {
+      return emptyText;
     }
     return Colors.white;
   }
@@ -142,6 +156,7 @@ class _WeekdayHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     return Row(
@@ -151,10 +166,10 @@ class _WeekdayHeader extends StatelessWidget {
               child: Center(
                 child: Text(
                   label,
-                  style:  TextStyle(
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -166,28 +181,32 @@ class _WeekdayHeader extends StatelessWidget {
 }
 
 class _HeatLegend extends StatelessWidget {
-  const _HeatLegend();
+  final Color noDataColor;
+
+  const _HeatLegend({required this.noDataColor});
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: const [
-        _LegendItem(
+      children: [
+        const _LegendItem(
           color: Color(0xFF37B56A),
           label: 'Goal',
         ),
-        _LegendItem(
+        const _LegendItem(
           color: Color(0xFF2E8AE6),
           label: 'Partial',
         ),
-        _LegendItem(
+        const _LegendItem(
           color: Color(0xFFE65C5C),
           label: 'Missed',
         ),
         _LegendItem(
-          color: Color(0xFFE0E0E0),
+          color: noDataColor,
           label: 'No Data',
+          labelColor: colorScheme.onSurfaceVariant,
         ),
       ],
     );
@@ -197,10 +216,12 @@ class _HeatLegend extends StatelessWidget {
 class _LegendItem extends StatelessWidget {
   final Color color;
   final String label;
+  final Color? labelColor;
 
   const _LegendItem({
     required this.color,
     required this.label,
+    this.labelColor,
   });
 
   @override
@@ -218,10 +239,10 @@ class _LegendItem extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           label,
-          style:  TextStyle(
+          style: TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w600,
-            color: AppColors.textSecondary,
+            color: labelColor ?? AppColors.textSecondary,
           ),
         ),
       ],

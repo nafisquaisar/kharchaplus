@@ -50,8 +50,9 @@ class _WaterScreenState extends ConsumerState<WaterScreen>
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: CommonAppBar(
@@ -90,11 +91,11 @@ class _WaterScreenState extends ConsumerState<WaterScreen>
             ),
             padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
+                  color: colorScheme.shadow.withOpacity(0.06),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -123,7 +124,7 @@ class _WaterScreenState extends ConsumerState<WaterScreen>
               ),
 
               labelColor: Colors.white,
-              unselectedLabelColor: AppColors.colorText,
+              unselectedLabelColor: colorScheme.onSurfaceVariant,
 
               labelStyle: const TextStyle(
                 fontSize: 12,

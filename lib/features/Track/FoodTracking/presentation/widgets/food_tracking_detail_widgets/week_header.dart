@@ -15,6 +15,7 @@ class WeekHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       child: Row(
@@ -24,9 +25,9 @@ class WeekHeader extends StatelessWidget {
                 child: Text(
                   day,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: Color(0xFF6B7280),
+                    color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -37,4 +38,3 @@ class WeekHeader extends StatelessWidget {
     );
   }
 }
-

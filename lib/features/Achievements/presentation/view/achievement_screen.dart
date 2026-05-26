@@ -255,8 +255,9 @@ class _TabChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final background = isSelected ? AppColors.accent : AppColors.card;
-    final textColor = isSelected ? Colors.white : AppColors.colorText;
+    final textColor = isSelected ? colorScheme.onPrimary : AppColors.colorText;
 
     return Padding(
       padding: const EdgeInsets.only(right: 8),

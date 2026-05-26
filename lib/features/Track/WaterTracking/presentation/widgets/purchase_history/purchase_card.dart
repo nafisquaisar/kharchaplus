@@ -29,6 +29,8 @@ class PurchaseHistoryCard extends StatelessWidget {
     final statusColor = _statusColor(
       purchase.paymentStatus,
     );
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Dismissible(
       key: ValueKey(
@@ -61,16 +63,16 @@ class PurchaseHistoryCard extends StatelessWidget {
           bottom: 14,
         ),
         decoration: BoxDecoration(
-          color: AppColors.card,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(
             10,
           ),
           border: Border.all(
-            color: AppColors.border,
+            color: colorScheme.outlineVariant,
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(
+              color: colorScheme.shadow.withOpacity(
                 0.08,
               ),
               blurRadius: 18,
@@ -99,7 +101,7 @@ class PurchaseHistoryCard extends StatelessWidget {
                       decoration: BoxDecoration(
 
                         color:
-                        AppColors.primarybg,
+                        colorScheme.surfaceContainerHighest,
 
                         borderRadius:
                         BorderRadius.circular(18),
@@ -217,12 +219,14 @@ class PurchaseHistoryCard extends StatelessWidget {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _smallInfoRow(
+                                    context,
                                     icon: Icons.inventory_2_outlined,
                                     iconColor: AppColors.primary,
                                     bgColor: AppColors.primarybg,
                                     text: '${purchase.quantity} Qty',
                                   ),
                                   _smallInfoRow(
+                                    context,
                                     icon: Icons.person_outline_rounded,
                                     iconColor: Colors.green,
                                     bgColor: const Color(
@@ -231,6 +235,7 @@ class PurchaseHistoryCard extends StatelessWidget {
                                     text: purchase.vendor ?? 'No Vendor',
                                   ),
                                   _smallInfoRow(
+                                    context,
                                     icon: Icons.calendar_month_rounded,
                                     iconColor: Colors.deepPurple,
                                     bgColor: const Color(
@@ -248,7 +253,7 @@ class PurchaseHistoryCard extends StatelessWidget {
                               margin: const EdgeInsets.symmetric(
                                 horizontal: 10,
                               ),
-                              color: AppColors.border,
+                              color: colorScheme.outlineVariant,
                             ),
 
                             /// PRICE
@@ -347,12 +352,15 @@ class PurchaseHistoryCard extends StatelessWidget {
     );
   }
 
-  Widget _smallInfoRow({
+  Widget _smallInfoRow(
+    BuildContext context, {
     required IconData icon,
     required Color iconColor,
     required Color bgColor,
     required String text,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Row(
       children: [
         Container(
@@ -376,10 +384,10 @@ class PurchaseHistoryCard extends StatelessWidget {
             text,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style:  TextStyle(
+            style: textTheme.labelSmall?.copyWith(
               fontSize: 10,
               fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ),

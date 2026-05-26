@@ -37,6 +37,7 @@ class CycleDurationSection
     required String value,
 
     required VoidCallback onTap,
+    required BuildContext context
   }) {
 
     return InkWell(
@@ -58,7 +59,7 @@ class CycleDurationSection
 
         decoration: BoxDecoration(
 
-          color: Colors.white,
+           color: Theme.of(context).colorScheme.surface,
 
           borderRadius:
           BorderRadius.circular(12),
@@ -144,8 +145,7 @@ class CycleDurationSection
 
                       fontSize: 11,
 
-                      color: Colors
-                          .grey.shade500,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
 
                       fontWeight:
                       FontWeight.w500,
@@ -161,7 +161,7 @@ class CycleDurationSection
                     value,
 
                     style:
-                    const TextStyle(
+                    TextStyle(
 
                       fontSize: 14,
 
@@ -169,7 +169,7 @@ class CycleDurationSection
                       FontWeight.w600,
 
                       color:
-                      Colors.black,
+                      Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -181,7 +181,7 @@ class CycleDurationSection
               Icons.chevron_right,
 
               color:
-              Colors.grey.shade400,
+              Theme.of(context).colorScheme.onSurfaceVariant,
 
               size: 20,
             ),
@@ -225,6 +225,7 @@ class CycleDurationSection
                 ),
 
                 onTap: onStartTap,
+                context: context
               ),
 
               const SizedBox(
@@ -245,6 +246,8 @@ class CycleDurationSection
                 ),
 
                 onTap: onEndTap,
+
+                context: context
               ),
             ],
           ),

@@ -40,6 +40,8 @@ class _PurchaseHistoryFilterSheetState extends ConsumerState<PurchaseHistoryFilt
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: EdgeInsets.fromLTRB(
         20,
@@ -47,9 +49,9 @@ class _PurchaseHistoryFilterSheetState extends ConsumerState<PurchaseHistoryFilt
         20,
         MediaQuery.of(context).padding.bottom + 18,
       ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(
           top: Radius.circular(30),
         ),
       ),
@@ -64,7 +66,7 @@ class _PurchaseHistoryFilterSheetState extends ConsumerState<PurchaseHistoryFilt
                 height: 5,
                 width: 58,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: colorScheme.outlineVariant,
                   borderRadius: BorderRadius.circular(100),
                 ),
               ),
@@ -95,19 +97,19 @@ class _PurchaseHistoryFilterSheetState extends ConsumerState<PurchaseHistoryFilt
                     children: [
                       Text(
                         'Filter Purchases',
-                        style: TextStyle(
+                          style: textTheme.titleMedium?.copyWith(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.black,
+                            color: colorScheme.onSurface,
                         ),
                       ),
                       SizedBox(height: 2),
                       Text(
                         'Refine your purchase history',
-                        style: TextStyle(
+                          style: textTheme.bodySmall?.copyWith(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.textSecondary,
+                            color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -379,6 +381,8 @@ class _PremiumDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment:
       CrossAxisAlignment.start,
@@ -393,17 +397,17 @@ class _PremiumDropdown<T> extends StatelessWidget {
               Icon(
                 icon,
                 size: 15,
-                color: AppColors.textSecondary,
+                color: colorScheme.onSurfaceVariant,
               ),
 
                SizedBox(width: 6),
 
               Text(
                 title,
-                style:  TextStyle(
+                style: textTheme.labelMedium?.copyWith(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -430,19 +434,19 @@ class _PremiumDropdown<T> extends StatelessWidget {
               ),
 
               borderRadius: BorderRadius.circular(22),
-              dropdownColor: AppColors.primarybg,
+              dropdownColor: colorScheme.surface,
               elevation: 8,
 
               decoration: InputDecoration(
                 filled: true,
-                fillColor: AppColors.primarybg,
+                fillColor: colorScheme.surfaceContainerHighest,
 
                 hintText: hint,
 
-                hintStyle:  TextStyle(
+                hintStyle: textTheme.bodySmall?.copyWith(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                 ),
 
                 contentPadding:
@@ -456,7 +460,7 @@ class _PremiumDropdown<T> extends StatelessWidget {
                   BorderRadius.circular(22),
 
                   borderSide: BorderSide(
-                    color: AppColors.accent.withOpacity(0.08),
+                    color: colorScheme.outlineVariant,
                   ),
                 ),
 
@@ -473,7 +477,7 @@ class _PremiumDropdown<T> extends StatelessWidget {
               style:  TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: AppColors.black,
+                color: colorScheme.onSurface,
               ),
 
               selectedItemBuilder: (context) {
@@ -487,7 +491,7 @@ class _PremiumDropdown<T> extends StatelessWidget {
                       style:  TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.black,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   );
@@ -514,10 +518,10 @@ class _PremiumDropdown<T> extends StatelessWidget {
 
                     child: Text(
                       (item.child as Text).data ?? '',
-                      style:  TextStyle(
+                      style: textTheme.bodyMedium?.copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.black,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ),

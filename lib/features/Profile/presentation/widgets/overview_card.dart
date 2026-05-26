@@ -78,7 +78,7 @@ class _OverviewCardState extends State<OverviewCard>
 
   Color _getTrendColor() {
     if (widget.trendPercentage.isEmpty || widget.trendPercentage == '0%') {
-      return Colors.grey.shade400;
+      return Theme.of(context).colorScheme.onSurfaceVariant;
     }
     return widget.isTrendPositive ? Colors.green.shade500 : Colors.red.shade500;
   }
@@ -96,7 +96,8 @@ class _OverviewCardState extends State<OverviewCard>
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isSmall = size.width < 400;
-    final isMedium = size.width < 600;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return ScaleTransition(
       scale: _scaleAnimation,
@@ -111,19 +112,19 @@ class _OverviewCardState extends State<OverviewCard>
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   /// Soft shadow - key to premium feel
                   BoxShadow(
-                    color: Colors.black.withOpacity(_isHovered ? 0.12 : 0.08),
+                    color: theme.shadowColor.withOpacity(_isHovered ? 0.12 : 0.08),
                     blurRadius: _isHovered ? 16 : 12,
                     spreadRadius: 0,
                     offset: Offset(0, _isHovered ? 6 : 4),
                   ),
                   /// Subtle inner highlight
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.5),
+                    color: colorScheme.surface.withOpacity(0.6),
                     blurRadius: 2,
                     spreadRadius: 0,
                     offset: const Offset(0, -1),
@@ -198,7 +199,7 @@ class _OverviewCardState extends State<OverviewCard>
                       style: TextStyle(
                         fontSize: isSmall ? 12 : 13,
                         fontWeight: FontWeight.w600,
-                        color: Colors.grey.shade700,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
 
@@ -212,7 +213,7 @@ class _OverviewCardState extends State<OverviewCard>
                       style: TextStyle(
                         fontSize: isSmall ? 16 : 18,
                         fontWeight: FontWeight.w800,
-                        color: Colors.black87,
+                        color: colorScheme.onSurface,
                         letterSpacing: -0.3,
                       ),
                     ),
@@ -222,7 +223,7 @@ class _OverviewCardState extends State<OverviewCard>
                     /// Divider
                     Container(
                       height: 0.5,
-                      color: Colors.grey.shade200,
+                      color: colorScheme.outlineVariant,
                     ),
 
                     const SizedBox(height: 6),
@@ -235,7 +236,7 @@ class _OverviewCardState extends State<OverviewCard>
                           'This month',
                           style: TextStyle(
                             fontSize: isSmall ? 10 : 11,
-                            color: Colors.grey.shade500,
+                            color: colorScheme.onSurfaceVariant,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -243,7 +244,7 @@ class _OverviewCardState extends State<OverviewCard>
                           Icon(
                             Icons.arrow_forward_rounded,
                             size: 12,
-                            color: Colors.grey.shade400,
+                            color: colorScheme.onSurfaceVariant,
                           ),
                       ],
                     ),
@@ -279,13 +280,16 @@ class CompactOverviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: theme.shadowColor.withOpacity(0.08),
             blurRadius: 10,
             spreadRadius: 0,
             offset: const Offset(0, 3),
@@ -304,10 +308,10 @@ class CompactOverviewCard extends StatelessWidget {
               title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 3),
@@ -315,9 +319,10 @@ class CompactOverviewCard extends StatelessWidget {
               value,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w800,
+                color: colorScheme.onSurface,
               ),
             ),
           ],

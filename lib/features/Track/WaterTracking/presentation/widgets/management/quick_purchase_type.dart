@@ -12,6 +12,8 @@ class QuickPurchaseType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     final items = [
       PurchaseType.tanker,
       PurchaseType.can20L,
@@ -22,11 +24,11 @@ class QuickPurchaseType extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: colorScheme.shadow.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -37,10 +39,10 @@ class QuickPurchaseType extends StatelessWidget {
         children: [
           Text(
             'Quick Add',
-            style: TextStyle(
+            style: textTheme.bodyMedium?.copyWith(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: AppColors.black,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 12),
@@ -59,7 +61,7 @@ class QuickPurchaseType extends StatelessWidget {
                           right: index != items.length - 1 ? 8 : 0,
                         ),
                         child: _buildItem(
-                          title: item.label,
+                          context: context,                          title: item.label,
                           iconPath: item.iconPath,
                           imageSize: _imageSize(item),
                           onTap: () {
@@ -80,6 +82,7 @@ class QuickPurchaseType extends StatelessWidget {
 
                 Expanded(
                   child: _buildOtherButton(
+                    context,
                     onTap: () {
                       _openAddPurchaseSheet(
                         context,
@@ -97,11 +100,14 @@ class QuickPurchaseType extends StatelessWidget {
   }
 
   Widget _buildItem({
+    required BuildContext context,
     required String title,
     required String iconPath,
     required double imageSize,
     required VoidCallback onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return InkWell(
       borderRadius: BorderRadius.circular(10),
       onTap: onTap,
@@ -111,10 +117,10 @@ class QuickPurchaseType extends StatelessWidget {
           vertical: 0,
         ),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: Colors.grey.shade200,
+            color: colorScheme.outlineVariant,
           ),
         ),
         child: Column(
@@ -141,11 +147,11 @@ class QuickPurchaseType extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style:  TextStyle(
+                style: textTheme.labelSmall?.copyWith(
                   fontSize: 10,
                   height: 1.2,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.black,
+                  color: colorScheme.onSurface,
                 ),
               ),
             ),
@@ -155,7 +161,9 @@ class QuickPurchaseType extends StatelessWidget {
     );
   }
 
-  Widget _buildOtherButton({required VoidCallback onTap}) {
+  Widget _buildOtherButton(BuildContext context, {required VoidCallback onTap}) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.only(left: 8),
       child: InkWell(
@@ -167,10 +175,10 @@ class QuickPurchaseType extends StatelessWidget {
             vertical: 10,
           ),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorScheme.surface,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: Colors.grey.shade200,
+              color: colorScheme.outlineVariant,
             ),
           ),
           child: Column(
@@ -180,13 +188,13 @@ class QuickPurchaseType extends StatelessWidget {
                 height: 42,
                 width: 42,
                 decoration: BoxDecoration(
-                  color: AppColors.primarybg,
+                  color: colorScheme.surfaceContainerHighest,
                   shape: BoxShape.circle,
                 ),
                 child:  Icon(
                   Icons.add_circle_outline,
                   size: 26,
-                  color: AppColors.colorText,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 10),
@@ -195,10 +203,10 @@ class QuickPurchaseType extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: textTheme.labelSmall?.copyWith(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.black,
+                  color: colorScheme.onSurface,
                 ),
               ),
             ],
@@ -215,7 +223,7 @@ class QuickPurchaseType extends StatelessWidget {
     final result = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       enableDrag: true,
       useSafeArea: true,
       builder: (_) {

@@ -249,6 +249,7 @@ class _CalendarWidgetState
   Widget build(BuildContext context) {
 
     final dates = _monthDates();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
 
@@ -430,7 +431,7 @@ class _CalendarWidgetState
                   style: TextStyle(
 
                     color:
-                    AppColors.textSecondary,
+                    colorScheme.onSurfaceVariant,
 
                     fontSize: 14,
                   ),

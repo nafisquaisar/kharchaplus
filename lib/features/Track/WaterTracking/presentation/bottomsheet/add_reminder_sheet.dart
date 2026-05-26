@@ -21,6 +21,8 @@ class _AddReminderSheetState extends ConsumerState<AddReminderSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: EdgeInsets.only(
         left: 24,
@@ -28,9 +30,9 @@ class _AddReminderSheetState extends ConsumerState<AddReminderSheet> {
         top: 24,
         bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
       ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(
           top: Radius.circular(30),
         ),
       ),
@@ -39,11 +41,12 @@ class _AddReminderSheetState extends ConsumerState<AddReminderSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Add Reminder',
-              style: TextStyle(
+              style: textTheme.titleLarge?.copyWith(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 20),
@@ -66,7 +69,7 @@ class _AddReminderSheetState extends ConsumerState<AddReminderSheet> {
                   vertical: 14,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.primarybg,
+                  color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -76,7 +79,7 @@ class _AddReminderSheetState extends ConsumerState<AddReminderSheet> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.colorText,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),

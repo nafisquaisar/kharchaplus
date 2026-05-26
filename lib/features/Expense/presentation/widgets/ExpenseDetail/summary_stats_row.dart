@@ -14,6 +14,7 @@ class SummaryStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       children: [
         _item(
@@ -22,9 +23,10 @@ class SummaryStatsRow extends StatelessWidget {
           Colors.red,
           Icons.arrow_downward,
           Colors.red.withOpacity(0.1),
+          colorScheme,
         ),
 
-        _divider(),
+        _divider(colorScheme),
 
         _item(
           "Total Income",
@@ -32,27 +34,29 @@ class SummaryStatsRow extends StatelessWidget {
           Colors.green,
           Icons.trending_up,
           Colors.green.withOpacity(0.1),
+          colorScheme,
         ),
 
-        _divider(),
+        _divider(colorScheme),
 
         _item(
           "Balance",
           balance,
-          Colors.black,
+          colorScheme.onSurface,
           Icons.remove,
           Colors.blue.withOpacity(0.1),
+          colorScheme,
         ),
       ],
     );
   }
 
-  Widget _divider() {
+  Widget _divider(ColorScheme colorScheme) {
     return Container(
       height: 40,
       width: 1,
       margin: const EdgeInsets.symmetric(horizontal: 10),
-      color: Colors.grey.shade300,
+      color: colorScheme.outlineVariant,
     );
   }
 
@@ -62,6 +66,7 @@ class SummaryStatsRow extends StatelessWidget {
       Color textColor,
       IconData icon,
       Color bgColor,
+      ColorScheme colorScheme,
       ) {
     return Expanded(
       child: Column(
@@ -70,7 +75,7 @@ class SummaryStatsRow extends StatelessWidget {
             title,
             style: TextStyle(
               fontSize: 10,
-              color: Colors.grey.shade600,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
 

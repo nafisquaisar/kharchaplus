@@ -24,14 +24,15 @@ class SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.09),
+            color: colorScheme.shadow.withOpacity(0.09),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -59,7 +60,7 @@ class SummaryCard extends StatelessWidget {
             height: 1,
             width: double.infinity,
             margin: const EdgeInsets.symmetric(vertical: 4),
-            color: Colors.grey.shade300,
+            color: colorScheme.outlineVariant,
           ),
 
           /// 🔥 STATS

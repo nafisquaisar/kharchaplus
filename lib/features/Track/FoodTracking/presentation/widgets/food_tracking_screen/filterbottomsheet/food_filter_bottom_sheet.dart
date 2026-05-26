@@ -40,16 +40,18 @@ class _FoodFilterBottomSheetState
   @override
   Widget build(BuildContext context) {
 
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
 
       padding: const EdgeInsets.all(20),
 
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
 
-        color: Colors.white,
+        color: colorScheme.surface,
 
         borderRadius:
-        BorderRadius.vertical(
+        const BorderRadius.vertical(
           top: Radius.circular(28),
         ),
       ),
@@ -73,7 +75,7 @@ class _FoodFilterBottomSheetState
 
               decoration: BoxDecoration(
 
-                color: Colors.grey.shade300,
+                color: colorScheme.outlineVariant,
 
                 borderRadius:
                 BorderRadius.circular(
@@ -85,16 +87,17 @@ class _FoodFilterBottomSheetState
 
           const SizedBox(height: 20),
 
-          const Text(
+          Text(
 
             "Filter Food Cycles",
 
-            style: TextStyle(
+            style: textTheme.titleMedium?.copyWith(
 
               fontSize: 20,
 
               fontWeight:
               FontWeight.w700,
+              color: colorScheme.onSurface,
             ),
           ),
 
@@ -177,6 +180,7 @@ class _FoodFilterBottomSheetState
 
     final isSelected =
         selectedStatus == value;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return InkWell(
 
@@ -204,7 +208,7 @@ class _FoodFilterBottomSheetState
 
               ? AppColors.primary
 
-              : Colors.grey.shade100,
+              : colorScheme.surfaceContainerHighest,
 
           borderRadius:
           BorderRadius.circular(
@@ -222,9 +226,9 @@ class _FoodFilterBottomSheetState
 
             isSelected
 
-                ? Colors.white
+                ? colorScheme.onPrimary
 
-                : Colors.black87,
+                : colorScheme.onSurfaceVariant,
 
             fontWeight:
             FontWeight.w600,

@@ -14,7 +14,8 @@ class ElectricityStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final status = _label(entity);
-    final color = _color(entity);
+    final colorScheme = Theme.of(context).colorScheme;
+    final color = _color(entity, colorScheme);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 220),
@@ -44,14 +45,13 @@ class ElectricityStatusBadge extends StatelessWidget {
     return entity.isActive ? 'Active' : 'Inactive';
   }
 
-  Color _color(ElectricityEntity entity) {
+  Color _color(ElectricityEntity entity, ColorScheme colorScheme) {
     if (entity.isDeleted) {
       return AppColors.deleteBackground;
     }
     if (!entity.isSynced || entity.isEdited || entity.isOfflineCreated) {
-      return AppColors.black;
+      return colorScheme.onSurface;
     }
-    return AppColors.kharchaGradientStart;
+    return AppColors.accent;
   }
 }
-

@@ -15,6 +15,7 @@ class SaveCardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -35,7 +36,7 @@ class SaveCardButton extends StatelessWidget {
         )
             : Text(
           isEdit ? "Update Card" : "Create Card",
-          style: TextStyle(fontSize: 16 ,color: AppColors.textPrimary),
+          style: TextStyle(fontSize: 16, color: colorScheme.onPrimary),
         ),
       ),
     );

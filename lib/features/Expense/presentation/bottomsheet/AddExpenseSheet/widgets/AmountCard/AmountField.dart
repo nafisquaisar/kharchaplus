@@ -15,21 +15,22 @@ class AmountField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 4, bottom: 8),
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
           child: Text(
             "Amount",
-            style: TextStyle(
+            style: textTheme.labelMedium?.copyWith(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: colorScheme.onSurface,
             ),
           ),
         ),
-
         Container(
           height: 45,
           decoration: BoxDecoration(
@@ -46,7 +47,7 @@ class AmountField extends StatelessWidget {
           padding: const EdgeInsets.all(1.2),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextField(
@@ -56,17 +57,16 @@ class AmountField extends StatelessWidget {
                 decimal: true,
               ),
               cursorColor: AppColors.primary,
-              style: const TextStyle(
+              style: textTheme.bodyMedium?.copyWith(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: Colors.black87,
+                color: colorScheme.onSurface,
               ),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 10,
                 ),
-
                 // ₹ Icon
                 prefixIcon: Container(
                   margin: const EdgeInsets.all(10),
@@ -81,11 +81,9 @@ class AmountField extends StatelessWidget {
                     color: AppColors.primary,
                   ),
                 ),
-
                 hintText: hintText,
-
-                hintStyle: TextStyle(
-                  color: Colors.grey.shade400,
+                hintStyle: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -100,7 +98,7 @@ class AmountField extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: Colors.grey.shade500,
+                        color: colorScheme.onSurfaceVariant,
                         letterSpacing: 1,
                       ),
                     ),

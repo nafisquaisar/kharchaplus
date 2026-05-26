@@ -130,6 +130,7 @@ class _AchievementBadgeState extends State<AchievementBadge>
   @override
   Widget build(BuildContext context) {
     final bool locked = !widget.unlocked;
+    final colorScheme = Theme.of(context).colorScheme;
 
     Widget child;
     final assetToUse = _resolvedAsset;
@@ -192,13 +193,13 @@ class _AchievementBadgeState extends State<AchievementBadge>
                           width: widget.size * 0.28,
                           height: widget.size * 0.28,
                           decoration: BoxDecoration(
-                            color: Colors.black.withAlpha(160),
+                            color: colorScheme.scrim.withOpacity(0.6),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             Icons.lock_rounded,
                             size: widget.size * 0.16,
-                            color: Colors.white.withAlpha(230),
+                            color: colorScheme.onSurface.withOpacity(0.9),
                           ),
                         ),
                       ),

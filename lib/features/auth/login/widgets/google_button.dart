@@ -54,7 +54,7 @@ class GoogleButton extends StatelessWidget {
               Text(
                 "Sign in with Google",
                 style: TextStyle(
-                  color: colorScheme.onPrimary,
+                  color: Colors.white,
                   fontWeight: FontWeight.w600,
                 ),
               ),

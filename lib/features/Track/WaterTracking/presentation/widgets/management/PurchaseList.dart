@@ -32,16 +32,18 @@ class PurchaseList extends ConsumerWidget {
 
     final isLoading = state.isLoading;
     final error = state.error;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: colorScheme.shadow.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -59,10 +61,10 @@ class PurchaseList extends ConsumerWidget {
             children: [
                Text(
                 'Recent Purchases',
-                style: TextStyle(
+                style: textTheme.bodyMedium?.copyWith(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.black,
+                  color: colorScheme.onSurface,
                 ),
               ),
               GestureDetector(
@@ -76,10 +78,10 @@ class PurchaseList extends ConsumerWidget {
                 },
                 child:  Text(
                   'View All',
-                  style: TextStyle(
+                  style: textTheme.bodySmall?.copyWith(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.colorText,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -95,7 +97,7 @@ class PurchaseList extends ConsumerWidget {
                 'Loading...',
                 style: TextStyle(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -107,7 +109,7 @@ class PurchaseList extends ConsumerWidget {
                 'Failed to load purchases',
                 style: TextStyle(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -128,16 +130,16 @@ class PurchaseList extends ConsumerWidget {
                     Icon(
                       Icons.water_drop_outlined,
                       size: 40,
-                      color: Colors.grey.shade400,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(
                       height: 10,
                     ),
                     Text(
                       "No purchases yet",
-                      style: TextStyle(
+                      style: textTheme.bodySmall?.copyWith(
                         fontSize: 12,
-                        color: Colors.grey.shade600,
+                        color: colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -157,7 +159,7 @@ class PurchaseList extends ConsumerWidget {
               itemCount: recentFivePurchases.length,
               separatorBuilder: (context, index) {
                 return Divider(
-                  color: Colors.grey.shade200,
+                  color: colorScheme.outlineVariant,
                   height: 18,
                 );
               },
@@ -175,7 +177,7 @@ class PurchaseList extends ConsumerWidget {
 
                       decoration: BoxDecoration(
 
-                        color: AppColors.primarybg,
+                        color: colorScheme.surfaceContainerHighest,
 
                         borderRadius:
                         BorderRadius.circular(20),
@@ -209,10 +211,10 @@ class PurchaseList extends ConsumerWidget {
                           Text(
                             item.displayTypeName,
                             overflow: TextOverflow.ellipsis,
-                            style:  TextStyle(
+                            style: textTheme.bodySmall?.copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.black,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(
@@ -220,10 +222,10 @@ class PurchaseList extends ConsumerWidget {
                           ),
                           Text(
                             "${item.quantity} items",
-                            style:  TextStyle(
+                            style: textTheme.labelSmall?.copyWith(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
-                              color: AppColors.textSecondary,
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                           const SizedBox(
@@ -231,10 +233,10 @@ class PurchaseList extends ConsumerWidget {
                           ),
                           Text(
                             "${item.date.day}/${item.date.month}/${item.date.year}",
-                            style:  TextStyle(
+                            style: textTheme.labelSmall?.copyWith(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
-                              color: AppColors.textSecondary,
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -251,10 +253,10 @@ class PurchaseList extends ConsumerWidget {
 
                     Text(
                       "₹${item.price}",
-                      style:  TextStyle(
+                      style: textTheme.titleSmall?.copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.black,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ],

@@ -10,7 +10,8 @@ class EmptyFoodCycle
   @override
   Widget build(BuildContext context) {
 
-    return const Center(
+    final colorScheme = Theme.of(context).colorScheme;
+    return Center(
 
       child: Text(
 
@@ -18,6 +19,7 @@ class EmptyFoodCycle
 
         style: TextStyle(
           fontSize: 16,
+          color: colorScheme.onSurfaceVariant,
         ),
       ),
     );

@@ -16,6 +16,8 @@ class WeeklyChart extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     final analyticsState = ref.watch(
       weeklyChartAnalyticsProvider,
     );
@@ -42,11 +44,11 @@ class WeeklyChart extends ConsumerWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: colorScheme.shadow.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -64,10 +66,10 @@ class WeeklyChart extends ConsumerWidget {
             children: [
                Text(
                 'This Week',
-                style: TextStyle(
+                style: textTheme.bodyMedium?.copyWith(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.black,
+                  color: colorScheme.onSurface,
                 ),
               ),
               GestureDetector(
@@ -103,7 +105,7 @@ class WeeklyChart extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.colorText,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -119,7 +121,7 @@ class WeeklyChart extends ConsumerWidget {
                 'Loading...',
                 style: TextStyle(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -131,7 +133,7 @@ class WeeklyChart extends ConsumerWidget {
                 'Failed to load weekly data',
                 style: TextStyle(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -143,7 +145,7 @@ class WeeklyChart extends ConsumerWidget {
                 'No intake this week',
                 style: TextStyle(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -174,9 +176,10 @@ class WeeklyChart extends ConsumerWidget {
                       children: [
                         Text(
                           '${value.toStringAsFixed(1)}L',
-                          style: const TextStyle(
+                          style: textTheme.labelSmall?.copyWith(
                             fontSize: 9,
                             fontWeight: FontWeight.w600,
+                            color: colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(
@@ -210,8 +213,8 @@ class WeeklyChart extends ConsumerWidget {
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                             color: isSelected
-                                ? AppColors.black
-                                : Colors.grey.shade700,
+                                ? colorScheme.onSurface
+                                : colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],

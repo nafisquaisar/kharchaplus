@@ -125,11 +125,13 @@ class TrackingScreen extends ConsumerWidget {
 
     final trackingAsync =
     ref.watch(trackingProvider);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
 
       backgroundColor:
-      const Color(0xFFF5F7FF),
+      Theme.of(context).scaffoldBackgroundColor,
 
       body: SafeArea(
 
@@ -201,16 +203,12 @@ class TrackingScreen extends ConsumerWidget {
 
                 const SizedBox(height: 6),
 
-                const Text(
+                Text(
 
                   "Tracking Modules",
 
-                  style: TextStyle(
-
-                    fontWeight:
-                    FontWeight.bold,
-
-                    fontSize: 24,
+                  style: textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
 
@@ -221,9 +219,7 @@ class TrackingScreen extends ConsumerWidget {
                   "Monitor all your tracking data",
 
                   style: TextStyle(
-
-                    color: Colors.grey.shade600,
-
+                    color: colorScheme.onSurfaceVariant,
                     fontSize: 14,
                   ),
                 ),
@@ -285,27 +281,28 @@ class TrackingScreen extends ConsumerWidget {
 
                   children: [
 
-                    const Icon(
+                    Icon(
 
                       Icons.error_outline,
 
                       size: 60,
 
-                      color: Colors.red,
+                      color: colorScheme.error,
                     ),
 
                     const SizedBox(height: 14),
 
-                    const Text(
+                    Text(
 
                       "Something went wrong",
 
                       style: TextStyle(
-
                         fontSize: 18,
 
                         fontWeight:
                         FontWeight.bold,
+
+                        color: colorScheme.onSurface,
                       ),
                     ),
 
@@ -319,9 +316,8 @@ class TrackingScreen extends ConsumerWidget {
                       TextAlign.center,
 
                       style: TextStyle(
-
                         color:
-                        Colors.grey.shade700,
+                        colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],

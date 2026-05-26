@@ -15,15 +15,17 @@ class QuickAddCard extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: colorScheme.shadow.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -34,10 +36,10 @@ class QuickAddCard extends ConsumerWidget {
         children: [
            Text(
             'Quick Add',
-            style: TextStyle(
+            style: textTheme.bodyMedium?.copyWith(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: AppColors.black,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 10),
@@ -57,6 +59,7 @@ class QuickAddCard extends ConsumerWidget {
                           sourceType: 'Quick Add',
                         );
                   },
+                  context: context,
                 ),
               ),
               const SizedBox(width: 8),
@@ -74,6 +77,7 @@ class QuickAddCard extends ConsumerWidget {
                           sourceType: 'Quick Add',
                         );
                   },
+                  context: context,
                 ),
               ),
               const SizedBox(width: 8),
@@ -91,6 +95,7 @@ class QuickAddCard extends ConsumerWidget {
                           sourceType: 'Quick Add',
                         );
                   },
+                  context: context,
                 ),
               ),
               const SizedBox(width: 8),
@@ -103,10 +108,10 @@ class QuickAddCard extends ConsumerWidget {
                   child: Container(
                     height: 66,
                     decoration: BoxDecoration(
-                      color: AppColors.primarybg,
+                      color: colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: AppColors.border,
+                        color: colorScheme.outlineVariant,
                       ),
                     ),
                     child: Column(
@@ -115,7 +120,7 @@ class QuickAddCard extends ConsumerWidget {
                         Icon(
                           Icons.add,
                           size: 20,
-                          color: AppColors.colorText,
+                          color: colorScheme.onSurface,
                         ),
                         SizedBox(height: 6),
                         Text(
@@ -123,7 +128,7 @@ class QuickAddCard extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.black,
+                            color: colorScheme.onSurface,
                           ),
                         ),
                       ],
@@ -138,21 +143,23 @@ class QuickAddCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildQuickButton({
-    required String iconPath,
-    required String label,
+  Widget _buildQuickButton({required String iconPath,required String label,
     required VoidCallback onTap,
+    required BuildContext context,
+
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return InkWell(
       borderRadius: BorderRadius.circular(10),
       onTap: onTap,
       child: Container(
         height: 66,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: Colors.grey.shade200,
+            color: colorScheme.outlineVariant,
           ),
         ),
         child: Column(
@@ -163,7 +170,7 @@ class QuickAddCard extends ConsumerWidget {
               height: 18,
               width: 18,
               colorFilter:  ColorFilter.mode(
-                AppColors.colorText,
+                colorScheme.onSurface,
                 BlendMode.srcIn,
               ),
             ),
@@ -173,10 +180,10 @@ class QuickAddCard extends ConsumerWidget {
               child: Text(
                 label,
                 maxLines: 1,
-                style:  TextStyle(
+                style: textTheme.bodySmall?.copyWith(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.black,
+                  color: colorScheme.onSurface,
                 ),
               ),
             ),

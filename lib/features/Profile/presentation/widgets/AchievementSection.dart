@@ -12,6 +12,8 @@ class AchievementSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       padding: const EdgeInsets.all(16),
@@ -20,7 +22,7 @@ class AchievementSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(10),
+            color: theme.shadowColor.withOpacity(0.08),
             blurRadius: 18,
             offset: const Offset(0, 6),
           ),
@@ -38,7 +40,7 @@ class AchievementSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.black,
+                  color: colorScheme.onSurface,
                 ),
               ),
 
@@ -77,4 +79,3 @@ class AchievementSection extends StatelessWidget {
     );
   }
 }
-

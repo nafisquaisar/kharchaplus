@@ -79,6 +79,7 @@ class _MonthlyOverviewSectionState extends State<MonthlyOverviewSection>
     final isSmall = size.width < 400;
     final isMedium = size.width < 600;
     final isTablet = size.width >= 900;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Consumer<OverviewViewModel>(
       builder: (context, viewModel, _) {
@@ -112,8 +113,8 @@ class _MonthlyOverviewSectionState extends State<MonthlyOverviewSection>
         return RefreshIndicator(
           onRefresh: _handleRefresh,
           strokeWidth: 2,
-          color: Colors.teal.shade600,
-          backgroundColor: Colors.white,
+          color: colorScheme.primary,
+          backgroundColor: colorScheme.surface,
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Padding(
@@ -160,6 +161,8 @@ class _MonthlyOverviewSectionState extends State<MonthlyOverviewSection>
     OverviewViewModel viewModel,
     bool isSmall,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -172,7 +175,7 @@ class _MonthlyOverviewSectionState extends State<MonthlyOverviewSection>
                 style: TextStyle(
                   fontSize: isSmall ? 18 : 20,
                   fontWeight: FontWeight.w800,
-                  color: Colors.black87,
+                  color: colorScheme.onSurface,
                   letterSpacing: -0.3,
                 ),
               ),
@@ -182,7 +185,7 @@ class _MonthlyOverviewSectionState extends State<MonthlyOverviewSection>
                 style: TextStyle(
                   fontSize: isSmall ? 12 : 13,
                   fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade600,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -191,10 +194,10 @@ class _MonthlyOverviewSectionState extends State<MonthlyOverviewSection>
         /// Refresh button
         Container(
           decoration: BoxDecoration(
-            color: Colors.grey.shade50,
+            color: colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: Colors.grey.shade200,
+              color: colorScheme.outlineVariant,
               width: 1,
             ),
           ),
@@ -212,14 +215,14 @@ class _MonthlyOverviewSectionState extends State<MonthlyOverviewSection>
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor: AlwaysStoppedAnimation(
-                            Colors.teal.shade600,
+                            colorScheme.primary,
                           ),
                         ),
                       )
                     : Icon(
                         Icons.refresh_rounded,
                         size: 18,
-                        color: Colors.grey.shade600,
+                        color: colorScheme.onSurfaceVariant,
                       ),
               ),
             ),
@@ -349,15 +352,16 @@ class _MonthlyOverviewSectionState extends State<MonthlyOverviewSection>
     dynamic overview,
     bool isSmall,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
     final balance = overview.totalIncome - overview.totalExpense;
 
     return Container(
       padding: EdgeInsets.all(isSmall ? 12 : 14),
       decoration: BoxDecoration(
-        color: Colors.teal.shade50,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.teal.shade100,
+          color: colorScheme.outlineVariant,
           width: 1,
         ),
       ),
@@ -369,7 +373,7 @@ class _MonthlyOverviewSectionState extends State<MonthlyOverviewSection>
             style: TextStyle(
               fontSize: isSmall ? 13 : 14,
               fontWeight: FontWeight.w700,
-              color: Colors.teal.shade900,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 8),
@@ -386,7 +390,7 @@ class _MonthlyOverviewSectionState extends State<MonthlyOverviewSection>
               Container(
                 width: 1,
                 height: 30,
-                color: Colors.teal.shade200,
+                color: colorScheme.outlineVariant,
                 margin: const EdgeInsets.symmetric(horizontal: 12),
               ),
               Expanded(
@@ -399,7 +403,7 @@ class _MonthlyOverviewSectionState extends State<MonthlyOverviewSection>
               Container(
                 width: 1,
                 height: 30,
-                color: Colors.teal.shade200,
+                color: colorScheme.outlineVariant,
                 margin: const EdgeInsets.symmetric(horizontal: 12),
               ),
               Expanded(
@@ -454,6 +458,8 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -463,7 +469,7 @@ class _InfoRow extends StatelessWidget {
           style: TextStyle(
             fontSize: isSmall ? 11 : 12,
             fontWeight: FontWeight.w500,
-            color: Colors.teal.shade700,
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 2),
@@ -481,4 +487,3 @@ class _InfoRow extends StatelessWidget {
     );
   }
 }
-

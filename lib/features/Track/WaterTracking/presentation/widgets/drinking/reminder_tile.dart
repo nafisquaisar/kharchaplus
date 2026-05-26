@@ -15,6 +15,8 @@ class ReminderTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final reminderState = ref.watch(reminderNotifierProvider);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     Future<void> updateReminder(String id, bool value) async {
       HapticFeedback.lightImpact();
@@ -27,11 +29,11 @@ class ReminderTile extends ConsumerWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: colorScheme.shadow.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -43,10 +45,10 @@ class ReminderTile extends ConsumerWidget {
         children: [
            Text(
             'Reminders',
-            style: TextStyle(
+            style: textTheme.bodyMedium?.copyWith(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: AppColors.black,
+              color: colorScheme.onSurface,
             ),
           ),
 
@@ -57,7 +59,7 @@ class ReminderTile extends ConsumerWidget {
                 'Loading...',
                 style: TextStyle(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -69,7 +71,7 @@ class ReminderTile extends ConsumerWidget {
                 'Failed to load reminders',
                 style: TextStyle(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -89,7 +91,7 @@ class ReminderTile extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: Colors.grey.shade600,
+                    color: colorScheme.onSurfaceVariant,
                 ),
               ),
             )
@@ -100,7 +102,7 @@ class ReminderTile extends ConsumerWidget {
               itemCount: reminderState.reminders.length,
               separatorBuilder: (context, index) {
                 return Divider(
-                  color: Colors.grey.shade200,
+                  color: colorScheme.outlineVariant,
                   height: 14,
                 );
               },
@@ -125,6 +127,7 @@ class ReminderTile extends ConsumerWidget {
                     );
                   },
                   child: _buildReminderRow(
+                    context: context,
                     icon: Icons.notifications_none_rounded,
                     time: time,
                     repeat: reminder.repeatDaily ? 'Everyday' : 'Once',
@@ -166,17 +169,17 @@ class ReminderTile extends ConsumerWidget {
                   Icon(
                     Icons.add,
                     size: 16,
-                    color: AppColors.colorText,
+                    color: colorScheme.onSurface,
                   ),
 
                   SizedBox(width: 6),
 
                   Text(
                     'Add Reminder',
-                    style: TextStyle(
+                    style: textTheme.bodySmall?.copyWith(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.colorText,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -189,18 +192,21 @@ class ReminderTile extends ConsumerWidget {
   }
 
   Widget _buildReminderRow({
+    required BuildContext context,
     required IconData icon,
     required String time,
     required String repeat,
     required bool value,
     required ValueChanged<bool>? onChanged,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Row(
       children: [
         Icon(
           icon,
           size: 16,
-          color: AppColors.colorText,
+          color: colorScheme.onSurface,
         ),
 
          SizedBox(width: 10),
@@ -208,10 +214,10 @@ class ReminderTile extends ConsumerWidget {
         Expanded(
           child: Text(
             time,
-            style:  TextStyle(
+            style: textTheme.bodySmall?.copyWith(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: AppColors.black,
+              color: colorScheme.onSurface,
             ),
           ),
         ),
@@ -221,7 +227,7 @@ class ReminderTile extends ConsumerWidget {
           style: TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w500,
-            color: Colors.grey.shade600,
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
 
@@ -236,7 +242,7 @@ class ReminderTile extends ConsumerWidget {
               activeThumbColor: Colors.white,
               activeTrackColor: AppColors.colorText,
               inactiveThumbColor: Colors.white,
-              inactiveTrackColor: Colors.grey.shade300,
+              inactiveTrackColor: colorScheme.outlineVariant,
               onChanged: onChanged,
             ),
           ),

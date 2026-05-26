@@ -23,6 +23,7 @@ class DateSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final isInvalid =
         startDate != null && endDate != null && endDate!.isBefore(startDate!);
 
@@ -36,7 +37,7 @@ class DateSection extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Colors.grey.shade700,
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
 

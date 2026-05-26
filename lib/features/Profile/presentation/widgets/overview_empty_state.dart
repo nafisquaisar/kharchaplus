@@ -19,6 +19,7 @@ class OverviewEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isSmall = size.width < 400;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Center(
       child: Padding(
@@ -34,13 +35,13 @@ class OverviewEmptyState extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: Colors.grey.shade100,
+                color: colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Icon(
                 Icons.analytics_outlined,
                 size: 40,
-                color: Colors.grey.shade400,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
 
@@ -53,7 +54,7 @@ class OverviewEmptyState extends StatelessWidget {
               style: TextStyle(
                 fontSize: isSmall ? 18 : 20,
                 fontWeight: FontWeight.w700,
-                color: Colors.black87,
+                color: colorScheme.onSurface,
               ),
             ),
 
@@ -66,7 +67,7 @@ class OverviewEmptyState extends StatelessWidget {
               style: TextStyle(
                 fontSize: isSmall ? 13 : 14,
                 fontWeight: FontWeight.w400,
-                color: Colors.grey.shade600,
+                color: colorScheme.onSurfaceVariant,
                 height: 1.5,
               ),
             ),
@@ -76,7 +77,7 @@ class OverviewEmptyState extends StatelessWidget {
               ElevatedButton(
                 onPressed: onRetry,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal.shade600,
+                  backgroundColor: colorScheme.primary,
                   padding: EdgeInsets.symmetric(
                     horizontal: isSmall ? 24 : 32,
                     vertical: 12,
@@ -85,10 +86,10 @@ class OverviewEmptyState extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   'Retry',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: colorScheme.onPrimary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -100,4 +101,3 @@ class OverviewEmptyState extends StatelessWidget {
     );
   }
 }
-

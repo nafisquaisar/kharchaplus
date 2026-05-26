@@ -22,6 +22,8 @@ class CustomDropdown
   @override
   Widget build(BuildContext context) {
 
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
 
       height: 48,
@@ -33,7 +35,7 @@ class CustomDropdown
 
       decoration: BoxDecoration(
 
-        color: Colors.white,
+        color: colorScheme.surface,
 
         borderRadius:
         BorderRadius.circular(10),
@@ -75,19 +77,19 @@ class CustomDropdown
             Icons.keyboard_arrow_down,
 
             color:
-            Colors.grey.shade500,
+            colorScheme.onSurfaceVariant,
 
             size: 20,
           ),
 
-          style: const TextStyle(
+          style: textTheme.bodyMedium?.copyWith(
 
             fontSize: 14,
 
             fontWeight:
             FontWeight.w600,
 
-            color: Colors.black,
+            color: colorScheme.onSurface,
           ),
 
           items:

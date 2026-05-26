@@ -9,13 +9,15 @@ class AchievementBadgeFallback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(size * 0.18),
-        border: Border.all(color: Colors.black.withAlpha(18)),
+        border: Border.all(color: colorScheme.outlineVariant),
       ),
     );
   }

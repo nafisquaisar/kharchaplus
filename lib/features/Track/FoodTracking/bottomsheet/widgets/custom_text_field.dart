@@ -29,13 +29,16 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
 
       height: maxLines == 1 ? 48 : null,
 
       decoration: BoxDecoration(
 
-        color: Colors.white,
+        color: colorScheme.surface,
 
         borderRadius:
         BorderRadius.circular(10),
@@ -70,22 +73,22 @@ class CustomTextField extends StatelessWidget {
 
         maxLines: maxLines,
 
-        style: const TextStyle(
+        style: textTheme.bodyMedium?.copyWith(
 
           fontSize: 14,
 
           fontWeight: FontWeight.w500,
 
-          color: Colors.black,
+          color: colorScheme.onSurface,
         ),
 
         decoration: InputDecoration(
 
           hintText: hint,
 
-          hintStyle: TextStyle(
+          hintStyle: textTheme.bodyMedium?.copyWith(
 
-            color: Colors.grey.shade400,
+            color: colorScheme.onSurfaceVariant,
 
             fontWeight: FontWeight.w500,
 
@@ -154,9 +157,9 @@ class CustomTextField extends StatelessWidget {
 
           suffixText: suffixText,
 
-          suffixStyle: TextStyle(
+          suffixStyle: textTheme.bodySmall?.copyWith(
 
-            color: Colors.grey.shade500,
+            color: colorScheme.onSurfaceVariant,
 
             fontWeight: FontWeight.w600,
 

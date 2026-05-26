@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/constants/AppColors.dart';
-
-
 class ElectricitySearchBar extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String>? onChanged;
@@ -17,13 +14,15 @@ class ElectricitySearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.accent.withOpacity(0.08),
+            color: colorScheme.shadow.withOpacity(0.08),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -32,12 +31,17 @@ class ElectricitySearchBar extends StatelessWidget {
       child: TextField(
         controller: controller,
         onChanged: onChanged,
+        style: textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onSurface,
+        ),
         decoration: InputDecoration(
           hintText: 'Search bills, months...',
-          hintStyle: TextStyle(color: AppColors.textSecondary),
+          hintStyle: textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
           prefixIcon: Icon(
             Icons.search_rounded,
-            color: AppColors.textSecondary,
+            color: colorScheme.onSurfaceVariant,
           ),
           suffixIcon: controller.text.isEmpty
               ? null
@@ -45,11 +49,11 @@ class ElectricitySearchBar extends StatelessWidget {
                   onPressed: onClear,
                   icon: Icon(
                     Icons.close_rounded,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
           filled: true,
-          fillColor: AppColors.card,
+          fillColor: colorScheme.surface,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide.none,
@@ -59,4 +63,3 @@ class ElectricitySearchBar extends StatelessWidget {
     );
   }
 }
-

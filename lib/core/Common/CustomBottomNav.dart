@@ -25,6 +25,8 @@ class CustomBottomNav extends StatelessWidget {
     final bottomPadding =
         MediaQuery.of(context).padding.bottom;
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: EdgeInsets.only(
         left: width * 0.07,
@@ -55,14 +57,13 @@ class CustomBottomNav extends StatelessWidget {
 
               /// 🔥 GLASS EFFECT
               color:
-              Colors.white.withOpacity(0.08),
+              colorScheme.surface.withOpacity(0.08),
 
               borderRadius:
               BorderRadius.circular(10),
 
               border: Border.all(
-                color: Colors.white
-                    .withOpacity(0.18),
+                color: colorScheme.outlineVariant.withOpacity(0.4),
                 width: 1,
               ),
 

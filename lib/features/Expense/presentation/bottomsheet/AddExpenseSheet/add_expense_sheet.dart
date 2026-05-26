@@ -94,6 +94,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   @override
   Widget build(BuildContext context) {
     final categoryVM = context.watch<CategoryViewModel>();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       padding: EdgeInsets.only(
@@ -102,7 +103,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         top: 14,
       ),
       decoration: BoxDecoration(
-        color: AppColors.primarybg,
+        color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
       ),
 

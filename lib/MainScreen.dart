@@ -80,7 +80,8 @@ class _MainScreenState
       resizeToAvoidBottomInset: true,
 
       backgroundColor:
-      AppColors.background,
+      Theme.of(context)
+          .scaffoldBackgroundColor,
 
       /// DRAWER
       drawer: AppDrawer(

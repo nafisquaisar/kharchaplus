@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/constants/AppColors.dart';
 
 class SectionTitle extends StatelessWidget {
   final String title;
@@ -9,6 +8,7 @@ class SectionTitle extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.only(
         bottom: 10,
@@ -18,7 +18,7 @@ class SectionTitle extends StatelessWidget {
         style: TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w700,
-          color: AppColors.black,
+          color: colorScheme.onSurface,
         ),
       ),
     );
