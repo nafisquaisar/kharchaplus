@@ -32,9 +32,11 @@ class RecentActivityNavigationHandler {
         context,
         MaterialPageRoute(builder: (_) => route()),
       );
-      debugPrint('[RecentActivityNav] navigation complete type=${activity.type}');
+      debugPrint(
+          '[RecentActivityNav] navigation complete type=${activity.type}');
     } catch (e) {
-      debugPrint('[RecentActivityNav] navigation failed type=${activity.type} error=$e');
+      debugPrint(
+          '[RecentActivityNav] navigation failed type=${activity.type} error=$e');
       _showFallback(context, activity.type);
     }
   }
@@ -44,26 +46,18 @@ class RecentActivityNavigationHandler {
 
     if (activity.type == 'food') {
       route = () => const FoodTrackingScreen();
-    }
-    else if (activity.type == 'electricity') {
+    } else if (activity.type == 'electricity') {
       route = () => const ElectricityTrackingScreen();
-    }
-    else if (activity.type == 'water_management') {
+    } else if (activity.type == 'water_management') {
       route = () => const WaterPurchaseHistoryScreen();
-    }
-    else if (activity.type == 'water_intake') {
+    } else if (activity.type == 'water_intake') {
       route = () => const WaterIntakeHistoryScreen();
-    }
-
-    else if (activity.type == 'expense_cycle') {
+    } else if (activity.type == 'expense_cycle') {
       route = () => const ExpenseScreen();
-    }
-    else if (activity.type == 'expense_item') {
-
+    } else if (activity.type == 'expense_item') {
       final cardId = activity.parentCardId;
 
       if (cardId == null || cardId.isEmpty) {
-
         debugPrint(
           '[RecentActivityNav] expense_item legacy record -> opening ExpenseScreen',
         );
@@ -76,8 +70,8 @@ class RecentActivityNavigationHandler {
       );
 
       return () => ExpenseDetailScreen(
-        cardId: cardId,
-      );
+            cardId: cardId,
+          );
     }
 
     return route;
