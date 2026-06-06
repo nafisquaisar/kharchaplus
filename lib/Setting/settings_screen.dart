@@ -53,6 +53,10 @@ class _SettingsScreenState
 
     final colorScheme =
         Theme.of(context).colorScheme;
+    final media = MediaQuery.of(context);
+    final horizontalPadding =
+        (media.size.width * 0.05).clamp(16.0, 24.0).toDouble();
+    final bottomPadding = media.padding.bottom + 24;
 
     return Scaffold(
 
@@ -60,220 +64,225 @@ class _SettingsScreenState
       Theme.of(context)
           .scaffoldBackgroundColor,
 
-      body: Column(
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: Column(
 
-        children: [
+          children: [
 
-          /// 🔥 COMMON APP BAR
+            /// 🔥 COMMON APP BAR
 
-          CommonAppBar(
+            CommonAppBar(
 
-            title: "Settings",
+              title: "Settings",
 
-            isHome: false,
+              isHome: false,
 
-            onMenuTap: () =>
-                Navigator.pop(context),
+              onMenuTap: () =>
+                  Navigator.pop(context),
 
-            onNotificationTap: () {},
-          ),
+              onNotificationTap: () {},
+            ),
 
-          Expanded(
+            Expanded(
 
-            child: SingleChildScrollView(
+              child: SingleChildScrollView(
 
-              padding:
-              const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 24,
-              ),
+                padding: EdgeInsets.fromLTRB(
+                  horizontalPadding,
+                  24,
+                  horizontalPadding,
+                  bottomPadding,
+                ),
 
-              child: Column(
+                child: Column(
 
-                crossAxisAlignment:
-                CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                  CrossAxisAlignment.start,
 
-                children: [
+                  children: [
 
-                  /// 🔥 GENERAL
+                    /// 🔥 GENERAL
 
-                  const SettingsSectionTitle(
-                    title: "GENERAL",
-                  ),
+                    const SettingsSectionTitle(
+                      title: "GENERAL",
+                    ),
 
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-                  SettingsGroupCard(
+                    SettingsGroupCard(
 
-                    children: [
+                      children: [
 
-                      ValueListenableBuilder<bool>(
+                        ValueListenableBuilder<bool>(
 
-                        valueListenable:
-                        ThemeController.isDark,
+                          valueListenable:
+                          ThemeController.isDark,
 
-                        builder:
-                            (
-                            context,
-                            isDark,
-                            child,
-                            ) {
+                          builder:
+                              (
+                              context,
+                              isDark,
+                              child,
+                              ) {
 
-                          return SettingsTile(
+                            return SettingsTile(
 
-                            icon:
-                            Icons.dark_mode_outlined,
+                              icon:
+                              Icons.dark_mode_outlined,
 
-                            title: "Dark Mode",
+                              title: "Dark Mode",
 
-                            switchValue: isDark,
+                              switchValue: isDark,
 
-                            onSwitchChanged:
-                                (value) async {
+                              onSwitchChanged:
+                                  (value) async {
 
-                                  await ThemeController.setDark(value);                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                                await ThemeController.setDark(value);                            },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
 
-                  const SizedBox(height: 34),
+                    const SizedBox(height: 34),
 
-                  /// 🔥 SECURITY
+                    /// 🔥 SECURITY
 
-                  const SettingsSectionTitle(
-                    title: "SECURITY",
-                  ),
+                    const SettingsSectionTitle(
+                      title: "SECURITY",
+                    ),
 
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-                  SettingsGroupCard(
+                    SettingsGroupCard(
 
-                    children: [
+                      children: [
 
-                      SettingsTile(
+                        SettingsTile(
 
-                        icon: Icons.fingerprint,
+                          icon: Icons.fingerprint,
 
-                        title: "Fingerprint Lock",
+                          title: "Fingerprint Lock",
 
-                        switchValue:
-                        isAppLockEnabled,
+                          switchValue:
+                          isAppLockEnabled,
 
-                        onSwitchChanged:
-                            (value) async {
+                          onSwitchChanged:
+                              (value) async {
 
-                          await AppLockStorage
-                              .setEnabled(value);
+                            await AppLockStorage
+                                .setEnabled(value);
 
-                          setState(() {
-                            isAppLockEnabled =
-                                value;
-                          });
-                        },
-                      ),
+                            setState(() {
+                              isAppLockEnabled =
+                                  value;
+                            });
+                          },
+                        ),
 
-                      const SettingsDivider(),
+                        const SettingsDivider(),
 
-                      SettingsTile(
+                        SettingsTile(
 
-                        icon: Icons
-                            .lock_outline_rounded,
+                          icon: Icons
+                              .lock_outline_rounded,
 
-                        title:
-                        "Privacy And Security",
+                          title:
+                          "Privacy And Security",
 
-                        onTap: () {
+                          onTap: () {
 
-                          Navigator.push(
+                            Navigator.push(
 
-                            context,
+                              context,
 
-                            MaterialPageRoute(
+                              MaterialPageRoute(
 
-                              builder: (context) =>
-                              const PrivacyPolicyScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                                builder: (context) =>
+                                const PrivacyPolicyScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
 
-                  const SizedBox(height: 34),
+                    const SizedBox(height: 34),
 
-                  /// 🔥 SUPPORT
+                    /// 🔥 SUPPORT
 
-                  const SettingsSectionTitle(
-                    title: "SUPPORT",
-                  ),
+                    const SettingsSectionTitle(
+                      title: "SUPPORT",
+                    ),
 
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-                  SettingsGroupCard(
+                    SettingsGroupCard(
 
-                    children: [
+                      children: [
 
-                      SettingsTile(
+                        SettingsTile(
 
-                        icon:
-                        Icons.help_outline_rounded,
+                          icon:
+                          Icons.help_outline_rounded,
 
-                        title: "Help Center",
+                          title: "Help Center",
 
-                        onTap: () {
+                          onTap: () {
 
-                          Navigator.push(
+                            Navigator.push(
 
-                            context,
+                              context,
 
-                            MaterialPageRoute(
+                              MaterialPageRoute(
 
-                              builder: (context) =>
-                              const HelpSupportScreen(),
-                            ),
-                          );
-                        },
-                      ),
+                                builder: (context) =>
+                                const HelpSupportScreen(),
+                              ),
+                            );
+                          },
+                        ),
 
-                      const SettingsDivider(),
+                        const SettingsDivider(),
 
-                      SettingsTile(
+                        SettingsTile(
 
-                        icon:
-                        Icons.info_outline_rounded,
+                          icon:
+                          Icons.info_outline_rounded,
 
-                        title: "About App",
+                          title: "About App",
 
-                        onTap: () {
+                          onTap: () {
 
-                          Navigator.push(
+                            Navigator.push(
 
-                            context,
+                              context,
 
-                            MaterialPageRoute(
+                              MaterialPageRoute(
 
-                              builder: (context) =>
-                              const AboutAppScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                                builder: (context) =>
+                                const AboutAppScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
 
-                  const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-                  Divider(
-                    color:
-                    colorScheme.outlineVariant,
-                  ),
-                ],
+                    Divider(
+                      color:
+                      colorScheme.outlineVariant,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

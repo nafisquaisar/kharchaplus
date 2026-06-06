@@ -237,6 +237,7 @@ class ExpenseRepository {
 
   // 📥 Stream by cardId
   Stream<List<ExpenseModel>> getExpensesByCard(String userId, String cardId) {
+    print('[ExpenseRepository] getExpensesByCard userId=$userId cardId=$cardId');
     return _firestore
         .collection("users")
         .doc(userId)
@@ -255,8 +256,11 @@ class ExpenseRepository {
                   .toList()
                 ..sort((a, b) => b.date.compareTo(a.date));
 
-          print("");
-          print("REALTIME COUNT => ${expenses.length}");
+          print('[ExpenseRepository] getExpensesByCard resultCount=${expenses.length} userId=$userId cardId=$cardId');
+          for (final expense in expenses) {
+            print('[ExpenseRepository] expense id=${expense.id} cardId=${expense.cardId} amount=${expense.amount} type=${expense.type.name}');
+          }
+          print('REALTIME COUNT => ${expenses.length}');
 
           return expenses;
         });

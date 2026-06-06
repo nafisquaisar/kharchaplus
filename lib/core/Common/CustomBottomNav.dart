@@ -1,13 +1,10 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../constants/AppColors.dart';
 
 class CustomBottomNav extends StatelessWidget {
-
   final int currentIndex;
-
   final Function(int) onTap;
 
   const CustomBottomNav({
@@ -18,109 +15,139 @@ class CustomBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final width =
         MediaQuery.of(context).size.width;
+    final horizontalPadding = (width * 0.055).clamp(14.0, 24.0).toDouble();
+    final isDark =
+        Theme.of(context).brightness ==
+            Brightness.dark;
 
-    final bottomPadding =
-        MediaQuery.of(context).padding.bottom;
+    return SafeArea(
+      top: false,
+      left: false,
+      right: false,
+      minimum: const EdgeInsets.only(bottom: 8),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding,
+        ),
 
-    final colorScheme = Theme.of(context).colorScheme;
+        child: ClipRRect(
+          borderRadius:
+          BorderRadius.circular(10),
 
-    return Padding(
-      padding: EdgeInsets.only(
-        left: width * 0.07,
-        right: width * 0.07,
-        bottom: bottomPadding == 0
-            ? 16
-            : bottomPadding,
-      ),
-
-      child: ClipRRect(
-        borderRadius:
-        BorderRadius.circular(10),
-
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: 22,
-            sigmaY: 22,
-          ),
-
-          child: Container(
-            padding:
-            const EdgeInsets.symmetric(
-              vertical: 6,
-              horizontal: 4,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 35,
+              sigmaY: 35,
             ),
 
-            decoration: BoxDecoration(
-
-              /// 🔥 GLASS EFFECT
-              color:
-              colorScheme.surface.withOpacity(0.08),
-
-              borderRadius:
-              BorderRadius.circular(10),
-
-              border: Border.all(
-                color: colorScheme.outlineVariant.withOpacity(0.4),
-                width: 1,
+            child: Container(
+              padding:
+              const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 8,
               ),
 
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.accent
-                      .withOpacity(0.3),
+              decoration: BoxDecoration(
+                borderRadius:
+                BorderRadius.circular(10),
 
-                  blurRadius: 25,
+                /// ✨ PREMIUM GLASS
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [
+                    Colors.white
+                        .withOpacity(0.10),
 
-                  offset:
-                  const Offset(0, 10),
-                ),
-              ],
-            ),
+                    Colors.white
+                        .withOpacity(0.04),
+                  ]
+                      : [
+                    Colors.white
+                        .withOpacity(0.65),
 
-            child: Row(
-              mainAxisAlignment:
-              MainAxisAlignment.spaceAround,
-
-              children: [
-
-                _buildItem(
-                  Icons.home_rounded,
-                  "Home",
-                  0,
-                  width,
-                ),
-
-                _buildItem(
-                  Icons.account_balance_wallet_rounded,
-                  "Expense",
-                  1,
-                  width,
+                    Colors.white
+                        .withOpacity(0.25),
+                  ],
                 ),
 
-                _buildItem(
-                  Icons.track_changes_rounded,
-                  "Tracking",
-                  2,
-                  width,
+                border: Border.all(
+                  color: isDark
+                      ? Colors.white
+                      .withOpacity(0.12)
+                      : Colors.white
+                      .withOpacity(0.7),
+                  width: 1,
                 ),
 
-                // _buildItem(
-                //   Icons.people_alt_outlined,
-                //   "Friend",
-                //   3,
-                //   width,
-                // ),
+                boxShadow: [
 
-                _buildItem(
-                  Icons.person_outline,
-                  "Profile",
-                  3,
-                  width,
-                ),
-              ],
+                  /// Outer Glow
+                  BoxShadow(
+                    color: isDark
+                        ? Colors.black
+                        .withOpacity(0.35)
+                        : Colors.black
+                        .withOpacity(0.08),
+
+                    blurRadius: 30,
+                    spreadRadius: 2,
+
+                    offset:
+                    const Offset(0, 10),
+                  ),
+
+                  /// Accent Glow
+                  BoxShadow(
+                    color: AppColors.accent
+                        .withOpacity(
+                      isDark ? 0.10 : 0.05,
+                    ),
+
+                    blurRadius: 18,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+
+              child: Row(
+                children: [
+
+                  _buildItem(
+                    context,
+                    icon: Icons.home_rounded,
+                    label: "Home",
+                    index: 0,
+                  ),
+
+                  _buildItem(
+                    context,
+                    icon: Icons
+                        .account_balance_wallet_rounded,
+                    label: "Expense",
+                    index: 1,
+                  ),
+
+                  _buildItem(
+                    context,
+                    icon:
+                    Icons.track_changes_rounded,
+                    label: "Tracking",
+                    index: 2,
+                  ),
+
+                  _buildItem(
+                    context,
+                    icon:
+                    Icons.person_outline_rounded,
+                    label: "Profile",
+                    index: 3,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -129,84 +156,184 @@ class CustomBottomNav extends StatelessWidget {
   }
 
   Widget _buildItem(
-      IconData icon,
-      String label,
-      int index,
-      double width,
-      ) {
+      BuildContext context, {
+        required IconData icon,
+        required String label,
+        required int index,
+      }) {
 
-    final bool isSelected =
+    final width =
+        MediaQuery.of(context).size.width;
+    final iconSize = (width * 0.06).clamp(22.0, 28.0).toDouble();
+    final fontSize = (width * 0.028).clamp(11.0, 13.0).toDouble();
+    final isDark =
+        Theme.of(context).brightness ==
+            Brightness.dark;
+
+    final isSelected =
         currentIndex == index;
 
     return Expanded(
-      child: GestureDetector(
-        onTap: () => onTap(index),
+      child: Padding(
+        padding:
+        const EdgeInsets.symmetric(
+          horizontal: 3,
+        ),
 
-        behavior:
-        HitTestBehavior.opaque,
+        child: Material(
+          color: Colors.transparent,
 
-        child: AnimatedContainer(
-          duration:
-          const Duration(
-            milliseconds: 250,
-          ),
-
-          padding:
-          const EdgeInsets.symmetric(
-            vertical: 6,
-          ),
-
-          decoration: BoxDecoration(
-            color: isSelected
-                ? AppColors.textSecondary.withOpacity(0.3)
-                : Colors.transparent,
+          child: InkWell(
+            onTap: () => onTap(index),
 
             borderRadius:
-            BorderRadius.circular(16),
-          ),
+            BorderRadius.circular(10),
 
-          child: Column(
-            mainAxisSize:
-            MainAxisSize.min,
+            splashColor:
+            AppColors.accent.withOpacity(
+              0.12,
+            ),
 
-            children: [
+            highlightColor:
+            Colors.transparent,
 
-              Icon(
-                icon,
-
-                size: width * 0.06,
-
-                color: isSelected
-                    ? AppColors.accent
-                    : AppColors
-                    .textSecondary,
+            child: AnimatedContainer(
+              duration: const Duration(
+                milliseconds: 280,
               ),
 
-              const SizedBox(height: 4),
+              curve: Curves.easeOutExpo,
 
-              FittedBox(
-                child: Text(
-                  label,
+              padding:
+              const EdgeInsets.symmetric(
+                vertical: 11,
+              ),
 
-                  maxLines: 1,
+              decoration: BoxDecoration(
+                borderRadius:
+                BorderRadius.circular(10),
 
-                  style: TextStyle(
-                    fontSize:
-                    width * 0.028,
+                /// ✨ Selected Glass
+                gradient: isSelected
+                    ? LinearGradient(
+                  begin:
+                  Alignment.topLeft,
+                  end: Alignment
+                      .bottomRight,
 
-                    fontWeight:
-                    isSelected
-                        ? FontWeight.w700
-                        : FontWeight.w500,
+                  colors: isDark
+                      ? [
+                    Colors.white
+                        .withOpacity(
+                        0.16),
 
-                    color: isSelected
-                        ? AppColors.accent
-                        : AppColors
-                        .textSecondary,
+                    Colors.white
+                        .withOpacity(
+                        0.06),
+                  ]
+                      : [
+                    Colors.white
+                        .withOpacity(
+                        0.85),
+
+                    Colors.white
+                        .withOpacity(
+                        0.35),
+                  ],
+                )
+                    : null,
+
+                border: isSelected
+                    ? Border.all(
+                  color: isDark
+                      ? Colors.white
+                      .withOpacity(
+                      0.12)
+                      : Colors.white
+                      .withOpacity(
+                      0.8),
+                )
+                    : null,
+
+                boxShadow: isSelected
+                    ? [
+
+                  /// Premium Active Glow
+                  BoxShadow(
+                    color: AppColors
+                        .accent
+                        .withOpacity(
+                      isDark
+                          ? 0.18
+                          : 0.08,
+                    ),
+
+                    blurRadius: 20,
+                    spreadRadius: 1,
                   ),
-                ),
+                ]
+                    : [],
               ),
-            ],
+
+              child: Column(
+                mainAxisSize:
+                MainAxisSize.min,
+
+                children: [
+
+                  AnimatedScale(
+                    duration:
+                    const Duration(
+                      milliseconds: 250,
+                    ),
+
+                    scale:
+                    isSelected
+                        ? 1.08
+                        : 1,
+
+                    child: Icon(
+                      icon,
+
+                      size: iconSize,
+
+                      color: isSelected
+                          ? AppColors.accent
+                          : isDark
+                          ? Colors.white70
+                          : Colors.black54,
+                    ),
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  AnimatedDefaultTextStyle(
+                    duration:
+                    const Duration(
+                      milliseconds: 250,
+                    ),
+
+                    style: TextStyle(
+                      fontSize: fontSize,
+
+                      fontWeight:
+                      isSelected
+                          ? FontWeight.w700
+                          : FontWeight
+                          .w500,
+
+                      color: isSelected
+                          ? AppColors.accent
+                          : isDark
+                          ? Colors.white70
+                          : Colors.black54,
+                    ),
+
+                    child: Text(label),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

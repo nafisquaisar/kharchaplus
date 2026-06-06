@@ -69,7 +69,7 @@ class RecentActivityLocalDataSourceImpl
       });
 
       debugPrint(
-        'RecentActivityLocalDataSource: added ${activity.id}',
+        'RecentActivityLocalDataSource: added type=${activity.type} id=${activity.id} referenceId=${activity.referenceId} parentCardId=${activity.parentCardId}',
       );
 
     } catch (e, stack) {
@@ -104,6 +104,12 @@ class RecentActivityLocalDataSourceImpl
       debugPrint(
         'RecentActivityLocalDataSource: fetched ${result.length} items',
       );
+
+      for (final item in result) {
+        debugPrint(
+          'RecentActivityLocalDataSource: fetched item type=${item.type} id=${item.id} referenceId=${item.referenceId} parentCardId=${item.parentCardId}',
+        );
+      }
 
       return result;
 
@@ -161,11 +167,19 @@ class RecentActivityLocalDataSourceImpl
           '${item.userId}_${item.referenceId}': item.isarId,
       };
 
+      debugPrint(
+        'RecentActivityLocalDataSource: upsert existing=${existing.length} incoming=${activities.length}',
+      );
+
       for (final activity in activities) {
 
         final existingId = existingMap[
         '${activity.userId}_${activity.referenceId}'
         ];
+
+        debugPrint(
+          'RecentActivityLocalDataSource: upsert activity type=${activity.type} id=${activity.id} referenceId=${activity.referenceId} parentCardId=${activity.parentCardId} existingId=$existingId',
+        );
 
         if (existingId != null) {
           activity.isarId = existingId;
@@ -254,7 +268,7 @@ class RecentActivityLocalDataSourceImpl
       });
 
       debugPrint(
-        'RecentActivityLocalDataSource: updated ${activity.id}',
+        'RecentActivityLocalDataSource: updated type=${activity.type} id=${activity.id} referenceId=${activity.referenceId} parentCardId=${activity.parentCardId}',
       );
 
     } catch (e, stack) {

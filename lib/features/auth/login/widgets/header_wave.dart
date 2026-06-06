@@ -7,12 +7,14 @@ class HeaderWave extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final height = MediaQuery.of(context).size.height;
+    final headerHeight = (height * 0.28).clamp(200.0, 280.0).toDouble();
+    final logoSize = (height * 0.12).clamp(70.0, 110.0).toDouble();
 
     return ClipPath(
       clipper: WaveClipper(),
       child: Container(
-        height: 260,
+        height: headerHeight,
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: AppColors.kharchaGradient,
@@ -21,13 +23,13 @@ class HeaderWave extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 45),
+              SizedBox(height: (headerHeight * 0.18).clamp(24.0, 48.0)),
               Image.asset(
                 "assets/images/whiteicon1.png",
-                height: 100,
+                height: logoSize,
               ),
-              const SizedBox(height: 5),
-              Text(
+              const SizedBox(height: 6),
+              const Text(
                 "Kharcha Plus",
                 style: TextStyle(
                   color: Colors.white,

@@ -1,4 +1,3 @@
-
 import 'package:expense_tracker/about/widgets/about_action_list.dart';
 import 'package:expense_tracker/about/widgets/about_app_info_section.dart';
 import 'package:expense_tracker/about/widgets/about_footer_section.dart';
@@ -13,41 +12,63 @@ class AboutAppScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    final bottomPadding = media.padding.bottom + 24;
+
     return Scaffold(
       backgroundColor: AppColors.background,
 
       /// 🔥 COMMON APP BAR
-      body: Column(
-        children: [
-          CommonAppBar(
-            title: "About App",
-            isHome: false,
-            onMenuTap: () => Navigator.pop(context),
-            onNotificationTap: () {},
-          ),
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: Column(
+          children: [
+            CommonAppBar(
+              title: "About App",
+              isHome: false,
+              onMenuTap: () => Navigator.pop(context),
+              onNotificationTap: () {},
+            ),
 
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 24,
-              ),
-              child: Column(
-                children: const [
-                  AboutAppInfoSection(),
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final horizontalPadding =
+                      (constraints.maxWidth * 0.05).clamp(16.0, 24.0).toDouble();
 
-                  SizedBox(height: 28),
+                  return Align(
+                    alignment: Alignment.topCenter,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 560),
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.fromLTRB(
+                          horizontalPadding,
+                          24,
+                          horizontalPadding,
+                          bottomPadding,
+                        ),
+                        child: Column(
+                          children: const [
+                            AboutAppInfoSection(),
 
-                  AboutActionList(),
+                            SizedBox(height: 28),
 
-                  SizedBox(height: 40),
+                            AboutActionList(),
 
-                  AboutFooterSection(),
-                ],
+                            SizedBox(height: 40),
+
+                            AboutFooterSection(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

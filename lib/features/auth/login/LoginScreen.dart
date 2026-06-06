@@ -18,8 +18,7 @@ class LoginScreen extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SafeArea(
-          top: false,
+        body: const SafeArea(
           child: LoginCard(),
         ),
       ),

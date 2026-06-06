@@ -30,6 +30,7 @@ class RecentActivityNotifier
         .call()
         .listen(
           (activities) {
+            debugPrint('[RecentActivityNotifier] local stream items=${activities.length}');
         state = AsyncData(activities);
       },
       onError: (e, stack) {
@@ -95,6 +96,7 @@ class RecentActivityNotifier
       RecentActivityEntity activity,
       ) async {
     try {
+      debugPrint('[RecentActivityNotifier] add activity type=${activity.type} referenceId=${activity.referenceId} parentCardId=${activity.parentCardId}');
       await ref
           .read(
         addRecentActivityUseCaseProvider,
@@ -111,6 +113,8 @@ class RecentActivityNotifier
       RecentActivityEntity activity,
       ) async {
     final previous = state;
+
+    debugPrint('[RecentActivityNotifier] update activity type=${activity.type} referenceId=${activity.referenceId} parentCardId=${activity.parentCardId}');
 
     state = state.whenData(
           (items) {
@@ -139,6 +143,8 @@ class RecentActivityNotifier
       String referenceId,
       ) async {
     final previous = state;
+
+    debugPrint('[RecentActivityNotifier] delete activity referenceId=$referenceId');
 
     state = state.whenData(
           (items) {

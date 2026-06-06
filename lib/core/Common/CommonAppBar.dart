@@ -64,81 +64,84 @@ class CommonAppBar extends StatelessWidget {
         gradient: AppColors.kharchaGradient,
       ),
       child: SafeArea(
-        child: Container(
+        bottom: false,
+        child: SizedBox(
           height: kToolbarHeight,
-          padding: EdgeInsets.symmetric(
-            horizontal: width * 0.04,
-          ),
-          child: Row(
-            children: [
-              /// ☰ MENU
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: width * 0.04,
+            ),
+            child: Row(
+              children: [
+                /// ☰ MENU
 
-              InkWell(
-                onTap: onMenuTap,
-                borderRadius: BorderRadius.circular(30),
-                child: Padding(
-                  padding: EdgeInsets.all(width * 0.015),
-                  child: Icon(
-                    isDashboard ? Icons.menu : Icons.arrow_back,
-                    size: width * 0.07,
-                    color: Colors.white,
+                InkWell(
+                  onTap: onMenuTap,
+                  borderRadius: BorderRadius.circular(30),
+                  child: Padding(
+                    padding: EdgeInsets.all(width * 0.015),
+                    child: Icon(
+                      isDashboard ? Icons.menu : Icons.arrow_back,
+                      size: width * 0.07,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
 
-              SizedBox(width: width * 0.03),
+                SizedBox(width: width * 0.03),
 
-              /// 🔥 TITLE / GREETING
+                ///  TITLE / GREETING
 
-              Expanded(
-                child: isHome
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${getGreeting()} 👋",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: width * 0.032,
-                              color: Colors.white70,
+                Expanded(
+                  child: isHome
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${getGreeting()} ",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: width * 0.032,
+                                color: Colors.white70,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            userName ?? "Sir",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: width * 0.045,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                            const SizedBox(height: 2),
+                            Text(
+                              userName ?? "Sir",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: width * 0.045,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
+                          ],
+                        )
+                      : Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: width * 0.045,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
-                        ],
-                      )
-                    : Text(
-                        title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: width * 0.045,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
                         ),
-                      ),
-              ),
+                ),
 
-              /// 🔔 RIGHT ACTION
+                ///  RIGHT ACTION
 
-              if (false)
-                _buildNotification(width)
-              else if (showMore)
-                _buildMoreButton(width)
-              else
-                SizedBox(width: width * 0.07),
-            ],
+                if (false)
+                  _buildNotification(width)
+                else if (showMore)
+                  _buildMoreButton(width)
+                else
+                  SizedBox(width: width * 0.07),
+              ],
+            ),
           ),
         ),
       ),

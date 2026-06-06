@@ -11,24 +11,29 @@ class LoginCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const HeaderWave(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: _Content(),
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: BorderRadius.circular(30),
           ),
-        ],
-      ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const HeaderWave(),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: const _Content(),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -40,9 +45,11 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final width = MediaQuery.of(context).size.width;
+    final horizontalPadding = (width * 0.06).clamp(16.0, 24.0).toDouble();
 
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 20),
       child: Column(
         children: [
           Text(
@@ -52,9 +59,9 @@ class _Content extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 6),
+          const SizedBox(height: 6),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 6),
             child: Text(
               "Track and manage your expenses easily.",
               textAlign: TextAlign.center,
@@ -67,11 +74,8 @@ class _Content extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           const GoogleButton(),
-          // const SizedBox(height: 15),
-          // const PhoneButton(),
           const SizedBox(height: 20),
-          // SocialFooter(),
-          Footer()
+          Footer(),
         ],
       ),
     );

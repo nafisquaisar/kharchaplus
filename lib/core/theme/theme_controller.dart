@@ -12,6 +12,11 @@ class ThemeController {
     final saved = _prefs!.getBool(_prefsKey);
     if (saved != null) {
       isDark.value = saved;
+    } else {
+      final brightness = WidgetsBinding
+          .instance.platformDispatcher.platformBrightness;
+      isDark.value =
+          brightness == Brightness.dark;
     }
     _bindPersistence();
   }

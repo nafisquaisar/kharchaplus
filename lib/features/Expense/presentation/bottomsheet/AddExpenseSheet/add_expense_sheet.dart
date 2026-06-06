@@ -95,86 +95,99 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   Widget build(BuildContext context) {
     final categoryVM = context.watch<CategoryViewModel>();
     final colorScheme = Theme.of(context).colorScheme;
+    final media = MediaQuery.of(context);
+    final horizontalPadding =
+        (media.size.width * 0.05).clamp(16.0, 24.0).toDouble();
 
-    return Container(
-      padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 14,
-      ),
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-      ),
-
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// 🔥 Header
-            Header(
-              title: widget.expense == null ? "Add Expense" : "Update Expense",
+    return SafeArea(
+      top: false,
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 560),
+          child: Container(
+            padding: EdgeInsets.fromLTRB(
+              horizontalPadding,
+              14,
+              horizontalPadding,
+              media.viewInsets.bottom + 16,
             ),
-            const SizedBox(height: 10),
-
-            /// 💰 Amount Card
-            AmountCard(
-              amountController: amountController,
-              expenseType: selectedType,
-              paymentMode: selectedPayment,
-
-              onTypeChanged: (val) {
-                setState(() {
-                  selectedType = val;
-                });
-              },
-
-              onPaymentChanged: (val) {
-                setState(() {
-                  selectedPayment = val;
-                });
-              },
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
             ),
 
-            const SizedBox(height: 10),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /// 🔥 Header
+                  Header(
+                    title: widget.expense == null ? "Add Expense" : "Update Expense",
+                  ),
+                  const SizedBox(height: 10),
 
-            /// 📂 Category Card
-            CategoryCard(
-              categories: categoryVM.categories,
-              selected: selectedCategory,
+                  /// 💰 Amount Card
+                  AmountCard(
+                    amountController: amountController,
+                    expenseType: selectedType,
+                    paymentMode: selectedPayment,
 
-              onChanged: (val) {
-                setState(() => selectedCategory = val);
-                validate();
-              },
+                    onTypeChanged: (val) {
+                      setState(() {
+                        selectedType = val;
+                      });
+                    },
+
+                    onPaymentChanged: (val) {
+                      setState(() {
+                        selectedPayment = val;
+                      });
+                    },
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  /// 📂 Category Card
+                  CategoryCard(
+                    categories: categoryVM.categories,
+                    selected: selectedCategory,
+
+                    onChanged: (val) {
+                      setState(() => selectedCategory = val);
+                      validate();
+                    },
+                  ),
+                  const SizedBox(height: 10),
+
+                  /// 📝 Details Card
+                  DetailsCard(
+                    selectedDate: selectedDate,
+
+                    onDateSelected: (date) {
+                      setState(() => selectedDate = date);
+                    },
+
+                    noteController: noteController,
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// 🚀 Save Button
+                  SaveButton(
+                    text: widget.buttonText,
+                    isLoading: isSaving,
+                    onPressed: isSaving
+                        ? () {}
+                        : submit,
+                  ),
+
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
-            const SizedBox(height: 10),
-
-            /// 📝 Details Card
-            DetailsCard(
-              selectedDate: selectedDate,
-
-              onDateSelected: (date) {
-                setState(() => selectedDate = date);
-              },
-
-              noteController: noteController,
-            ),
-
-            const SizedBox(height: 20),
-
-            /// 🚀 Save Button
-            SaveButton(
-              text: widget.buttonText,
-              isLoading: isSaving,
-              onPressed: isSaving
-                  ? () {}
-                  : submit,
-            ),
-
-            const SizedBox(height: 10),
-          ],
+          ),
         ),
       ),
     );

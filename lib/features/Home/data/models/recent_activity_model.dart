@@ -25,6 +25,8 @@ class RecentActivityModel extends RecentActivityEntity {
 
     required super.referenceId,
 
+    super.parentCardId,
+
     required super.isSynced,
     required super.isDeleted,
     required super.isEdited,
@@ -41,6 +43,9 @@ class RecentActivityModel extends RecentActivityEntity {
 
   @Index(unique: true)
   String get indexedReferenceId => referenceId;
+
+  @Index()
+  String? get indexedParentCardId => parentCardId;
 
   @Index()
   DateTime get indexedCreatedAt => createdAt;
@@ -70,6 +75,8 @@ class RecentActivityModel extends RecentActivityEntity {
 
       referenceId: entity.referenceId,
 
+      parentCardId: entity.parentCardId,
+
       isSynced: entity.isSynced,
       isDeleted: entity.isDeleted,
       isEdited: entity.isEdited,
@@ -97,6 +104,8 @@ class RecentActivityModel extends RecentActivityEntity {
       'updatedAt': firestore.Timestamp.fromDate(updatedAt),
 
       'referenceId': referenceId,
+
+      'parentCardId': parentCardId,
 
       'isSynced': isSynced,
       'isDeleted': isDeleted,
@@ -137,6 +146,8 @@ class RecentActivityModel extends RecentActivityEntity {
 
       referenceId: json['referenceId'] as String,
 
+      parentCardId: json['parentCardId'] as String?,
+
       isSynced: json['isSynced'] as bool? ?? false,
       isDeleted: json['isDeleted'] as bool? ?? false,
       isEdited: json['isEdited'] as bool? ?? false,
@@ -164,6 +175,8 @@ class RecentActivityModel extends RecentActivityEntity {
 
     String? referenceId,
 
+    String? parentCardId,
+
     bool? isSynced,
     bool? isDeleted,
     bool? isEdited,
@@ -184,6 +197,8 @@ class RecentActivityModel extends RecentActivityEntity {
       updatedAt: updatedAt ?? this.updatedAt,
 
       referenceId: referenceId ?? this.referenceId,
+
+      parentCardId: parentCardId ?? this.parentCardId,
 
       isSynced: isSynced ?? this.isSynced,
       isDeleted: isDeleted ?? this.isDeleted,

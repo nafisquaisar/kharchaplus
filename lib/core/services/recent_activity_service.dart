@@ -25,6 +25,10 @@ class RecentActivityService {
       title: 'Expense Cycle Created',
     );
 
+    debugPrint(
+      '[RecentActivityService] create expense_cycle id=${activity.id} referenceId=${activity.referenceId} parentCardId=${activity.parentCardId} userId=${activity.userId}',
+    );
+
     try {
 
       await repository.addActivity(activity);
@@ -52,6 +56,10 @@ class RecentActivityService {
     final activity = _buildExpenseCycleActivity(
       card,
       title: 'Expense Cycle Updated',
+    );
+
+    debugPrint(
+      '[RecentActivityService] update expense_cycle id=${activity.id} referenceId=${activity.referenceId} parentCardId=${activity.parentCardId} userId=${activity.userId}',
     );
 
     try {
@@ -111,6 +119,10 @@ class RecentActivityService {
       title: 'Expense Added',
     );
 
+    debugPrint(
+      '[RecentActivityService] create expense_item id=${activity.id} referenceId=${activity.referenceId} parentCardId=${activity.parentCardId} userId=${activity.userId}',
+    );
+
     try {
 
       await repository.addActivity(activity);
@@ -138,6 +150,10 @@ class RecentActivityService {
     final activity = _buildExpenseItemActivity(
       expense,
       title: 'Expense Updated',
+    );
+
+    debugPrint(
+      '[RecentActivityService] update expense_item id=${activity.id} referenceId=${activity.referenceId} parentCardId=${activity.parentCardId} userId=${activity.userId}',
     );
 
     try {
@@ -249,6 +265,8 @@ class RecentActivityService {
       updatedAt: now,
 
       referenceId: expense.id,
+
+      parentCardId: expense.cardId,
 
       isSynced: false,
       isDeleted: false,

@@ -13,9 +13,9 @@ class RecentActivitySection extends ConsumerWidget {
 
   @override
   Widget build(
-      BuildContext context,
-      WidgetRef ref,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     final width = MediaQuery.of(context).size.width;
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
@@ -45,13 +45,11 @@ class RecentActivitySection extends ConsumerWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment:
-        CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// 🔥 HEADER
           Row(
-            mainAxisAlignment:
-            MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 "Recent Activity",
@@ -61,7 +59,6 @@ class RecentActivitySection extends ConsumerWidget {
                   color: colorScheme.onSurface,
                 ),
               ),
-
               InkWell(
                 borderRadius: BorderRadius.circular(30),
                 onTap: () {
@@ -79,8 +76,7 @@ class RecentActivitySection extends ConsumerWidget {
                   ),
                   decoration: BoxDecoration(
                     color: colorScheme.surfaceContainerHighest,
-                    borderRadius:
-                    BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(30),
                   ),
                   child: Text(
                     "View All",
@@ -100,7 +96,6 @@ class RecentActivitySection extends ConsumerWidget {
           /// 🔥 DYNAMIC RECENT DATA
           recentState.when(
             loading: () => const SizedBox.shrink(),
-
             error: (e, _) => Padding(
               padding: const EdgeInsets.all(20),
               child: Center(
@@ -112,7 +107,6 @@ class RecentActivitySection extends ConsumerWidget {
                 ),
               ),
             ),
-
             data: (activities) {
               if (activities.isEmpty) {
                 return Padding(
@@ -128,17 +122,15 @@ class RecentActivitySection extends ConsumerWidget {
                 );
               }
 
-              final limitedActivities =
-              activities.length > 5
+              final limitedActivities = activities.length > 5
                   ? activities.take(5).toList()
                   : activities;
 
               return Column(
                 children: List.generate(
                   limitedActivities.length,
-                      (index) {
-                    final item =
-                    limitedActivities[index];
+                  (index) {
+                    final item = limitedActivities[index];
 
                     return Column(
                       children: [
@@ -147,11 +139,7 @@ class RecentActivitySection extends ConsumerWidget {
                           width: width,
                           onTap: () => navHandler.navigate(context, item),
                         ),
-
-                        if (index !=
-                            limitedActivities
-                                .length -
-                                1)
+                        if (index != limitedActivities.length - 1)
                           const RecentActivityDivider(),
                       ],
                     );

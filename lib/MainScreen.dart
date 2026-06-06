@@ -46,7 +46,7 @@ class _MainScreenState
     /// ✅ KEEP SCREEN STATE
     _screens = const [
       Home(),
-      ExpenseScreen(),
+      ExpenseScreen(showAppBar: false,),
       TrackingScreen(),
       ProfileScreen(),
     ];
@@ -57,6 +57,7 @@ class _MainScreenState
 
     final size =
         MediaQuery.of(context).size;
+    final topInset = MediaQuery.of(context).padding.top;
 
     final vm =
     context.watch<AuthViewModel>();
@@ -99,7 +100,7 @@ class _MainScreenState
       appBar: PreferredSize(
         preferredSize: Size(
           size.width,
-          70,
+          kToolbarHeight + topInset,
         ),
 
         child: CommonAppBar(

@@ -1,3 +1,4 @@
+import 'package:expense_tracker/features/Expense/presentation/screens/expense_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/RecentActivityEntity.dart';
@@ -5,7 +6,6 @@ import '../../../Track/FoodTracking/presentation/screens/food_tracking_screen.da
 import '../../../Track/ElectricityTracking/presentation/screens/ElectricityTrackingScreen.dart';
 import '../../../Track/WaterTracking/presentation/screens/purchase_history_screen.dart';
 import '../../../Track/WaterTracking/presentation/screens/water_intake_history_screen.dart';
-import '../../../Expense/presentation/screens/expense_screen.dart';
 import '../../../Expense/presentation/screens/expense_detail_screen.dart';
 
 class RecentActivityNavigationHandler {
@@ -16,7 +16,7 @@ class RecentActivityNavigationHandler {
     RecentActivityEntity activity,
   ) async {
     debugPrint(
-      '[RecentActivityNav] clicked type=${activity.type} referenceId=${activity.referenceId}',
+      '[RecentActivityNav] clicked type=${activity.type} referenceId=${activity.referenceId} parentCardId=${activity.parentCardId}',
     );
 
     final route = _resolveRoute(activity);
@@ -40,25 +40,47 @@ class RecentActivityNavigationHandler {
   }
 
   Widget Function()? _resolveRoute(RecentActivityEntity activity) {
-    switch (activity.type) {
-      case 'food':
-        return () => const FoodTrackingScreen();
-      case 'electricity':
-        return () => const ElectricityTrackingScreen();
-      case 'water_management':
-        return () => const WaterPurchaseHistoryScreen();
-      case 'water_intake':
-        return () => const WaterIntakeHistoryScreen();
-      case 'expense_cycle':
-        if (activity.referenceId.isEmpty) {
-          return null;
-        }
-        return () => ExpenseDetailScreen(cardId: activity.referenceId);
-      case 'expense_item':
-        return () => const ExpenseScreen();
-      default:
-        return null;
+    Widget Function()? route;
+
+    if (activity.type == 'food') {
+      route = () => const FoodTrackingScreen();
     }
+    else if (activity.type == 'electricity') {
+      route = () => const ElectricityTrackingScreen();
+    }
+    else if (activity.type == 'water_management') {
+      route = () => const WaterPurchaseHistoryScreen();
+    }
+    else if (activity.type == 'water_intake') {
+      route = () => const WaterIntakeHistoryScreen();
+    }
+
+    else if (activity.type == 'expense_cycle') {
+      route = () => const ExpenseScreen();
+    }
+    else if (activity.type == 'expense_item') {
+
+      final cardId = activity.parentCardId;
+
+      if (cardId == null || cardId.isEmpty) {
+
+        debugPrint(
+          '[RecentActivityNav] expense_item legacy record -> opening ExpenseScreen',
+        );
+
+        return () => const ExpenseScreen();
+      }
+
+      debugPrint(
+        '[RecentActivityNav] expense_item -> cardId=$cardId',
+      );
+
+      return () => ExpenseDetailScreen(
+        cardId: cardId,
+      );
+    }
+
+    return route;
   }
 
   void _showFallback(BuildContext context, String type) {

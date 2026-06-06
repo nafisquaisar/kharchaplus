@@ -47,6 +47,10 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     final profileVm = context.read<ProfileViewModel>();
     final missing = widget.missingFields;
     final isPhoneUser = widget.user.providers.contains('phone');
+    final media = MediaQuery.of(context);
+    final horizontalPadding =
+        (media.size.width * 0.06).clamp(16.0, 24.0).toDouble();
+    final bottomPadding = media.viewInsets.bottom + media.padding.bottom + 24;
 
     final needsPhoneLink = missing.contains(ProfileField.phone) && !isPhoneUser;
     final needsProfileDetails = missing.contains(ProfileField.name) ||
@@ -55,122 +59,119 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Complete Profile')),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Finish setting up your account',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'We need a few details before continuing.',
-                style: TextStyle(color: Colors.grey.shade600),
-              ),
-              const SizedBox(height: 24),
-              if (missing.contains(ProfileField.name)) ...[
-                _buildTextField(
-                  controller: _nameController,
-                  label: 'Full Name',
-                  hint: 'Enter your name',
-                ),
-                const SizedBox(height: 16),
-              ],
-              if (missing.contains(ProfileField.email)) ...[
-                _buildTextField(
-                  controller: _emailController,
-                  label: 'Email',
-                  hint: 'Enter your email',
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                const SizedBox(height: 16),
-              ],
-              // if (needsPhoneLink) ...[
-              //   SizedBox(
-              //     width: double.infinity,
-              //     height: 48,
-              //     child: OutlinedButton(
-              //       onPressed: vm.isLoading
-              //           ? null
-              //           : () {
-              //               Navigator.push(
-              //                 context,
-              //                 MaterialPageRoute(
-              //                   builder: (_) => const PhoneScreen(isLinking: true),
-              //                 ),
-              //               );
-              //             },
-              //       child: const Text('Link Phone'),
-              //     ),
-              //   ),
-              //   const SizedBox(height: 24),
-              // ],
-              if (needsProfileDetails) ...[
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: Selector<ProfileViewModel, bool>(
-                    selector: (_, pvm) => pvm.isSavingProfile,
-                    builder: (context, isSavingProfile, _) {
-                      return ElevatedButton(
-                        onPressed: isSavingProfile
-                            ? null
-                            : () async {
-                                final name = missing.contains(ProfileField.name)
-                                    ? _nameController.text.trim()
-                                    : (profileVm.profile?.name ??
-                                        widget.user.displayName ??
-                                        '');
-                                final email = missing.contains(ProfileField.email)
-                                    ? _emailController.text.trim()
-                                    : (profileVm.profile?.email ??
-                                        widget.user.email ??
-                                        '');
-                                final phone = widget.user.phoneNumber ??
-                                    profileVm.profile?.phone ??
-                                    '';
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 520),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(
+                    horizontalPadding,
+                    20,
+                    horizontalPadding,
+                    bottomPadding,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Finish setting up your account',
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'We need a few details before continuing.',
+                        style: TextStyle(color: Colors.grey.shade600),
+                      ),
+                      const SizedBox(height: 24),
+                      if (missing.contains(ProfileField.name)) ...[
+                        _buildTextField(
+                          controller: _nameController,
+                          label: 'Full Name',
+                          hint: 'Enter your name',
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                      if (missing.contains(ProfileField.email)) ...[
+                        _buildTextField(
+                          controller: _emailController,
+                          label: 'Email',
+                          hint: 'Enter your email',
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                      if (needsProfileDetails) ...[
+                        SizedBox(
+                          width: double.infinity,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(minHeight: kMinInteractiveDimension),
+                            child: Selector<ProfileViewModel, bool>(
+                              selector: (_, pvm) => pvm.isSavingProfile,
+                              builder: (context, isSavingProfile, _) {
+                                return ElevatedButton(
+                                  onPressed: isSavingProfile
+                                      ? null
+                                      : () async {
+                                          final name = missing.contains(ProfileField.name)
+                                              ? _nameController.text.trim()
+                                              : (profileVm.profile?.name ??
+                                                  widget.user.displayName ??
+                                                  '');
+                                          final email = missing.contains(ProfileField.email)
+                                              ? _emailController.text.trim()
+                                              : (profileVm.profile?.email ??
+                                                  widget.user.email ??
+                                                  '');
+                                          final phone = widget.user.phoneNumber ??
+                                              profileVm.profile?.phone ??
+                                              '';
 
-                                if (missing.contains(ProfileField.name) && name.isEmpty) {
-                                  _showSnack(context, 'Name is required');
-                                  return;
-                                }
-                                if (missing.contains(ProfileField.email) && email.isEmpty) {
-                                  _showSnack(context, 'Email is required');
-                                  return;
-                                }
+                                          if (missing.contains(ProfileField.name) && name.isEmpty) {
+                                            _showSnack(context, 'Name is required');
+                                            return;
+                                          }
+                                          if (missing.contains(ProfileField.email) && email.isEmpty) {
+                                            _showSnack(context, 'Email is required');
+                                            return;
+                                          }
 
-                                final success = await profileVm.saveProfile(
-                                  name: name,
-                                  email: email,
-                                  phone: phone,
-                                  photoUrl: vm.currentUser?.photoUrl,
+                                          final success = await profileVm.saveProfile(
+                                            name: name,
+                                            email: email,
+                                            phone: phone,
+                                            photoUrl: vm.currentUser?.photoUrl,
+                                          );
+
+                                          if (!context.mounted) {
+                                            return;
+                                          }
+
+                                          if (!success) {
+                                            _showSnack(context,
+                                                profileVm.errorMessage ?? 'Profile update failed');
+                                          }
+                                        },
+                                  child: isSavingProfile
+                                      ? const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(strokeWidth: 2),
+                                        )
+                                      : const Text('Continue'),
                                 );
-
-                                if (!context.mounted) {
-                                  return;
-                                }
-
-                                if (!success) {
-                                  _showSnack(context,
-                                      profileVm.errorMessage ?? 'Profile update failed');
-                                }
                               },
-                        child: isSavingProfile
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              )
-                            : const Text('Continue'),
-                      );
-                    },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
-              ],
-            ],
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

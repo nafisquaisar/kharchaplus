@@ -23,13 +23,12 @@ class _PhoneScreenState extends State<PhoneScreen> {
   final phoneCtrl = TextEditingController();
   String selectedCode = "+91";
 
-
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AuthViewModel>();
     final brightness = Theme.of(context).brightness;
     final isDark = brightness == Brightness.dark;
-
+    final viewInsets = MediaQuery.of(context).viewInsets;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
@@ -41,59 +40,78 @@ class _PhoneScreenState extends State<PhoneScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: const PhoneAppBar(),
 
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const PhoneHeader(),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final maxWidth = 520.0;
+            final horizontalPadding =
+                (constraints.maxWidth * 0.06).clamp(16.0, 24.0).toDouble();
 
-            const SizedBox(height: 30),
+            return Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: maxWidth),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(
+                    horizontalPadding,
+                    20,
+                    horizontalPadding,
+                    viewInsets.bottom + 24,
+                  ),
+                  child: Column(
+                    children: [
+                      const PhoneHeader(),
 
-            PhoneInputField(
-              controller: phoneCtrl,
-              selectedCode: selectedCode,
-              onCodeChanged: (code) {
-                setState(() => selectedCode = code);
-              },
-            ),
+                      const SizedBox(height: 30),
 
-            const SizedBox(height: 20),
-
-            SendOtpButton(
-              isLoading: vm.isLoading,
-              onTap: () async {
-                final phone = "$selectedCode${phoneCtrl.text.trim()}";
-
-                final result = widget.isLinking
-                    ? await vm.sendOtpForLink(phone)
-                    : await vm.sendOtp(phone);
-
-                if (!context.mounted) return;
-
-                if (result == OtpSendStatus.codeSent) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => OtpScreen(
-                        phone: phone,
-                        isLinking: widget.isLinking,
+                      PhoneInputField(
+                        controller: phoneCtrl,
+                        selectedCode: selectedCode,
+                        onCodeChanged: (code) {
+                          setState(() => selectedCode = code);
+                        },
                       ),
-                    ),
-                  );
-                }
-              },
-            ),
 
-            const SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
-            const TrustText(),
-          ],
+                      SendOtpButton(
+                        isLoading: vm.isLoading,
+                        onTap: () async {
+                          final phone = "$selectedCode${phoneCtrl.text.trim()}";
+
+                          final result = widget.isLinking
+                              ? await vm.sendOtpForLink(phone)
+                              : await vm.sendOtp(phone);
+
+                          if (!context.mounted) return;
+
+                          if (result == OtpSendStatus.codeSent) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => OtpScreen(
+                                  phone: phone,
+                                  isLinking: widget.isLinking,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      const TrustText(),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     )
     );
   }
 }
-
-
 

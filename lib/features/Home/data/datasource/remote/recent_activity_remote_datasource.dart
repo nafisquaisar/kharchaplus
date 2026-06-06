@@ -49,6 +49,7 @@ class RecentActivityRemoteDataSourceImpl
     }
 
     try {
+      debugPrint('RecentActivityRemoteDataSource: add type=${activity.type} id=${activity.id} referenceId=${activity.referenceId} parentCardId=${activity.parentCardId}');
       await _collection(userId)
           .doc(activity.id)
           .set(activity.toJson());
@@ -78,6 +79,9 @@ class RecentActivityRemoteDataSourceImpl
           .toList();
 
       debugPrint('RecentActivityRemoteDataSource: fetched ${result.length} items');
+      for (final item in result) {
+        debugPrint('RecentActivityRemoteDataSource: fetched item type=${item.type} id=${item.id} referenceId=${item.referenceId} parentCardId=${item.parentCardId}');
+      }
       return result;
     } catch (e, stack) {
       debugPrint('RecentActivityRemoteDataSource: fetch failed $e');
@@ -113,6 +117,7 @@ class RecentActivityRemoteDataSourceImpl
     }
 
     try {
+      debugPrint('RecentActivityRemoteDataSource: update type=${activity.type} id=${activity.id} referenceId=${activity.referenceId} parentCardId=${activity.parentCardId}');
       await _collection(userId)
           .doc(activity.id)
           .set(activity.toJson(), SetOptions(merge: true));

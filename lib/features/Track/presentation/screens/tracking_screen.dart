@@ -127,6 +127,11 @@ class TrackingScreen extends ConsumerWidget {
     ref.watch(trackingProvider);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final media = MediaQuery.of(context);
+    final horizontalPadding =
+        (media.size.width * 0.05).clamp(16.0, 24.0).toDouble();
+    final bottomPadding =
+        media.padding.bottom + kBottomNavigationBarHeight + 24;
 
     return Scaffold(
 
@@ -134,7 +139,8 @@ class TrackingScreen extends ConsumerWidget {
       Theme.of(context).scaffoldBackgroundColor,
 
       body: SafeArea(
-
+        top: false,
+        bottom: false,
         child: trackingAsync.when(
 
           /// =====================================
@@ -196,8 +202,12 @@ class TrackingScreen extends ConsumerWidget {
 
             return ListView(
 
-              padding:
-              const EdgeInsets.all(16),
+              padding: EdgeInsets.fromLTRB(
+                horizontalPadding,
+                16,
+                horizontalPadding,
+                bottomPadding,
+              ),
 
               children: [
 

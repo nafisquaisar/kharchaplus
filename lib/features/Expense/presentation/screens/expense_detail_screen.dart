@@ -31,7 +31,9 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
   @override
   void initState() {
     super.initState();
+    debugPrint('[ExpenseDetailScreen] initState cardId=${widget.cardId}');
     Future.microtask(() {
+      debugPrint('[ExpenseDetailScreen] listenExpensesByCard(${widget.cardId})');
       context.read<ExpenseViewModel>().listenExpensesByCard(widget.cardId);
     });
   }
@@ -41,6 +43,9 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.cardId != widget.cardId) {
+      debugPrint(
+        '[ExpenseDetailScreen] didUpdateWidget oldCardId=${oldWidget.cardId} newCardId=${widget.cardId}',
+      );
       context.read<ExpenseViewModel>().listenExpensesByCard(widget.cardId);
     }
   }
@@ -62,8 +67,11 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
     final cardVM = context.watch<ExpenseCardViewModel>();
+    final media = MediaQuery.of(context);
+    final horizontalPadding =
+        (media.size.width * 0.05).clamp(16.0, 24.0).toDouble();
+    final bottomPadding = media.padding.bottom + 24;
 
     ExpenseCardModel? selectedCard;
 
@@ -96,130 +104,139 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
         ),
       ),
 
-      body: Consumer2<ExpenseViewModel, ExpenseFilterViewModel>(
-        builder: (_, expenseVM, filterVM, __) {
-          final filteredExpenses = filterVM.filterExpenses(expenseVM.expenses);
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: Consumer2<ExpenseViewModel, ExpenseFilterViewModel>(
+          builder: (_, expenseVM, filterVM, __) {
+            final filteredExpenses = filterVM.filterExpenses(expenseVM.expenses);
 
-          final totalExpense = ExpenseDetailHelper.calculateExpense(
-            filteredExpenses,
-          );
+            final totalExpense = ExpenseDetailHelper.calculateExpense(
+              filteredExpenses,
+            );
 
-          final totalIncome = ExpenseDetailHelper.calculateIncome(
-            filteredExpenses,
-          );
+            final totalIncome = ExpenseDetailHelper.calculateIncome(
+              filteredExpenses,
+            );
 
-          final balance = ExpenseDetailHelper.calculateBalance(
-            income: totalIncome,
+            final balance = ExpenseDetailHelper.calculateBalance(
+              income: totalIncome,
 
-            expense: totalExpense,
-          );
+              expense: totalExpense,
+            );
 
-          final recentCompletedCard =
-              ExpenseDetailHelper.getRecentCompletedCard(
-                cards: cardVM.cards,
+            final recentCompletedCard =
+                ExpenseDetailHelper.getRecentCompletedCard(
+                  cards: cardVM.cards,
 
-                currentCardId: widget.cardId,
-              );
+                  currentCardId: widget.cardId,
+                );
 
-          return RefreshIndicator(
-            /// 🔥 FIXED PULL REFRESH
-            displacement: 40,
+            return RefreshIndicator(
+              /// 🔥 FIXED PULL REFRESH
+              displacement: 40,
 
-            edgeOffset: 20,
+              edgeOffset: 20,
 
-            color: AppColors.accent,
+              color: AppColors.accent,
 
-            backgroundColor: colorScheme.surface,
+              backgroundColor: colorScheme.surface,
 
-            onRefresh: () {
-              return ExpenseDetailHelper.refreshExpenses(
-                context: context,
+              onRefresh: () {
+                return ExpenseDetailHelper.refreshExpenses(
+                  context: context,
 
-                cardId: widget.cardId,
-              );
-            },
+                  cardId: widget.cardId,
+                );
+              },
 
-            child: ListView(
-              /// 🔥 IMPORTANT FIX
-              physics: const AlwaysScrollableScrollPhysics(
-                parent: BouncingScrollPhysics(),
+              child: ListView(
+                /// 🔥 IMPORTANT FIX
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
+                ),
+
+                padding: EdgeInsets.fromLTRB(
+                  horizontalPadding,
+                  12,
+                  horizontalPadding,
+                  bottomPadding,
+                ),
+
+                children: [
+                  /// SUMMARY
+                  SummaryCard(
+                    startDate: ExpenseDetailHelper.formatDate(
+                      selectedCard!.startDate,
+                    ),
+
+                    endDate: ExpenseDetailHelper.formatDate(selectedCard.endDate),
+
+                    totalExpense: totalExpense,
+
+                    totalIncome: totalIncome,
+
+                    balance: balance,
+
+                    trendText: ExpenseDetailHelper.generateCardTrend(
+                      currentAmount: selectedCard.totalExpense,
+
+                      previousAmount: recentCompletedCard?.totalExpense ?? 0,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// FILTER
+                  FilterRow(
+                    selectedType: filterVM.selectedType,
+
+                    onChanged: (type) {
+                      filterVM.setQuickFilter(type);
+                    },
+
+                    onFilterTap: () {
+                      ExpenseDetailHelper.openFilterSheet(
+                        context: context,
+
+                        filterVM: filterVM,
+                      );
+                    },
+
+                    onAddTap: openSheet,
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  /// LOADING
+                  if (expenseVM.isInitialLoading) const ExpenseShimmer(),
+
+                  /// ERROR
+                  if (!expenseVM.isInitialLoading && expenseVM.error != null)
+                    _ErrorView(cardId: widget.cardId),
+
+                  /// EMPTY
+                  if (!expenseVM.isInitialLoading &&
+                      expenseVM.error == null &&
+                      filteredExpenses.isEmpty)
+                    const _EmptyView(),
+
+                  /// LIST
+                  if (!expenseVM.isInitialLoading &&
+                      expenseVM.error == null &&
+                      filteredExpenses.isNotEmpty)
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+
+                      child: TransactionList(expenses: filteredExpenses),
+                    ),
+
+                  const SizedBox(height: 20),
+                ],
               ),
-
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-
-              children: [
-                /// SUMMARY
-                SummaryCard(
-                  startDate: ExpenseDetailHelper.formatDate(
-                    selectedCard!.startDate,
-                  ),
-
-                  endDate: ExpenseDetailHelper.formatDate(selectedCard.endDate),
-
-                  totalExpense: totalExpense,
-
-                  totalIncome: totalIncome,
-
-                  balance: balance,
-
-                  trendText: ExpenseDetailHelper.generateCardTrend(
-                    currentAmount: selectedCard.totalExpense,
-
-                    previousAmount: recentCompletedCard?.totalExpense ?? 0,
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                /// FILTER
-                FilterRow(
-                  selectedType: filterVM.selectedType,
-
-                  onChanged: (type) {
-                    filterVM.setQuickFilter(type);
-                  },
-
-                  onFilterTap: () {
-                    ExpenseDetailHelper.openFilterSheet(
-                      context: context,
-
-                      filterVM: filterVM,
-                    );
-                  },
-
-                  onAddTap: openSheet,
-                ),
-
-                const SizedBox(height: 14),
-
-                /// LOADING
-                if (expenseVM.isInitialLoading) const ExpenseShimmer(),
-
-                /// ERROR
-                if (!expenseVM.isInitialLoading && expenseVM.error != null)
-                  _ErrorView(cardId: widget.cardId),
-
-                /// EMPTY
-                if (!expenseVM.isInitialLoading &&
-                    expenseVM.error == null &&
-                    filteredExpenses.isEmpty)
-                  const _EmptyView(),
-
-                /// LIST
-                if (!expenseVM.isInitialLoading &&
-                    expenseVM.error == null &&
-                    filteredExpenses.isNotEmpty)
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-
-                    child: TransactionList(expenses: filteredExpenses),
-                  ),
-
-                const SizedBox(height: 20),
-              ],
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

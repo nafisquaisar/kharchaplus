@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 
-
 import '../../../Expense/data/model/ExpenseCardModel.dart';
 import '../../../Expense/presentation/viewmodel/ExpenseCardViewModel.dart';
 import '../../../Expense/presentation/viewmodel/expense_viewmodel.dart';
@@ -21,22 +20,17 @@ import '../widgets/recent_activity/recent_activity_section.dart';
 import '../widgets/water_tracking/water_tracking_card.dart';
 
 class Home extends ConsumerStatefulWidget {
-
   const Home({
     super.key,
   });
 
   @override
-  ConsumerState<Home> createState() =>
-      _HomeState();
+  ConsumerState<Home> createState() => _HomeState();
 }
 
-class _HomeState
-    extends ConsumerState<Home> {
-
-  final ValueNotifier<ExpenseCardModel?>
-  selectedCardNotifier =
-  ValueNotifier(null);
+class _HomeState extends ConsumerState<Home> {
+  final ValueNotifier<ExpenseCardModel?> selectedCardNotifier =
+      ValueNotifier(null);
 
   @override
   void initState() {
@@ -60,13 +54,9 @@ class _HomeState
     );
 
     /// ✅ Production-level auto select
-    WidgetsBinding.instance
-        .addPostFrameCallback(
-          (_) {
-
-        final cardVm =
-        context.read<
-            ExpenseCardViewModel>();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        final cardVm = context.read<ExpenseCardViewModel>();
 
         cardVm.addListener(
           _handleInitialCardSelection,
@@ -80,34 +70,20 @@ class _HomeState
 
   /// ✅ Auto select latest card
   void _handleInitialCardSelection() {
+    final cardVm = context.read<ExpenseCardViewModel>();
 
-    final cardVm =
-    context.read<
-        ExpenseCardViewModel>();
-
-    if (
-    selectedCardNotifier.value !=
-        null ||
-        cardVm.cards.isEmpty
-    ) {
+    if (selectedCardNotifier.value != null || cardVm.cards.isEmpty) {
       return;
     }
 
-    final latestCard =
-    [...cardVm.cards]
-      ..sort(
-            (
-            a,
-            b,
-            ) {
+    final latestCard = [...cardVm.cards]..sort(
+        (
+          a,
+          b,
+        ) {
+          final aDate = a.startDate ?? DateTime(2000);
 
-          final aDate =
-              a.startDate ??
-                  DateTime(2000);
-
-          final bDate =
-              b.startDate ??
-                  DateTime(2000);
+          final bDate = b.startDate ?? DateTime(2000);
 
           return bDate.compareTo(
             aDate,
@@ -115,25 +91,18 @@ class _HomeState
         },
       );
 
-    selectedCardNotifier.value =
-        latestCard.first;
+    selectedCardNotifier.value = latestCard.first;
 
-    context
-        .read<ExpenseViewModel>()
-        .listenExpensesByCard(
-      latestCard.first.id,
-    );
+    context.read<ExpenseViewModel>().listenExpensesByCard(
+          latestCard.first.id,
+        );
   }
 
   @override
   void dispose() {
-
-    context
-        .read<
-        ExpenseCardViewModel>()
-        .removeListener(
-      _handleInitialCardSelection,
-    );
+    context.read<ExpenseCardViewModel>().removeListener(
+          _handleInitialCardSelection,
+        );
 
     selectedCardNotifier.dispose();
 
@@ -142,177 +111,153 @@ class _HomeState
 
   @override
   Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    final horizontalPadding =
+        (media.size.width * 0.01).clamp(2.0, 4.0).toDouble();
+    final bottomSpacing =
+        (media.padding.bottom + kBottomNavigationBarHeight + 24)
+            .clamp(80.0, 140.0)
+            .toDouble();
 
     return SafeArea(
+      top: false,
       bottom: false,
-
       child: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
-
         child: CustomScrollView(
-
           key: const PageStorageKey(
             'home_scroll',
           ),
-
-          physics:
-          const BouncingScrollPhysics(),
-
+          physics: const BouncingScrollPhysics(),
           slivers: [
-
             /// ✅ Production-Level Lazy Rendering
-            SliverList(
+            SliverPadding(
+              padding: EdgeInsets.fromLTRB(
+                horizontalPadding,
+                0,
+                horizontalPadding,
+                0,
+              ),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    const _DashboardSpacing(),
 
-              delegate:
-              SliverChildListDelegate(
-
-                [
-
-                  const _DashboardSpacing(),
-
-                  /// ✅ HEADER
-                  Selector<
-                      ExpenseCardViewModel,
-                      ExpenseCardViewModel>(
-                    selector: (
+                    /// ✅ HEADER
+                    Selector<ExpenseCardViewModel, ExpenseCardViewModel>(
+                      selector: (
                         _,
                         vm,
-                        ) =>
-                    vm,
-
-                    builder: (
+                      ) =>
+                          vm,
+                      builder: (
                         _,
                         cardVm,
                         __,
-                        ) {
-
-                      return ValueListenableBuilder<
-                          ExpenseCardModel?>(
-                        valueListenable:
-                        selectedCardNotifier,
-
-                        builder: (
+                      ) {
+                        return ValueListenableBuilder<ExpenseCardModel?>(
+                          valueListenable: selectedCardNotifier,
+                          builder: (
                             _,
                             selectedCard,
                             __,
-                            ) {
-
-                          return HomeHeader(
-                            selectedCard:
-                            selectedCard,
-
-                            onCardSelected: (
+                          ) {
+                            return HomeHeader(
+                              selectedCard: selectedCard,
+                              onCardSelected: (
                                 card,
-                                ) {
+                              ) {
+                                if (card == null) {
+                                  return;
+                                }
 
-                              if (card == null) {
-                                return;
-                              }
+                                /// ✅ No full rebuild
+                                selectedCardNotifier.value = card;
 
-                              /// ✅ No full rebuild
-                              selectedCardNotifier
-                                  .value = card;
+                                context
+                                    .read<ExpenseViewModel>()
+                                    .listenExpensesByCard(
+                                      card.id,
+                                    );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
 
-                              context
-                                  .read<
-                                  ExpenseViewModel>()
-                                  .listenExpensesByCard(
-                                card.id,
-                              );
-                            },
-                          );
-                        },
-                      );
-                    },
-                  ),
+                    const _DashboardSpacing(),
 
-                  const _DashboardSpacing(),
-
-                  /// ✅ BALANCE CARD
-                  ValueListenableBuilder<
-                      ExpenseCardModel?>(
-                    valueListenable:
-                    selectedCardNotifier,
-
-                    builder: (
+                    /// ✅ BALANCE CARD
+                    ValueListenableBuilder<ExpenseCardModel?>(
+                      valueListenable: selectedCardNotifier,
+                      builder: (
                         _,
                         selectedCard,
                         __,
-                        ) {
-
-                      return Selector<
-                          ExpenseViewModel,
-                          ExpenseViewModel>(
-                        selector: (
+                      ) {
+                        return Selector<ExpenseViewModel, ExpenseViewModel>(
+                          selector: (
                             _,
                             vm,
-                            ) =>
-                        vm,
-
-                        builder: (
+                          ) =>
+                              vm,
+                          builder: (
                             _,
                             expenseVm,
                             __,
-                            ) {
+                          ) {
+                            return RepaintBoundary(
+                              child: BalanceCard(
+                                selectedCard: selectedCard,
+                                expenseVm: expenseVm,
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
 
-                          return RepaintBoundary(
-                            child: BalanceCard(
-                              selectedCard:
-                              selectedCard,
+                    const _DashboardSpacing(),
 
-                              expenseVm:
-                              expenseVm,
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
+                    /// ✅ RECENT ACTIVITY
+                    const RepaintBoundary(
+                      child: RecentActivitySection(),
+                    ),
 
-                  const _DashboardSpacing(),
+                    const _DashboardSpacing(),
 
-                  /// ✅ RECENT ACTIVITY
-                  const RepaintBoundary(
-                    child:
-                    RecentActivitySection(),
-                  ),
+                    /// ✅ FOOD TRACKING
+                    const RepaintBoundary(
+                      child: FoodTrackingCard(),
+                    ),
 
-                  const _DashboardSpacing(),
+                    const _DashboardSpacing(),
 
-                  /// ✅ FOOD TRACKING
-                  const RepaintBoundary(
-                    child:
-                    FoodTrackingCard(),
-                  ),
+                    /// ✅ ELECTRICITY TRACKING
+                    const RepaintBoundary(
+                      child: ElectricityTrackingCard(),
+                    ),
 
-                  const _DashboardSpacing(),
+                    const _DashboardSpacing(),
 
-                  /// ✅ ELECTRICITY TRACKING
-                  const RepaintBoundary(
-                    child:
-                    ElectricityTrackingCard(),
-                  ),
+                    /// ✅ WATER TRACKING
+                    const RepaintBoundary(
+                      child: WaterTrackingCard(),
+                    ),
 
-                  const _DashboardSpacing(),
+                    const _DashboardSpacing(),
 
-                  /// ✅ WATER TRACKING
-                  const RepaintBoundary(
-                    child:
-                    WaterTrackingCard(),
-                  ),
+                    /// ✅ QUICK ACTIONS
+                    const RepaintBoundary(
+                      child: QuickActionsSection(),
+                    ),
 
-                  const _DashboardSpacing(),
-
-                  /// ✅ QUICK ACTIONS
-                  const RepaintBoundary(
-                    child:
-                    QuickActionsSection(),
-                  ),
-
-                  const SizedBox(
-                    height: 100,
-                  ),
-                ],
+                    SizedBox(
+                      height: bottomSpacing,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -323,14 +268,11 @@ class _HomeState
 }
 
 /// ✅ Reusable spacing widget
-class _DashboardSpacing
-    extends StatelessWidget {
-
+class _DashboardSpacing extends StatelessWidget {
   const _DashboardSpacing();
 
   @override
   Widget build(BuildContext context) {
-
     return const SizedBox(
       height: 10,
     );

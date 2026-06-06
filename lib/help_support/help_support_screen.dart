@@ -15,45 +15,67 @@ class HelpSupportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    final bottomPadding = media.padding.bottom + 24;
+
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Column(
-        children: [
-          /// 🔥 COMMON APP BAR
-          CommonAppBar(
-            title: "Help Center",
-            isHome: false,
-            onMenuTap: () => Navigator.pop(context),
-            onNotificationTap: () {},
-          ),
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: Column(
+          children: [
+            /// 🔥 COMMON APP BAR
+            CommonAppBar(
+              title: "Help Center",
+              isHome: false,
+              onMenuTap: () => Navigator.pop(context),
+              onNotificationTap: () {},
+            ),
 
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 24,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  HelpBannerCard(),
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final horizontalPadding =
+                      (constraints.maxWidth * 0.05).clamp(16.0, 24.0).toDouble();
 
-                  SizedBox(height: 34),
+                  return Align(
+                    alignment: Alignment.topCenter,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 560),
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.fromLTRB(
+                          horizontalPadding,
+                          24,
+                          horizontalPadding,
+                          bottomPadding,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            HelpBannerCard(),
 
-                  HelpContactSection(),
+                            SizedBox(height: 34),
 
-                  SizedBox(height: 34),
+                            HelpContactSection(),
 
-                  HelpFaqSection(),
+                            SizedBox(height: 34),
 
-                  SizedBox(height: 40),
+                            HelpFaqSection(),
 
-                  HelpBottomContact(),
-                ],
+                            SizedBox(height: 40),
+
+                            HelpBottomContact(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

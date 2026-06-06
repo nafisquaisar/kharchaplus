@@ -58,48 +58,55 @@ class _CreateExpenseCardSheetState
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 16),
+    final viewInsets = MediaQuery.of(context).viewInsets;
+    final bottomPadding = viewInsets.bottom + 20;
 
-            SheetHeader(isEdit: isEdit),
+    return SafeArea(
+      top: false,
+      child: AnimatedPadding(
+        padding: EdgeInsets.only(bottom: bottomPadding),
+        duration: const Duration(milliseconds: 180),
+        curve: Curves.easeOut,
+        child: Container(
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 16),
 
-            const SizedBox(height: 16),
+                SheetHeader(isEdit: isEdit),
 
-            DateSection(
-              startDate: startDate,
-              endDate: endDate,
-              onStartTap: () => pickDate(true),
-              onEndTap: () => pickDate(false),
+                const SizedBox(height: 16),
+
+                DateSection(
+                  startDate: startDate,
+                  endDate: endDate,
+                  onStartTap: () => pickDate(true),
+                  onEndTap: () => pickDate(false),
+                ),
+
+                const SizedBox(height: 16),
+
+                DetailsSection(
+                  titleController: titleController,
+                  notesController: notesController,
+                ),
+
+                const SizedBox(height: 20),
+
+                SaveCardButton(
+                  isEdit: isEdit,
+                  isLoading: isLoading,
+                  onPressed: submit,
+                ),
+              ],
             ),
-
-            const SizedBox(height: 16),
-
-            DetailsSection(
-              titleController: titleController,
-              notesController: notesController,
-            ),
-
-            const SizedBox(height: 20),
-
-            SaveCardButton(
-              isEdit: isEdit,
-              isLoading: isLoading,
-              onPressed: submit,
-            ),
-          ],
+          ),
         ),
       ),
     );

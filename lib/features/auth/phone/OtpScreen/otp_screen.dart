@@ -50,72 +50,94 @@ class _OtpScreenState extends State<OtpScreen> {
   Widget build(BuildContext context) {
     final vm = context.watch<AuthViewModel>();
     final colorScheme = Theme.of(context).colorScheme;
+    final viewInsets = MediaQuery.of(context).viewInsets;
 
     return Scaffold(
       appBar: const OtpAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// 🔹 Header
-            OtpHeader(phone: widget.phone),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final maxWidth = 520.0;
+            final horizontalPadding =
+                (constraints.maxWidth * 0.06).clamp(16.0, 24.0).toDouble();
 
-            const SizedBox(height: 30),
+            return Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: maxWidth),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(
+                    horizontalPadding,
+                    20,
+                    horizontalPadding,
+                    viewInsets.bottom + 24,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// 🔹 Header
+                      OtpHeader(phone: widget.phone),
 
-            /// 🔹 OTP Input
-            OtpInputField(
-              onCompleted: (value) {
-                setState(() {
-                  otp = value;
-                  otpError = null; // 🔥 clear error when typing
-                });
-              },
-            ),
+                      const SizedBox(height: 30),
 
-            /// 🔴 Error Message
-            if (otpError != null) ...[
-              const SizedBox(height: 10),
-              Text(
-                otpError!,
-                style: TextStyle(
-                  color: colorScheme.error,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+                      /// 🔹 OTP Input
+                      OtpInputField(
+                        onCompleted: (value) {
+                          setState(() {
+                            otp = value;
+                            otpError = null; // 🔥 clear error when typing
+                          });
+                        },
+                      ),
+
+                      /// 🔴 Error Message
+                      if (otpError != null) ...[
+                        const SizedBox(height: 10),
+                        Text(
+                          otpError!,
+                          style: TextStyle(
+                            color: colorScheme.error,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+
+                      const SizedBox(height: 25),
+
+                      /// 🔹 Verify Button
+                      VerifyButton(
+                        isLoading: vm.isLoading,
+                        onTap: otp.length == 6
+                            ? () async {
+                          final success = widget.isLinking
+                              ? await vm.linkPhone(otp)
+                              : await vm.verifyOtp(otp);
+
+                          if (!context.mounted) return;
+
+                          if (success) {
+                            Navigator.popUntil(
+                                context, (route) => route.isFirst);
+                          } else {
+                            setState(() {
+                              otpError = getOtpErrorMessage(vm.errorMessage);
+                            });
+                          }
+                        }
+                            : null, // 🔥 disable if incomplete
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      /// 🔹 Resend
+                      ResendSection(vm: vm),
+                    ],
+                  ),
                 ),
               ),
-            ],
-
-            const SizedBox(height: 25),
-
-            /// 🔹 Verify Button
-            VerifyButton(
-              isLoading: vm.isLoading,
-              onTap: otp.length == 6
-                  ? () async {
-                final success = widget.isLinking
-                    ? await vm.linkPhone(otp)
-                    : await vm.verifyOtp(otp);
-
-                if (!context.mounted) return;
-
-                if (success) {
-                  Navigator.popUntil(
-                      context, (route) => route.isFirst);
-                } else {
-                  setState(() {
-                    otpError = getOtpErrorMessage(vm.errorMessage);
-                  });
-                }
-              }
-                  : null, // 🔥 disable if incomplete
-            ),
-
-            const SizedBox(height: 20),
-
-            /// 🔹 Resend
-            ResendSection(vm: vm),
-          ],
+            );
+          },
         ),
       ),
     );

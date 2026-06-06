@@ -14,6 +14,8 @@ class RecentActivityEntity {
 
   final String referenceId;
 
+  final String? parentCardId;
+
   final bool isSynced;
   final bool isDeleted;
   final bool isEdited;
@@ -34,6 +36,8 @@ class RecentActivityEntity {
     required this.updatedAt,
 
     required this.referenceId,
+
+    this.parentCardId,
 
     required this.isSynced,
     required this.isDeleted,

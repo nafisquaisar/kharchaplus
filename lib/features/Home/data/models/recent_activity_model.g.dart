@@ -38,68 +38,78 @@ const RecentActivityModelSchema = CollectionSchema(
       name: r'indexedCreatedAt',
       type: IsarType.dateTime,
     ),
-    r'indexedReferenceId': PropertySchema(
+    r'indexedParentCardId': PropertySchema(
       id: 4,
+      name: r'indexedParentCardId',
+      type: IsarType.string,
+    ),
+    r'indexedReferenceId': PropertySchema(
+      id: 5,
       name: r'indexedReferenceId',
       type: IsarType.string,
     ),
     r'indexedUpdatedAt': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'indexedUpdatedAt',
       type: IsarType.dateTime,
     ),
     r'indexedUserId': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'indexedUserId',
       type: IsarType.string,
     ),
     r'isDeleted': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'isDeleted',
       type: IsarType.bool,
     ),
     r'isEdited': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'isEdited',
       type: IsarType.bool,
     ),
     r'isSynced': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'isSynced',
       type: IsarType.bool,
     ),
+    r'parentCardId': PropertySchema(
+      id: 11,
+      name: r'parentCardId',
+      type: IsarType.string,
+    ),
     r'referenceId': PropertySchema(
-      id: 10,
+      id: 12,
       name: r'referenceId',
       type: IsarType.string,
     ),
     r'subtitle': PropertySchema(
-      id: 11,
+      id: 13,
       name: r'subtitle',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 12,
+      id: 14,
       name: r'title',
       type: IsarType.string,
     ),
     r'type': PropertySchema(
-      id: 13,
+      id: 15,
       name: r'type',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 14,
+      id: 16,
       name: r'updatedAt',
       type: IsarType.dateTime,
     ),
     r'userId': PropertySchema(
-      id: 15,
+      id: 17,
       name: r'userId',
       type: IsarType.string,
     ),
     r'version': PropertySchema(
-      id: 16,
+      id: 18,
       name: r'version',
       type: IsarType.long,
     )
@@ -131,6 +141,19 @@ const RecentActivityModelSchema = CollectionSchema(
       properties: [
         IndexPropertySchema(
           name: r'indexedReferenceId',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'indexedParentCardId': IndexSchema(
+      id: -8272428786968969543,
+      name: r'indexedParentCardId',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'indexedParentCardId',
           type: IndexType.hash,
           caseSensitive: true,
         )
@@ -178,8 +201,20 @@ int _recentActivityModelEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.id.length * 3;
+  {
+    final value = object.indexedParentCardId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.indexedReferenceId.length * 3;
   bytesCount += 3 + object.indexedUserId.length * 3;
+  {
+    final value = object.parentCardId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.referenceId.length * 3;
   bytesCount += 3 + object.subtitle.length * 3;
   bytesCount += 3 + object.title.length * 3;
@@ -198,19 +233,21 @@ void _recentActivityModelSerialize(
   writer.writeDateTime(offsets[1], object.createdAt);
   writer.writeString(offsets[2], object.id);
   writer.writeDateTime(offsets[3], object.indexedCreatedAt);
-  writer.writeString(offsets[4], object.indexedReferenceId);
-  writer.writeDateTime(offsets[5], object.indexedUpdatedAt);
-  writer.writeString(offsets[6], object.indexedUserId);
-  writer.writeBool(offsets[7], object.isDeleted);
-  writer.writeBool(offsets[8], object.isEdited);
-  writer.writeBool(offsets[9], object.isSynced);
-  writer.writeString(offsets[10], object.referenceId);
-  writer.writeString(offsets[11], object.subtitle);
-  writer.writeString(offsets[12], object.title);
-  writer.writeString(offsets[13], object.type);
-  writer.writeDateTime(offsets[14], object.updatedAt);
-  writer.writeString(offsets[15], object.userId);
-  writer.writeLong(offsets[16], object.version);
+  writer.writeString(offsets[4], object.indexedParentCardId);
+  writer.writeString(offsets[5], object.indexedReferenceId);
+  writer.writeDateTime(offsets[6], object.indexedUpdatedAt);
+  writer.writeString(offsets[7], object.indexedUserId);
+  writer.writeBool(offsets[8], object.isDeleted);
+  writer.writeBool(offsets[9], object.isEdited);
+  writer.writeBool(offsets[10], object.isSynced);
+  writer.writeString(offsets[11], object.parentCardId);
+  writer.writeString(offsets[12], object.referenceId);
+  writer.writeString(offsets[13], object.subtitle);
+  writer.writeString(offsets[14], object.title);
+  writer.writeString(offsets[15], object.type);
+  writer.writeDateTime(offsets[16], object.updatedAt);
+  writer.writeString(offsets[17], object.userId);
+  writer.writeLong(offsets[18], object.version);
 }
 
 RecentActivityModel _recentActivityModelDeserialize(
@@ -223,16 +260,17 @@ RecentActivityModel _recentActivityModelDeserialize(
     amount: reader.readDouble(offsets[0]),
     createdAt: reader.readDateTime(offsets[1]),
     id: reader.readString(offsets[2]),
-    isDeleted: reader.readBool(offsets[7]),
-    isEdited: reader.readBool(offsets[8]),
-    isSynced: reader.readBool(offsets[9]),
-    referenceId: reader.readString(offsets[10]),
-    subtitle: reader.readString(offsets[11]),
-    title: reader.readString(offsets[12]),
-    type: reader.readString(offsets[13]),
-    updatedAt: reader.readDateTime(offsets[14]),
-    userId: reader.readString(offsets[15]),
-    version: reader.readLong(offsets[16]),
+    isDeleted: reader.readBool(offsets[8]),
+    isEdited: reader.readBool(offsets[9]),
+    isSynced: reader.readBool(offsets[10]),
+    parentCardId: reader.readStringOrNull(offsets[11]),
+    referenceId: reader.readString(offsets[12]),
+    subtitle: reader.readString(offsets[13]),
+    title: reader.readString(offsets[14]),
+    type: reader.readString(offsets[15]),
+    updatedAt: reader.readDateTime(offsets[16]),
+    userId: reader.readString(offsets[17]),
+    version: reader.readLong(offsets[18]),
   );
   object.isarId = id;
   return object;
@@ -254,30 +292,34 @@ P _recentActivityModelDeserializeProp<P>(
     case 3:
       return (reader.readDateTime(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readDateTime(offset)) as P;
-    case 6:
       return (reader.readString(offset)) as P;
+    case 6:
+      return (reader.readDateTime(offset)) as P;
     case 7:
-      return (reader.readBool(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 8:
       return (reader.readBool(offset)) as P;
     case 9:
       return (reader.readBool(offset)) as P;
     case 10:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 11:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 12:
       return (reader.readString(offset)) as P;
     case 13:
       return (reader.readString(offset)) as P;
     case 14:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 15:
       return (reader.readString(offset)) as P;
     case 16:
+      return (reader.readDateTime(offset)) as P;
+    case 17:
+      return (reader.readString(offset)) as P;
+    case 18:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -542,6 +584,73 @@ extension RecentActivityModelQueryWhere
               indexName: r'indexedReferenceId',
               lower: [],
               upper: [indexedReferenceId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterWhereClause>
+      indexedParentCardIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'indexedParentCardId',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterWhereClause>
+      indexedParentCardIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'indexedParentCardId',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterWhereClause>
+      indexedParentCardIdEqualTo(String? indexedParentCardId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'indexedParentCardId',
+        value: [indexedParentCardId],
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterWhereClause>
+      indexedParentCardIdNotEqualTo(String? indexedParentCardId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'indexedParentCardId',
+              lower: [],
+              upper: [indexedParentCardId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'indexedParentCardId',
+              lower: [indexedParentCardId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'indexedParentCardId',
+              lower: [indexedParentCardId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'indexedParentCardId',
+              lower: [],
+              upper: [indexedParentCardId],
               includeUpper: false,
             ));
       }
@@ -1052,6 +1161,160 @@ extension RecentActivityModelQueryFilter on QueryBuilder<RecentActivityModel,
   }
 
   QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      indexedParentCardIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'indexedParentCardId',
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      indexedParentCardIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'indexedParentCardId',
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      indexedParentCardIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'indexedParentCardId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      indexedParentCardIdGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'indexedParentCardId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      indexedParentCardIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'indexedParentCardId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      indexedParentCardIdBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'indexedParentCardId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      indexedParentCardIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'indexedParentCardId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      indexedParentCardIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'indexedParentCardId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      indexedParentCardIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'indexedParentCardId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      indexedParentCardIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'indexedParentCardId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      indexedParentCardIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'indexedParentCardId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      indexedParentCardIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'indexedParentCardId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
       indexedReferenceIdEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1461,6 +1724,160 @@ extension RecentActivityModelQueryFilter on QueryBuilder<RecentActivityModel,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      parentCardIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'parentCardId',
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      parentCardIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'parentCardId',
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      parentCardIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'parentCardId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      parentCardIdGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'parentCardId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      parentCardIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'parentCardId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      parentCardIdBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'parentCardId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      parentCardIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'parentCardId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      parentCardIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'parentCardId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      parentCardIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'parentCardId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      parentCardIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'parentCardId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      parentCardIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'parentCardId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterFilterCondition>
+      parentCardIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'parentCardId',
+        value: '',
       ));
     });
   }
@@ -2323,6 +2740,20 @@ extension RecentActivityModelQuerySortBy
   }
 
   QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterSortBy>
+      sortByIndexedParentCardId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'indexedParentCardId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterSortBy>
+      sortByIndexedParentCardIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'indexedParentCardId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterSortBy>
       sortByIndexedReferenceId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'indexedReferenceId', Sort.asc);
@@ -2403,6 +2834,20 @@ extension RecentActivityModelQuerySortBy
       sortByIsSyncedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isSynced', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterSortBy>
+      sortByParentCardId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'parentCardId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterSortBy>
+      sortByParentCardIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'parentCardId', Sort.desc);
     });
   }
 
@@ -2564,6 +3009,20 @@ extension RecentActivityModelQuerySortThenBy
   }
 
   QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterSortBy>
+      thenByIndexedParentCardId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'indexedParentCardId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterSortBy>
+      thenByIndexedParentCardIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'indexedParentCardId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterSortBy>
       thenByIndexedReferenceId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'indexedReferenceId', Sort.asc);
@@ -2658,6 +3117,20 @@ extension RecentActivityModelQuerySortThenBy
       thenByIsarIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterSortBy>
+      thenByParentCardId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'parentCardId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QAfterSortBy>
+      thenByParentCardIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'parentCardId', Sort.desc);
     });
   }
 
@@ -2791,6 +3264,14 @@ extension RecentActivityModelQueryWhereDistinct
   }
 
   QueryBuilder<RecentActivityModel, RecentActivityModel, QDistinct>
+      distinctByIndexedParentCardId({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'indexedParentCardId',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QDistinct>
       distinctByIndexedReferenceId({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'indexedReferenceId',
@@ -2831,6 +3312,13 @@ extension RecentActivityModelQueryWhereDistinct
       distinctByIsSynced() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isSynced');
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, RecentActivityModel, QDistinct>
+      distinctByParentCardId({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'parentCardId', caseSensitive: caseSensitive);
     });
   }
 
@@ -2918,6 +3406,13 @@ extension RecentActivityModelQueryProperty
     });
   }
 
+  QueryBuilder<RecentActivityModel, String?, QQueryOperations>
+      indexedParentCardIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'indexedParentCardId');
+    });
+  }
+
   QueryBuilder<RecentActivityModel, String, QQueryOperations>
       indexedReferenceIdProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -2955,6 +3450,13 @@ extension RecentActivityModelQueryProperty
   QueryBuilder<RecentActivityModel, bool, QQueryOperations> isSyncedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isSynced');
+    });
+  }
+
+  QueryBuilder<RecentActivityModel, String?, QQueryOperations>
+      parentCardIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'parentCardId');
     });
   }
 
